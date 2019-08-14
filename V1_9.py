@@ -181,7 +181,7 @@ WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 #######################################################################
 #Background Rate
-scale = 1e-4 # fid_vol/Sigma(vol)
+scale = 1e-4 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 #######################################################################
 def BGRate():    
     ###################################################################
@@ -531,7 +531,19 @@ while ans.lower() != "exit":
         clear()
         ans = ''
     elif ans.lower() == 'cb':
-        k = [0.2, 0.2, 0.2, 0.1, 0.1, 0.2] #[PMT, VETO, TANK, CONC, ROCK, WATER]
+        IsoShare = [7.90973e-02, 8.87580e-2, 1.61053e-02, 1.84219e-01, 1.60078e-3, 8.42900e-02, 2.49073e-01, 3.68388e-02, 1.83681e-1, 7.63377e-2] 
+        Iso_cb_labels = ['Pa234', 'Ac228', 'Pb214', 'Bi214', 'Pb212', 'Bi212', 'Tl210', 'Bi210', 'Tl208', 'K40'] 
+        Iso_cb = list()
+        PMT_Iso = [4.60125e-01, 3.49298e-01, 5.37989e-01, 2.51743e-01, 5.59632e-01, 4.30561e-01, 2.37596e-01, 5.25258e-01, 3.875000e-01, 4.29666e-01]
+        VETO_Iso = [3.95017e-01, 2.59425e-01, 4.12636e-01, 2.13328e-01, 4.34460e-01, 3.65216e-01, 2.14290e-01, 4.23952e-01, 3.81624e-01, 3.51135e-01]
+        TANK_Iso = [1.44844e-01, 3.73504e-01, 4.79718e-02, 5.01133e-01, 5.90822e-03, 1.95711e-01, 5.15283e-01, 5.07907e-02, 1.12262e-01, 2.08981e-01]
+        CONC_Iso = [1.39419e-05, 2.59425e-01, 1.33521e-03, 3.23309e-02, 0, 4.32656e-03, 3.13512e-02, 0, 1.12262e-01, 9.77846e-03]
+        ROCK_Iso = [0, 4.96978e-04, 6.84725e-05, 1.46542e-03, 0, 4.18658e-03, 1.48012e-03, 0, 6.35248e-03, 4.40601e-04]
+        PMT_BG_CB = 0
+        VETO_BG_CB = 0
+        TANK_BG_CB = 0
+        CONC_BG_CB = 0
+        ROCK_BG_CB = 0
         #signal input
         try:
             s = float(input('Input signal rate: '))
@@ -548,34 +560,39 @@ while ans.lower() != "exit":
             print('Time dection set to default value of %.3e days' % days)
         #def sigma
         sigma = 4.65
-        Mbg = (1/2)*(((3*pow(s, 2)*days*pow(60,2)*24)/(2*pow(sigma,2)))-s)
-        print('Maximum Background for this time dection @ 3 sigma rate is %.3e' % Mbg)
+        Mbg = (3/2)*(((pow(s, 2)*days*pow(60,2)*24)/(2*pow(sigma,2)))-s)
+        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         print('##################################################')
-        #for PMT
-        PMTR = Mbg/k[0]
-        print('Max Rate from PMT = %.3e' % PMTR)
-        #get rates for different isotopes
-        #PMTIsoAct = list()
-        #for i in range(len(IsoEff[0])):
-        #    PMTIsoAct.append()
-        ##for VETO
-        VETOR = Mbg/k[1]
-        print('Max Rate from VETO = %.3e' % VETOR)
-        ##for TANK
-        TANKR = Mbg/k[2]
-        print('Max Rate from TANK = %.3e' % TANKR)
-        ##for CONCRETE
-        CONCR = Mbg/k[3]
-        print('Max Rate from CONCRETE = %.3e' % CONCR)
-        ##For ROCK
-        ROCKR = Mbg/k[4]
-        print('Max Rate from ROCK = %.3e' % ROCKR)
-        ##For Water
-        GdWATERR = Mbg/k[5]
-        print('Max Rate from Gd Water = %.3e' % GdWATERR)
-        #clear
+        for i in range(len(IsoShare)):
+            Iso_cb.append(Mbg*IsoShare[i])
+            print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
+        print('##################################################')
+        for i in range(len(PMT_Iso)):
+            PMT_BG_CB += Iso_cb[i]*PMT_Iso[i]
+        print('Max BG from PMT = %.5e' % PMT_BG_CB)
+        print('##################################################')
+        for i in range(len(VETO_Iso)):
+            VETO_BG_CB += Iso_cb[i]*VETO_Iso[i]
+        print('Max BG from VETO = %.5e' % VETO_BG_CB)
+        print('##################################################')
+        for i in range(len(TANK_Iso)):
+            TANK_BG_CB += Iso_cb[i]*TANK_Iso[i]
+        print('Max BG from TANK = %.5e' % TANK_BG_CB)
+        print('##################################################')
+        for i in range(len(CONC_Iso)):
+            CONC_BG_CB += Iso_cb[i]*CONC_Iso[i]
+        print('Max BG from CONC = %.5e' % CONC_BG_CB)
+        print('##################################################')
+        for i in range(len(ROCK_Iso)):
+            ROCK_BG_CB += Iso_cb[i]*ROCK_Iso[i]
+        print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
+        print('##################################################')
+        print('Total = %.5e' % (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB))
+        diff = (Mbg - (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + ROCK_BG_CB))
+        print('Abs Diff = %.5e' %  diff)
+        print('Percent Diff = %.5e' % (diff/Mbg))
+        print('##################################################')
         clear()
         ans = ''
     elif ans.lower() == 'exit':
         break
-
