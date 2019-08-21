@@ -181,7 +181,7 @@ WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 #######################################################################
 #Background Rate
-scale = 1e-4 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
+scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 #######################################################################
 def BGRate():    
     ###################################################################
@@ -192,9 +192,9 @@ def BGRate():
     for i in range(len(PMTIsoDecay)):
         for x in range(len(PMTIsoEff[i])):
             PMTBGIso.append(dataAct[0][i]*PMTIsoEff[i][x]/scale)
-            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.3e'  % PMTBGIso[x]) 
+            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[x]) 
     PMTBGR = sum(PMTBGIso)
-    print('Total BGR due to PMTs = %.3e' % PMTBGR)
+    print('Total BGR due to PMTs = %.5e' % PMTBGR)
     ###################################################################
     #VETO
     print('##################################################') 
@@ -203,9 +203,9 @@ def BGRate():
     for i in range(len(VETOIsoDecay)):
         for x in range(len(VETOIsoEff[i])):
             VETOBGIso.append(dataAct[1][i]*VETOIsoEff[i][x]/scale)
-            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.3e' % VETOBGIso[x])
+            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[x])
     VETOBGR = sum(VETOBGIso)
-    print('Total BRG due to Veto = %.3e' % VETOBGR)
+    print('Total BRG due to Veto = %.5e' % VETOBGR)
     ###################################################################
     #TANK
     print('##################################################') 
@@ -214,9 +214,9 @@ def BGRate():
     for i in range(len(TANKIsoDecay)):
         for x in range(len(TANKIsoEff[i])):
             TANKBGIso.append(dataAct[2][i]*TANKIsoEff[i][x]/scale)
-            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.3e' % TANKBGIso[x])
+            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[x])
     TANKBGR = sum(TANKBGIso)
-    print('Total BGR due to Tank = %.3e' % TANKBGR)
+    print('Total BGR due to Tank = %.5e' % TANKBGR)
     ###################################################################
     #CONCRETE
     print('##################################################') 
@@ -225,9 +225,9 @@ def BGRate():
     for i in range(len(CONCIsoDecay)):
         for x in range(len(CONCIsoEff[i])):
             CONCBGIso.append(dataAct[3][i]*CONCIsoEff[i][x]/scale)
-            print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.3e' % CONCBGIso[x])
+            print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[x])
     CONCBGR = sum(CONCBGIso)
-    print('Total BGR due to Concrete = %.3e' % CONCBGR)
+    print('Total BGR due to Concrete = %.5e' % CONCBGR)
     ###################################################################
     #ROCK
     print('##################################################') 
@@ -236,9 +236,9 @@ def BGRate():
     for i in range(len(ROCKIsoDecay)):
         for x in range(len(ROCKIsoEff[i])):
             ROCKBGIso.append(dataAct[4][i]*ROCKIsoEff[i][x]/scale)
-            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.3e' % ROCKBGIso[x])
+            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[x])
     ROCKBGR = sum(ROCKBGIso)
-    print('Total BGR due to Rock = %.3e' % ROCKBGR)
+    print('Total BGR due to Rock = %.5e' % ROCKBGR)
     ###################################################################
     #Gd Water
     print('##################################################') 
@@ -246,14 +246,14 @@ def BGRate():
     WATERBGIso = list()
     for i in range(len(WATERIsoDecay)): #1d array
             WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i]/scale)
-            print('BGR due to ' + WATERIsoDecay[i] + ' = %.3e' % WATERBGIso[i])
+            print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
-    print('Total BGR due to Gd Water = %.3e' % WATERBGR)
+    print('Total BGR due to Gd Water = %.5e' % WATERBGR)
     ###################################################################
     #Total
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR
-    print('##################################################')
-    print('Total BGR is %.3e' % tot)
+    #print('##################################################')
+    #print('Total BGR is %.5e' % tot)
     bgi = True
     tot = tot/(60**2*24)
     return tot
@@ -313,6 +313,11 @@ def AccBack(Prate, Nrate):
         for x in range(len(Prate[i])):
             back += Prate[i][x]*Nrate[i][x]*timeScale
     return back
+PMT_Acc = AccBack(PMT_Pr, PMT_Nr)
+VETO_Acc = AccBack(VETO_Pr, VETO_Nr)
+TANK_Acc = AccBack(TANK_Pr, TANK_Nr)
+CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
+ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 #######################################################################
 #k constant
 #print('k = ' + str(k))
@@ -344,13 +349,13 @@ def menu(): #menu text
         print('WATCHMAN Cleanliness software')
         print('Alex Healey, UoS, 2019')
         print('Options: ')
-        print('- Input Values for Activity [a]')
-        print('- Input Values for Efficiency [e]')
-        print('- Calculate Background Rate [bgr]')
-        print('- Calculate Time Detection [td]')
+        print('- Input Values for Activity    [a]')
+        print('- Input Values for Efficiency  [e]')
+        print('- Calculate Background Rate    [bgr]')
+        print('- Calculate Time Detection     [td]')
         print('- Calculate Maximum Background [maxbg]')
-        print('- Cleanliness Budget [cb]')
-        print('- Exit software [exit]')
+        print('- Cleanliness Budget           [cb]')
+        print('- Exit software                [exit]')
         a = str(input('Select an option: '))
         if a.lower() in options:
             #print('Option selected')
@@ -467,7 +472,8 @@ while ans.lower() != "exit":
         #output
         i = 0
         for i in range(len(Comp)):
-            print('##################################################')            print('Activity of Isotopes in ' + Comp[i] + ': ')
+            print('##################################################')
+            print('Activity of Isotopes in ' + Comp[i] + ': ')
             for x in range(len(Iso[i])):
                 print('   Activity of ' + Iso[i][x] + ' = %.5e Bq' % dataAct[i][x])
         ans = ""
@@ -554,7 +560,7 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Setting Activity values to default values')
             for i in range(len(Iso)):
-                print('##################################################')
+                print('##############################################')
                 print('Activity of Isotopes in ' + Comp[i])
                 print(i)
                 print("len: ", len(Iso[i]))
@@ -579,6 +585,17 @@ while ans.lower() != "exit":
             pass
         #BGR Code
         tot = BGRate()
+        ###############################################################
+        #Accidental BG Rate
+                print('##################################################')
+        print('PMT  Accidental background = %.5e' % PMT_Acc)
+        print('VETO Accidental background = %.5e' % VETO_Acc)
+        print('TANK Accidental background = %.5e' % TANK_Acc)
+        print('CONC Accidental background = %.5e' % CONC_Acc)
+        print('ROCK Accidental background = %.5e' % ROCK_Acc)
+        print('##################################################')
+        tot += (PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc)
+        print('Total Backgroud Rate = %.5e' % tot)
         clear()
         ans = ''
     elif ans.lower() == 'td':
@@ -608,7 +625,7 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate()
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
         else:
             pass
         try:
@@ -651,15 +668,15 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate()
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
         else:
             pass
         #signal input
         try:
-            s = float(input('Input signal rate: '))
+            signal = input('Input signal rate: ')
             print('Signal rate set to value of %.3e' % s)
         except:
-            s = 0.5
+            signal = 0.5
             print('Signal rate set to default value of %.3e' % s)
         #get number of days
         try:
@@ -670,8 +687,9 @@ while ans.lower() != "exit":
             print('Time dection set to default value of %.3e days' % days)
         #def sigma
         sigma = 4.65
-        Mbg = (1/2)*(((3*pow(s, 2)*days*pow(60,2)*24)/(2*pow(sigma,2)))-s)
-        print('Maximum Background for this time dection @ 3 sigma rate is %.3e' % Mbg)
+        S = signal*0.9
+        Mbg = (1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S)
+        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         clear()
         ans = ''
     elif ans.lower() == 'cb':
@@ -690,10 +708,10 @@ while ans.lower() != "exit":
         ROCK_BG_CB = 0
         #signal input
         try:
-            s = float(input('Input signal rate: '))
+            signal = float(input('Input signal rate: '))
             print('Signal rate set to value of %.3e' % s)
         except:
-            s = 0.5
+            signal = 0.5
             print('Signal rate set to default value of %.3e' % s)
         #get number of days
         try:
@@ -708,7 +726,7 @@ while ans.lower() != "exit":
         sigma = 4.65
         t = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days]
         print('Time to detection @ 3 sigma rate = ' + str(t) + ' days')
-        Mbg = (3/2)*(((pow(s, 2)*days*pow(60,2)*24)/(2*pow(sigma,2)))-s)
+        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         print('##################################################')
         for i in range(len(IsoShare)):
