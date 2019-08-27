@@ -75,7 +75,7 @@ def VETOAct(PPM): #done
     n = 354
     IsoAct = list(range(len(Iso[1])))
     for i in range(len(Iso[1])):
-                IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
+        IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
 #######################################################################
 #Background Activity from Steel Tank
@@ -245,8 +245,8 @@ def BGRate():
     print('BGR due to Gd WATER')
     WATERBGIso = list()
     for i in range(len(WATERIsoDecay)): #1d array
-            WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i]/scale)
-            print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
+        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i]/scale)
+        print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
     ###################################################################
@@ -345,17 +345,17 @@ def menu(): #menu text
     options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
     while a.lower() not in options:
         print('##################################################')
-        #os.system('clc' if os.name == 'nt' else 'clear')
         print('WATCHMAN Cleanliness software')
         print('Alex Healey, UoS, 2019')
         print('Options: ')
-        print('- Input Values for Activity    [a]')
-        print('- Input Values for Efficiency  [e]')
-        print('- Calculate Background Rate    [bgr]')
-        print('- Calculate Time Detection     [td]')
-        print('- Calculate Maximum Background [maxbg]')
-        print('- Cleanliness Budget           [cb]')
-        print('- Exit software                [exit]')
+        print('- Input Values for Activity     [a]')
+        print('- Input Values for Efficiency   [e]')
+        print('- Calculate Background Rate     [bgr]')
+        print('- Calculate Time Detection      [td]')
+        print('- Calculate Maximum Background  [maxbg]')
+        print('- Cleanliness Budget            [cb]')
+        print('- Exit software                 [exit]')
+        print('##################################################')
         a = str(input('Select an option: '))
         if a.lower() in options:
             #print('Option selected')
@@ -489,7 +489,7 @@ while ans.lower() != "exit":
         except:
             print('Invalid value')
         if in_ans.lower() == 'y':
-            print('##################################################')    
+            print('##################################################')
             print('Efficiency of Isotopes in PMT')
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
@@ -629,11 +629,11 @@ while ans.lower() != "exit":
         else:
             pass
         try:
-            signal = float(input('Input signal rate: '))
+            signal = input('Input signal rate: '))
             signal < 1
         except:
             signal = 0.5
-            print('Signal rate set to default value of %.3e' % signal)
+            print('Signal rate set to default value of %.5e' % signal)
         B = signal*1.035 + tot
         S = signal*0.9
         sigma = 4.65
@@ -674,21 +674,21 @@ while ans.lower() != "exit":
         #signal input
         try:
             signal = input('Input signal rate: ')
-            print('Signal rate set to value of %.3e' % s)
+            signal < 1
         except:
             signal = 0.5
-            print('Signal rate set to default value of %.3e' % s)
+            print('Signal rate set to default value of %.5e' % s)
         #get number of days
         try:
             days = input('Input time dection in days: ')
-            print('Time dection set to value of %.5e days' % days)
+            days != 0
         except:
             days = 1
-            print('Time dection set to default value of %.3e days' % days)
+            print('Time dection set to default value of %.5e days' % days)
         #def sigma
         sigma = 4.65
         S = signal*0.9
-        Mbg = (1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S)
+        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         clear()
         ans = ''
@@ -708,15 +708,15 @@ while ans.lower() != "exit":
         ROCK_BG_CB = 0
         #signal input
         try:
-            signal = float(input('Input signal rate: '))
-            print('Signal rate set to value of %.3e' % s)
+            signal = input('Input signal rate: ')
+            signal < 1
         except:
             signal = 0.5
             print('Signal rate set to default value of %.3e' % s)
         #get number of days
         try:
-            days = float(input('Input time dection in days: '))
-            print('Time dection set to value of %.3e days' % days)
+            days = input('Input time dection in days: ')
+            days != 0
         except:
             days = 1
             print('Time dection set to default value of %.3e days' % days)
