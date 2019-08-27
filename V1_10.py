@@ -2,6 +2,7 @@
 import numpy as np
 from math import log, pow
 import os
+from ast import literal_eval
 #dim vars
 bgi = False
 #Isotope properties
@@ -47,6 +48,9 @@ def InputVals(IType, isotope, component, x):
 def disdefval(IType, isotope, component, x):
     print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
 def clear():
+    """
+    Clears output
+    """
     ui = ""
     while ui.lower() != 'y' or ui.lower() != 'n':
         ui = input('Do you want to clear the output? [y/n] ')
@@ -58,6 +62,11 @@ def clear():
 #######################################################################
 #Background activity from Glass in PMTs
 def PMTAct(PPM): #done
+    """
+    Calculates the background activity for the PMTs
+    Decay Chains: U238, Th232, K40 
+    PPM = Parts per 1e6 for Isotope
+    """
     #def mass
     mass = 1.4 #kg - mass of glass in PMT
     #DimVars
@@ -69,6 +78,11 @@ def PMTAct(PPM): #done
 #######################################################################
 #Background Activity from VETO Region
 def VETOAct(PPM): #done
+    """
+    Calculates the background activity for the VETO region
+    Decay Chains: U238, Th232, K40
+    PPM: Parts per 1e6 for Isotope
+    """
     #def mass
     mass = 1.4 #kg
     #Dim Vars
@@ -80,6 +94,11 @@ def VETOAct(PPM): #done
 #######################################################################
 #Background Activity from Steel Tank
 def TankAct(Act): #done
+    """
+    Calculates the background activity for the Steel Tank
+    Decay Chains: U238, Th232, K40, Co60 Cs137
+    Act: Activity of the Isotope
+    """
     #def mass
     vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) #def this - use load.py defaults
     den = 8000 #kg/m^3
@@ -93,7 +112,12 @@ def TankAct(Act): #done
     return IsoAct
 #######################################################################
 #Background Activity from concrete
-def ConcAct(Act): #done 
+def ConcAct(Act): #done
+    """
+    Calculates the background activity for the Concrete
+    Decay Chains: U238, Th232, K40
+    Act: Activity of the Isotope
+    """
     #def mass
     vol = 25.5*(np.pi*pow(13.,2)-np.pi*pow(12.5,2))+0.5*np.pi*pow(13.,2)
     den = 2300 #kg/m^3
@@ -106,6 +130,11 @@ def ConcAct(Act): #done
 #######################################################################
 #Background Activity from Rock Salt
 def RockAct(PPM): #done
+    """
+    Calculates the background activity for the Rock Salt
+    Decay Chains: U238, Th232, K40
+    PPM: Parts per 1e6 for Isotope
+    """
     #def mass
     den = 2165 #kg/m^3
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
@@ -119,6 +148,11 @@ def RockAct(PPM): #done
 #######################################################################
 #Background Activity from Gd Water
 def WaterAct(PPM): #done
+    """
+    Calculates the background activity for the Gd Water
+    Decay Chains: U238, Th232, U235, U238_l, Th232_l, U235_l
+    PPM: Parts per 1e6 for Isotope
+    """
     #def mass of water
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     #dim vars
@@ -183,7 +217,10 @@ WATERIsoEff = WATERIsoDefault
 #Background Rate
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 #######################################################################
-def BGRate():    
+def BGRate():
+    """
+    Calculates the Background Rate for all components
+    """
     ###################################################################
     #PMTs
     print('##################################################') 
@@ -307,6 +344,11 @@ ROCK_Nr = [[0, 0, 0, 0, 0],                             #U238 chain
           [0, 0, 0, 0],                                 #Th232 chain
           [0]]                                          #K40
 def AccBack(Prate, Nrate):
+    """
+    Caculates Accidental Background rate
+    Prate: rate with the prompt n9 cut
+    Nrate: rate with the delayed n9 cut
+    """
     timeScale = 0.0001*86400*0.05
     back = 0
     for i in range(len(Prate)):
@@ -341,6 +383,9 @@ CONCACT = IsoDefault[3]
 ROCKPPM = IsoDefault[4]
 GdWPPM = IsoDefault[5]
 def menu(): #menu text
+    """
+    Displays options
+    """
     a = ''
     options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
     while a.lower() not in options:
@@ -587,7 +632,7 @@ while ans.lower() != "exit":
         tot = BGRate()
         ###############################################################
         #Accidental BG Rate
-                print('##################################################')
+        print('##################################################')
         print('PMT  Accidental background = %.5e' % PMT_Acc)
         print('VETO Accidental background = %.5e' % VETO_Acc)
         print('TANK Accidental background = %.5e' % TANK_Acc)
@@ -629,7 +674,7 @@ while ans.lower() != "exit":
         else:
             pass
         try:
-            signal = input('Input signal rate: '))
+            signal = input('Input signal rate: ')
             signal < 1
         except:
             signal = 0.5
@@ -707,15 +752,44 @@ while ans.lower() != "exit":
         CONC_BG_CB = 0
         ROCK_BG_CB = 0
         #signal input
+        if ai == False:
+            print('##################################################')
+            print('Setting Activity values to default values')
+            for i in range(len(Iso)):
+                print('##################################################')
+                print('Activity of Isotopes in ' + Comp[i])
+                for x in range(len(Iso[i])):
+                    if i == 2 or i == 3:
+                        disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
+                    else:
+                        disdefval(InType[0], Iso[i][x], Comp[i], dataAct[i][x])
+        else:
+            pass
+        if ei == False:
+            print('##################################################')
+            print('Setting Efficiency values to default values')
+            #just print out lists as set to default when lists are defined
+            #PMT
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[0])
+            for i in range(len(PMTIsoDecay)):
+                for x in range(len(PMTIsoDefault[i])):
+                    disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+        else:
+            pass
+        if bgi == False:
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
+        else:
+            pass
         try:
-            signal = input('Input signal rate: ')
+            signal = literal_eval(input('Input signal rate: '))
             signal < 1
         except:
             signal = 0.5
-            print('Signal rate set to default value of %.3e' % s)
+            print('Signal rate set to default value of %.3e' % signal)
         #get number of days
         try:
-            days = input('Input time dection in days: ')
+            days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
             days = 1
@@ -724,8 +798,6 @@ while ans.lower() != "exit":
         B = signal*1.035 + tot
         S = signal*0.9
         sigma = 4.65
-        t = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days]
-        print('Time to detection @ 3 sigma rate = ' + str(t) + ' days')
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         print('##################################################')
