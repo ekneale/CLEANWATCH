@@ -39,7 +39,7 @@ def InputVals(IType, isotope, component, x):
         x = default value of PPM for the specified Isotope in the specified component (float)
     """
     try:
-        i = float(input('Input Value of ' + IType + ' of the ' + isotope + ' isotope for ' + component + ' component: '))
+        i = literal_eval(input('Input Value of ' + IType + ' of the ' + isotope + ' isotope for ' + component + ' component: '))
         print(IType + ' of ' + isotope + ' for ' + component + ' set to value of %.5e' % i)
     except:
         i = x
@@ -674,7 +674,7 @@ while ans.lower() != "exit":
         else:
             pass
         try:
-            signal = input('Input signal rate: ')
+            signal = literal_eval(input('Input signal rate: '))
             signal < 1
         except:
             signal = 0.5
@@ -718,14 +718,14 @@ while ans.lower() != "exit":
             pass
         #signal input
         try:
-            signal = input('Input signal rate: ')
+            signal = literal_eval(input('Input signal rate: '))
             signal < 1
         except:
             signal = 0.5
             print('Signal rate set to default value of %.5e' % s)
         #get number of days
         try:
-            days = input('Input time dection in days: ')
+            days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
             days = 1
