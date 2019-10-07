@@ -3,6 +3,7 @@ import numpy as np
 from math import log, pow
 import os
 from ast import literal_eval
+import Eff
 #dim vars
 bgi = False
 #Isotope properties
@@ -169,7 +170,7 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60'],                                      #Co60 decay chain
             ['Cs137']]                                     #Cs137 decay chain
-#######################################################################
+#####################################################
 ##dim vars
 #PMT
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
@@ -177,14 +178,14 @@ PMTIsoDefault = [[0.000130259, 0, 0.0017544, 0, 0.00501633], #[[Pa234, Pb214, Bi
                  [0, 0, 0, 0.0210737],                       #[Ac228, Pb212, Bi212, Tl208]
                  [0]]                                        #[K40]]
 PMTIsoEff = PMTIsoDefault
-#######################################################################
+#####################################################
 #VETO
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 VETOIsoDefault = [[0, 0, 0, 0, 5.84932e-5], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [0, 0, 0, 0.000612745],   #[Ac228, Pb212, Bi212, Tl208],
                   [0]]                      #[K40]]
 VETOIsoEff = VETOIsoDefault
-#######################################################################
+#####################################################
 #TANK
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5], IsoDecay[6]]
 TANKIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
@@ -193,24 +194,24 @@ TANKIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [0],             #[Co60],
                   [0]]             #[Cs137]]
 TANKIsoEff = TANKIsoDefault
-#######################################################################
+#####################################################
 #CONCRETE
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
                   [0]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
-#######################################################################
+#####################################################
 #ROCK
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 ROCKIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                 [0, 0, 0, 0],       #[Ac228, Pb212, Bi212, Tl208],
                 [0]]               #[K40]]
 ROCKIsoEff = ROCKIsoDefault
-#######################################################################
+#####################################################
 #WATER
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
-WATERIsoDefault = [0, 0.0171801, 0, 0.113282] #[Pb214, Bi214, Bi210, Tl210]
+WATERIsoDefault = Eff.GDWATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 #######################################################################
