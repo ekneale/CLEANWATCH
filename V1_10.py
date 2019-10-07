@@ -168,31 +168,29 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
             ['K40'],                                       #K40 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
-            ['Co60'],                                      #Co60 decay chain
-            ['Cs137']]                                     #Cs137 decay chain
+            ['Co60', 'Cs137']]
 #####################################################
 ##dim vars
 #PMT
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-PMTIsoDefault = [[0.000130259, 0, 0.0017544, 0, 0.00501633], #[[Pa234, Pb214, Bi214, Bi210, Tl210], 
-                 [0, 0, 0, 0.0210737],                       #[Ac228, Pb212, Bi212, Tl208]
-                 [0]]                                        #[K40]]
+PMTIsoDefault = [Eff.PMTU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210], 
+                 Eff.PMTTh232,                       #[Ac228, Pb212, Bi212, Tl208]
+                 Eff.PMTK40]                                        #[K40]]
 PMTIsoEff = PMTIsoDefault
 #####################################################
 #VETO
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-VETOIsoDefault = [[0, 0, 0, 0, 5.84932e-5], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  [0, 0, 0, 0.000612745],   #[Ac228, Pb212, Bi212, Tl208],
-                  [0]]                      #[K40]]
+VETOIsoDefault = [Eff.VETOU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  Eff.VETOTh232,   #[Ac228, Pb212, Bi212, Tl208],
+                  Eff.VETOK40]                      #[K40]]
 VETOIsoEff = VETOIsoDefault
 #####################################################
 #TANK
-TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5], IsoDecay[6]]
-TANKIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
-                  [0],             #[K40],
-                  [0],             #[Co60],
-                  [0]]             #[Cs137]]
+TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
+TANKIsoDefault = [Eff.TANKU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  Eff.TANKTh232,    #[Ac228, Pb212, Bi212, Tl208],
+                  Eff.TANKK40,             #[K40],
+                  Eff.TANKSTEEL]             #[Steel Activity]]
 TANKIsoEff = TANKIsoDefault
 #####################################################
 #CONCRETE
@@ -204,9 +202,9 @@ CONCIsoEff = CONCIsoDefault
 #####################################################
 #ROCK
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-ROCKIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                [0, 0, 0, 0],       #[Ac228, Pb212, Bi212, Tl208],
-                [0]]               #[K40]]
+ROCKIsoDefault = [Eff.ROCKU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                Eff.ROCKTh232,       #[Ac228, Pb212, Bi212, Tl208],
+                Eff.ROCKK40]               #[K40]]
 ROCKIsoEff = ROCKIsoDefault
 #####################################################
 #WATER
@@ -266,8 +264,7 @@ def BGRate():
             print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[x])
     CONCBGR = sum(CONCBGIso)
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
-    ###################################################################
-    #ROCK
+#####ROCK############################################
     print('##################################################') 
     print('BGR due to ROCK')
     ROCKBGIso = list()
@@ -277,8 +274,7 @@ def BGRate():
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[x])
     ROCKBGR = sum(ROCKBGIso)
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
-    ###################################################################
-    #Gd Water
+######GdWater########################################
     print('##################################################') 
     print('BGR due to Gd WATER')
     WATERBGIso = list()
@@ -287,7 +283,7 @@ def BGRate():
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
-    ###################################################################
+#####################################################
     #Total
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR
     #print('##################################################')
@@ -300,87 +296,61 @@ IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e
 PMTShare = [4.60123e-1, 5.37989e-1, 4.06841e-1, 1.95302e-1, 2.37596e-1, 5.78219e-1, 1.88178e-1, 3.63865e-1, 3.62383e-1, 2.98963e-1]
 VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691e-1, 1.69719e-1, 2.93687e-1, 2.17803e-1, 2.44321e-1] 
 TANKShare = [1.44844e-1, 4.79718e-2, 3.62776e-2, 3.88787e-1, 5.15283e-1, 8.44188e-2, 4.08107e-1, 3.51846e-2, 3.83691e-1, 1.45410e-1] 
-CONCShare = [1.39419e-5, #Pa234 
-             1.33521e-3, #Ac228
-             1.00972e-3, #Pb214
-             2.50823e-2, #Bi214
-             3.13512e-2, #Pb212
-             3.33691e-1, #Bi212
-             1.17226e-3, #Tl210
-             0, #Bi210
-             3.45508e-2, #Tl208
-             6.80389e-3] #K40
-ROCKShare = [0,          #Pa234
-             6.84725e-5, #Ac228
-             5.17807e-5, #Pb214
-             1.13687e-3, #Bi214
-             1.48012e-3, #Pb212
-             2.23804e-4, #Bi212
-             1.17226e-3, #Tl210
-             0,          #Bi210
-             1.57184e-3, #Tl208
-             3.06572e-4] #K40
-GdWAshare = [0,          #Pa234
-             0,          #Ac228
-             2.43773e-1, #Pb214
-             2.24192e-1, #Bi214
-             0,          #Pb212
-             0,          #Bi212
-             2.07993e-1, #Tl210
-             3.07263e-1, #Bi210
-             0,          #Tl208
-             3.04196e-1] #K40
+CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
+ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
+GdWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
+########Max Accidental BG############################
 def Max(bg, share):
     for i in range(len(share)):
         BG += bg*IsoShare[i]*share[i]
     return BG
-###########################################Accidental Background
+########Accidental Background########################
 #U238  = [Pa234, Pb214, Bi214, Tl210, Bi210]
 #Th232 = [Ac228, Bi212, Pb212, Tl208]
 #K40   = [K40]
-#PMT######################################
+#########PMT#########################################
 PMT_Pr =  [[3.20946e-4, 0, 3.36027e-3, 9.81119e-3, 0], #U238 chain
           [2.14329e-5, 3.04153e-4, 0, 3.88494e-2], #Th232 chain
           [7.42865e-5]]#K40 chain
 PMT_Nr =  [[1.75361e-4, 0, 2.58670e-3, 7.23630e-3, 0], #U238 chain
           [7.07220e-6, 1.73195e-4, 0, 3.02348e-2], #Th232 chain
           [6.57061e-5]] #K40 chain
-#VETO#####################################
+#########VETO########################################
 VETO_Pr = [[0, 0, 4.49260e-5, 1.59123e-4, 0], #U238 chain
           [0, 0, 0, 9.69449e-4], #Th232 chain
           [4.15627e-6]] #K40 chain
 VETO_Nr = [[0, 0, 3.94931e-5, 1.19808e-4, 0], #U238 chain
           [0, 0, 0, 7.49615e-4], #Th232 chain
           [0]] #K40
-#TANK#####################################
+#########TANK########################################
 TANK_Pr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40 chain
 TANK_Nr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40
-#CONC#####################################
+#########CONC########################################
 CONC_Pr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40 chain
 CONC_Nr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40 chain
-#ROCK#####################################
+#########ROCK########################################
 ROCK_Pr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40 chain
 ROCK_Nr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40
-#GdWater##################################
+#########GdWater#####################################
 WATER_Pr = [[0, 1.73071e-2, 1.16941e-1, 1.36300e-5], #U238 Iso
           [0, 0, 0, 0], #Th232 Iso
           [4.33342e-4]] #K40 Iso
 WATER_Nr = [[0, 2.45325e-2, 1.13338e-1, 8.13443e-5], #U238 Iso
           [0, 0, 0, 0], #Th232 Iso
           [1.42567e-4]] #K40 Iso
-##########################################
+#####################################################
 def AccBack(Prate, Nrate):
     """
     Caculates Accidental Background rate
@@ -399,7 +369,7 @@ TANK_Acc = AccBack(TANK_Pr, TANK_Nr)
 CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
 ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
-##########################################
+#####################################################
 #k constant
 #print('k = ' + str(k))
 #events from process (evp?) = total event rate for process (data->GetEntries()) / BGR(=tot) (results.txt, 3rd column from end) <- plot this
@@ -565,7 +535,7 @@ while ans.lower() != "exit":
         clear()
         ans = ''
     elif ans.lower() == 'e':
-        #PMTs
+#########PMTs########################################
         in_ans = ''
         try:
             in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[0] + ' ? [y/n] ')
@@ -584,7 +554,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
                     disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
-        #VETOS
+#########VETOS#######################################
         in_ans = ''
         try:
             in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[1] + ' ? [y/n] ')
@@ -603,42 +573,77 @@ while ans.lower() != "exit":
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
                     disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
-        #TANK
+#########TANK########################################
         in_ans = ''
         try:
             in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[2] + ' ? [y/n] ')
             in_ans.lower() == 'y' or in_ans.lower() == 'n'
         except:
             print('Invalid value')
+        print('##################################################')
+        print('Efficiency of Isotopes in TANK')
         if in_ans.lower() == 'y':
-            print('##################################################')
-            print('Efficiency of Isotopes in TANK')
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
                     TANKIsoEff[i][x] = InputVals(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoDefault[i][x])
         elif in_ans.lower() == 'n':
-            print('##################################################')
-            print('Efficiency of Isotopes in TANK')
-        #CONCRETE
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
+#########CONCRETE####################################
+        in_ans = ''
+        try:
+            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[4] + ' [y/n] ')
+            in_ans.lower() == 'y' or in_ans.lower() == 'n'
+        except:
+            print('Invalid Value')
         print('##################################################')
         print('Efficiency of Isotopes in CONCRETE')
-        for i in range(len(CONCIsoDecay)):
-            for x in range(len(CONCIsoEff[i])):
-                CONCIsoEff[i][x] = InputVals(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoDefault[i][x])
-         #ROCK
+        if in_ans.lower() == 'y':
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    CONCIsoEff[i][x] = InputVals(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
+        elif in_ans.lower() == 'n':
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
+#########ROCK########################################
+        in_ans = ''
+        try:
+            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[5] + ' [y/n] ')
+            in_ans.lower() == 'y' or in_ans.lower() == 'n'
+        except:
+            print('Invalid Value')
         print('##################################################')
         print('Efficiency of Isotopes in ROCK')
-        for i in range(len(ROCKIsoDecay)):
-            for x in range(len(ROCKIsoEff[i])):
-                ROCKIsoEff[i][x] = InputVals(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
-        #WATER
+        if in_ans.lower() == 'y':
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoEff[i])):
+                    ROCKIsoEff[i][x] = InputVals(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
+        elif in_ans.lower() == 'n':
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoEff[i])):
+                    disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
+#########WATER#######################################
+        in_ans = ''
+        try:
+            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[5] + ' [y/n] ')
+            in_ans.lower() == 'y' or in_ans.lower() == 'n'
+        except:
+            print('Invalid Value')
         print('##################################################')
         print('Efficiency of Isotopes in WATER')
-        for i in range(len(WATERIsoDecay)): #1d list
-            WATERIsoEff[i] = InputVals(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
+        if in_ans.lower() == 'y':
+            for i in range(len(WATERIsoDecay)): #1d list
+                WATERIsoEff[i] = InputVals(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
+        elif in_ans.lower() == 'n':
+            for i in range(len(WaterIsoDecay)):
+                disdefval(InType[2], WaterIsoDecay, Comp[5], WaterIsoDefault[i])
+#########reset#######################################
         ei = True
         clear()
         ans = ''
+#####################################################
     elif ans.lower() == 'bgr':
         if ai == False:
             print('##################################################')
@@ -669,8 +674,7 @@ while ans.lower() != "exit":
             pass
         #BGR Code
         tot = BGRate()
-        ###############################################################
-        #Accidental BG Rate
+#########Accidental BG Rate##########################
         print('##################################################')
         print('PMT  Accidental background = %.5e' % PMT_Acc)
         print('VETO Accidental background = %.5e' % VETO_Acc)
@@ -712,6 +716,8 @@ while ans.lower() != "exit":
             tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
         else:
             pass
+        print('##################################################')
+        print('Total BG = %.5e' % tot)
         try:
             signal = literal_eval(input('Input signal rate: '))
             signal < 1
@@ -722,7 +728,7 @@ while ans.lower() != "exit":
         S = signal*0.9
         sigma = 4.65
         t = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days]
-        print('Time to detection @ 3 sigma rate = ' + str(t) + ' days')
+        print('Time to detection @ 3 sigma rate = %.5e' % t + ' days')
         clear()
         ans = ''
     elif ans.lower() == 'maxbg':
