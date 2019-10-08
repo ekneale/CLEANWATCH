@@ -6,18 +6,18 @@ from ast import literal_eval
 import Eff
 #dim vars
 bgi = False
-#Isotope properties
+######Isotope properties############################
 Ms = [3.953e-25, 3.853145e-26, 6.636286e-26] #[U238, Th232, K40] kg per atom
 Lam = [4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
 halfL = list(range(len(Lam)))
 for i in range(len(Lam)):
     halfL[i] = (log(2)/Lam[i])/(60**2*24*365*1e9) #half life in billions of years
 Abs = [0.992745, 1.0, 0.00117] #[U238, Th232, K40] Natural Abundance
-#measurements
+#####measurements###################################
 TankR = 10026.35e-3 #m
 Height = 10026.35e-3 #m
 SThick = 6.35e-3 #m
-#User input
+######User input Type###############################
 InType = ['PPM', 'Activity', 'Efficiency', 'Signal Rate']
 Iso = [['U238', 'Th232', 'K40'], #[[PMT], 
        ['U238', 'Th232', 'K40'], # [VETO], 
@@ -31,7 +31,9 @@ IsoDefault = [[0.043, 0.133, 16], #[[PMT],
               [61, 30, 493],      # [CONCRETE],
               [0.067, 0.125,1130],# [ROCK]
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] # [WATER]]
+######Comp##########################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK', 'Gd WATER']
+######Input func####################################
 def InputVals(IType, isotope, component, x):
     """
         IType = Input Type (str)
@@ -46,8 +48,10 @@ def InputVals(IType, isotope, component, x):
         i = x
         print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
     return i
+######Display default value func####################
 def disdefval(IType, isotope, component, x):
     print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
+######Clear display func############################
 def clear():
     """
     Clears output
@@ -60,8 +64,7 @@ def clear():
             break
         if ui.lower() == 'n':
             break
-#######################################################################
-#Background activity from Glass in PMTs
+#####Background activity from Glass in PMTs##########
 def PMTAct(PPM): #done
     """
     Calculates the background activity for the PMTs
@@ -76,8 +79,7 @@ def PMTAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#######################################################################
-#Background Activity from VETO Region
+#####Background Activity from VETO Region###########
 def VETOAct(PPM): #done
     """
     Calculates the background activity for the VETO region
@@ -92,8 +94,7 @@ def VETOAct(PPM): #done
     for i in range(len(Iso[1])):
         IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#######################################################################
-#Background Activity from Steel Tank
+#####Background Activity from Steel Tank############
 def TankAct(Act): #done
     """
     Calculates the background activity for the Steel Tank
@@ -111,8 +112,7 @@ def TankAct(Act): #done
     for i in range(len(Act)):
          IsoAct[i] = Act[i]*mass
     return IsoAct
-#######################################################################
-#Background Activity from concrete
+#####Background Activity from concrete###############
 def ConcAct(Act): #done
     """
     Calculates the background activity for the Concrete
@@ -128,8 +128,7 @@ def ConcAct(Act): #done
     for i in range(len(Act)):
         IsoAct[i] = Act[i]*mass
     return IsoAct
-#######################################################################
-#Background Activity from Rock Salt
+#####Background Activity from Rock Salt#############
 def RockAct(PPM): #done
     """
     Calculates the background activity for the Rock Salt
@@ -146,8 +145,7 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
-#######################################################################
-#Background Activity from Gd Water
+#####Background Activity from Gd Water##############
 def WaterAct(PPM): #done
     """
     Calculates the background activity for the Gd Water
@@ -161,8 +159,7 @@ def WaterAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
-#######################################################################
-#Efficiences
+#####Efficiences#####################################
 IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
@@ -212,16 +209,14 @@ WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.GDWATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
-#######################################################################
-#Background Rate
+######Background Rate###############################
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
-#######################################################################
+####################################################
 def BGRate():
     """
     Calculates the Background Rate for all components
     """
-    ###################################################################
-    #PMTs
+#####PMTs###########################################
     print('##################################################') 
     print('BGR due to PMTs')
     PMTBGIso = list()
@@ -231,8 +226,7 @@ def BGRate():
             print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[x]) 
     PMTBGR = sum(PMTBGIso)
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
-    ###################################################################
-    #VETO
+#####VETO###########################################
     print('##################################################') 
     print('BGR due to VETO')
     VETOBGIso = list()
@@ -242,8 +236,7 @@ def BGRate():
             print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[x])
     VETOBGR = sum(VETOBGIso)
     print('Total BRG due to Veto = %.5e' % VETOBGR)
-    ###################################################################
-    #TANK
+#####TANK###########################################
     print('##################################################') 
     print('BGR due to TANK')
     TANKBGIso = list()
@@ -253,8 +246,7 @@ def BGRate():
             print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[x])
     TANKBGR = sum(TANKBGIso)
     print('Total BGR due to Tank = %.5e' % TANKBGR)
-    ###################################################################
-    #CONCRETE
+#####CONCRETE#######################################
     print('##################################################') 
     print('BGR due to CONCRETE')
     CONCBGIso = list()
