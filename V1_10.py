@@ -51,6 +51,17 @@ def InputVals(IType, isotope, component, x):
 ######Display default value func####################
 def disdefval(IType, isotope, component, x):
     print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
+######Check input###################################
+def inputcheck(Itype, comp):
+    opts = ['y', 'n']
+    ans = ''
+    while ans.lower() not in opts:
+        ans = input('Do you want to input values of '+ Itype + ' for ' + comp + '? [y/n] ')
+        if ans.lower() in opts:
+            break
+        else:
+            print('Invalid Value')
+    return ans
 ######Clear display func############################
 def clear():
     """
@@ -368,7 +379,7 @@ WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
 #k = (BGR - x) * events from process(^)
 #different k for each component
 #read off efficiences form histogram - use command in notebook
-##########################################
+#####################################################
 ans = ""
 ai = False
 ei = False
@@ -411,111 +422,74 @@ def menu(): #menu text
 ans = ""
 while ans.lower() != "exit":
     ans = menu()
-    #Activity
+#####Activity#######################################
     if ans.lower() == 'a':
-        in_ans = ''
-        ##UI
-        #PMT
-        try:
-            in_ans = input('Do you want to input values of ' + InType[0] + ' for ' + Comp[0] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+########PMT#########################################
+        in_ans = inputcheck(InType[0], Comp[0])
+        print('ans = ', in_ans)
+        print('##################################################')
         if in_ans.lower() == 'y':
-            print('##################################################')
-            print('Input Values of ' + InType[0] + ' for ' + Comp[0] + ': ')
             for i in range(len(PMTPPM)):
                 PMTPPM[i] = InputVals(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
         elif in_ans.lower() == 'n':
-            print('##################################################')
             for i in range(len(PMTPPM)):
                 disdefval(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
-        #VETO
         in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[0] + ' for ' + Comp[1] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower()  == 'n'
-        except:
-            print('Invalid Value')
+#########VETO#######################################
+        print('##################################################')
+        in_ans = inputcheck(InType[0], Comp[1])
+        print('ans = ', in_ans)
+        print('##################################################')
         if in_ans.lower() == 'y':
-            print('##################################################')
-            print('Input Values of ' + InType[0] + ' for ' + Comp[1] + ': ')
             for i in range(len(VETOPPM)):
                 VETOPPM[i] = InputVals(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
-        elif in_ans.lower()=='n':
-            print('##################################################')
+        elif in_ans.lower() == 'n':
             for i in range(len(VETOPPM)):
                 disdefval = InputVals(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
-        #TANK
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[1] + ' for ' + Comp[2] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid Value')
+#########TANK#######################################
+        print('##################################################')
+        in_ans = inputcheck(InType[1], Comp[2])
+        print('##################################################')
         if ans.lower() == 'y':
-            print('##################################################')
-            print('Input Values of ' + InType[1] + ' for ' + Comp[2] + ': ')
             for i in range(len(TANKACT)):
                 TANKACT[i] = InputVals(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
-        elif ans.lower() =='n':
-            print('##################################################')
+        elif ans.lower() == 'n':
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
-        #CONCRETE
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[1] + ' for ' + Comp[3] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('invalid Value')
+#########CONCRETE###################################
+        in_ans = inputcheck(InType[1], Comp[3])
+        print('##################################################')
         if ans.lower() == 'y':
-            print('##################################################')
-            print('Input Values of ' + InType[1] + ' for ' + Comp[3] + ': ')
             for i in range(len(CONCACT)):
                 CONCACT[i] = InputVals(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
         elif ans.lower() == 'n':
-            print('##################################################')
             for i in range(len(CONCACT)):
                 disdefval(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
-        #ROCK
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[0] + ' for ' + Comp[4] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+#########ROCK#######################################
+        in_ans = inputcheck(InType[0], Comp[4])
+        print('##################################################')
         if in_ans.lower() == 'y':
-            print('##################################################')
-            print('Input Values of ' + InType[0] + ' for ' + Comp[4] + ': ')
             for i in range(len(ROCKPPM)):
                 ROCKPPM[i] = InputVals(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
         elif in_ans.lower() == 'n':
-            print('##################################################')
             disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
-        #Gd WATER
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[0] + ' for ' + Comp[5] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+#########Gd WATER###################################
+        in_ans = inputcheck(InType[0], Comp[5])
+        print('##################################################')
         if in_ans.lower() == 'y':
-            print('##################################################')
             print('Input Values of ' + InType[0] + ' for ' + Comp[5] + ': ')
             for i in range(len(GdWPPM)):
                 GdWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
         elif in_ans.lower() == 'n':
-            print('##################################################')
             disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[4][i])
-        #Get Data
+#########Get Data###################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
         dataAct[2] = TankAct(TANKACT)
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
         dataAct[5] = WaterAct(GdWPPM)
-        #output
+#########output#####################################
         i = 0
         for i in range(len(Comp)):
             print('##################################################')
@@ -526,52 +500,34 @@ while ans.lower() != "exit":
         ai = True
         clear()
         ans = ''
+######Efficiency#####################################
     elif ans.lower() == 'e':
 #########PMTs########################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[0] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+        in_ans = inputcheck(InType[2], Comp[0])
+        print('##################################################')
+        print('Efficiency of Isotopes in PMT')
         if in_ans.lower() == 'y':
-            print('##################################################')
-            print('Efficiency of Isotopes in PMT')
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
                     PMTIsoEff[i][x] = InputVals(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
         elif in_ans.lower() == 'n':
-            print('##################################################')
-            print('Efficiency of Isotopes in PMT')
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
                     disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
 #########VETOS#######################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[1] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+        in_ans = inputcheck(InType[2], Comp[1])
+        print('##################################################')
+        print('Efficiency of Isotopes in VETO')
         if in_ans.lower() =='y':
-            print('##################################################')
-            print('Efficiency of Isotopes in VETO')
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
                     VETOIsoEff[i][x] = InputVals(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
         elif in_ans.lower() == 'n':
-            print('##################################################')
-            print('Efficiency of Isotopes in VETO')
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
                     disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
 #########TANK########################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[2] + ' ? [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid value')
+        in_ans = inputcheck(InType[2], Comp[2])
         print('##################################################')
         print('Efficiency of Isotopes in TANK')
         if in_ans.lower() == 'y':
@@ -583,29 +539,19 @@ while ans.lower() != "exit":
                 for x in range(len(TANKIsoEff[i])):
                     disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
 #########CONCRETE####################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[4] + ' [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid Value')
+        in_ans = inputcheck(InType[2], Comp[3])
         print('##################################################')
         print('Efficiency of Isotopes in CONCRETE')
         if in_ans.lower() == 'y':
             for i in range(len(CONCIsoDecay)):
                 for x in range(len(CONCIsoEff[i])):
-                    CONCIsoEff[i][x] = InputVals(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
+                    CONCIsoEff[i][x] = InputVals(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoDefault[i][x])
         elif in_ans.lower() == 'n':
             for i in range(len(CONCIsoDecay)):
                 for x in range(len(CONCIsoEff[i])):
                     disdefval(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
 #########ROCK########################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[5] + ' [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid Value')
+        in_ans = inputcheck(InType[2], Comp[4])
         print('##################################################')
         print('Efficiency of Isotopes in ROCK')
         if in_ans.lower() == 'y':
@@ -616,13 +562,8 @@ while ans.lower() != "exit":
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
                     disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
-#########WATER#######################################
-        in_ans = ''
-        try:
-            in_ans = input('Do you want to input values of ' + InType[2] + ' for ' + Comp[5] + ' [y/n] ')
-            in_ans.lower() == 'y' or in_ans.lower() == 'n'
-        except:
-            print('Invalid Value')
+#########GdWATER#####################################
+        in_ans = inputcheck(InType[2], Comp[5])
         print('##################################################')
         print('Efficiency of Isotopes in WATER')
         if in_ans.lower() == 'y':
@@ -635,7 +576,7 @@ while ans.lower() != "exit":
         ei = True
         clear()
         ans = ''
-#####################################################
+########Background Rate##############################
     elif ans.lower() == 'bgr':
         if ai == False:
             print('##################################################')
@@ -643,8 +584,6 @@ while ans.lower() != "exit":
             for i in range(len(Iso)):
                 print('##############################################')
                 print('Activity of Isotopes in ' + Comp[i])
-                print(i)
-                print("len: ", len(Iso[i]))
                 for x in range(len(Iso[i])):
                     if i == 2 or i == 3:
                         disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
@@ -678,6 +617,7 @@ while ans.lower() != "exit":
         print('Total Backgroud Rate = %.5e' % tot)
         clear()
         ans = ''
+######time detection calculation#####################
     elif ans.lower() == 'td':
         if ai == False:
             print('##################################################')
