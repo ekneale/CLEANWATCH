@@ -85,7 +85,7 @@ def PMTAct(PPM): #done
     #def mass
     mass = 1.4 #kg - mass of glass in PMT
     #DimVars
-    n = 3542
+    n = 3542 #number of PMTs
     IsoAct = list(range(len(Iso[0])))
     for i in range(len(PPM)):
         IsoAct[i] = (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
@@ -221,7 +221,7 @@ WATERIsoDefault = Eff.GDWATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 ######Background Rate###############################
-scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
+scale = 1/6. #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ####################################################
 def BGRate():
     """
@@ -230,71 +230,92 @@ def BGRate():
 #####PMTs###########################################
     print('##################################################') 
     print('BGR due to PMTs')
+    #TODO Can you make PMTBGIso into a 2D list that can be accessed at the end
+    # of the function?
     PMTBGIso = list()
     for i in range(len(PMTIsoDecay)):
         for x in range(len(PMTIsoEff[i])):
-            PMTBGIso.append(dataAct[0][i]*PMTIsoEff[i][x]/scale)
+            PMTBGIso.append(dataAct[0][i]*PMTIsoEff[i][x])
             print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[x]) 
     PMTBGR = sum(PMTBGIso)
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
 #####VETO###########################################
     print('##################################################') 
     print('BGR due to VETO')
+    #TODO Can you make VETOBGIso into a 2D list that can be accessed at the end
+    # of the function?
     VETOBGIso = list()
     for i in range(len(VETOIsoDecay)):
         for x in range(len(VETOIsoEff[i])):
-            VETOBGIso.append(dataAct[1][i]*VETOIsoEff[i][x]/scale)
+            VETOBGIso.append(dataAct[1][i]*VETOIsoEff[i][x])
             print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[x])
     VETOBGR = sum(VETOBGIso)
     print('Total BRG due to Veto = %.5e' % VETOBGR)
 #####TANK###########################################
     print('##################################################') 
     print('BGR due to TANK')
+    #TODO Can you make TANKBGIso into a 2D list that can be accessed at the end
+    # of the function?
     TANKBGIso = list()
     for i in range(len(TANKIsoDecay)):
         for x in range(len(TANKIsoEff[i])):
-            TANKBGIso.append(dataAct[2][i]*TANKIsoEff[i][x]/scale)
+            TANKBGIso.append(dataAct[2][i]*TANKIsoEff[i][x])
             print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[x])
     TANKBGR = sum(TANKBGIso)
     print('Total BGR due to Tank = %.5e' % TANKBGR)
 #####CONCRETE#######################################
     print('##################################################') 
     print('BGR due to CONCRETE')
+    #TODO Can you make CONCRETEBGIso into a 2D list that can be accessed at the end
+    # of the function?
     CONCBGIso = list()
     for i in range(len(CONCIsoDecay)):
         for x in range(len(CONCIsoEff[i])):
-            CONCBGIso.append(dataAct[3][i]*CONCIsoEff[i][x]/scale)
+            CONCBGIso.append(dataAct[3][i]*CONCIsoEff[i][x])
             print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[x])
     CONCBGR = sum(CONCBGIso)
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
 #####ROCK############################################
     print('##################################################') 
     print('BGR due to ROCK')
+    #TODO Can you make ROCKBGIso into a 2D list that can be accessed at the end
+    # of the function?
     ROCKBGIso = list()
     for i in range(len(ROCKIsoDecay)):
         for x in range(len(ROCKIsoEff[i])):
-            ROCKBGIso.append(dataAct[4][i]*ROCKIsoEff[i][x]/scale)
+            ROCKBGIso.append(dataAct[4][i]*ROCKIsoEff[i][x])
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[x])
     ROCKBGR = sum(ROCKBGIso)
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
 ######GdWater########################################
     print('##################################################') 
     print('BGR due to Gd WATER')
+    # TODO Can you make WATERBGIso into a 2D list that can be accessed at the end
+    # of the function?
     WATERBGIso = list()
     for i in range(len(WATERIsoDecay)): #1d array
-        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i]/scale)
+        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
 #####################################################
     #Total
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR
+
+    #TODO Define the share of events for each decay in each isotope in each component. 
+    # These will need to be accessible outside the function.
+    # e.g.
+    # PMTIsoDecayShare[i][x] = PMTBGIso[i][x]/tot 
+    # ...for each component
+ 
     #print('##################################################')
     #print('Total BGR is %.5e' % tot)
     bgi = True
     tot = tot/(60**2*24)
     return tot
+
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
+#TODO Replace this with the calculation at the end of the previous function
 IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
 PMTShare = [4.60123e-1, 5.37989e-1, 4.06841e-1, 1.95302e-1, 2.37596e-1, 5.78219e-1, 1.88178e-1, 3.63865e-1, 3.62383e-1, 2.98963e-1]
 VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691e-1, 1.69719e-1, 2.93687e-1, 2.17803e-1, 2.44321e-1] 
@@ -304,6 +325,11 @@ ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17
 GdWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
 ########Max Accidental BG############################
 def Max(bg, share):
+    # Calculate BG using IsoDecay shares calculated in BGRate function above
+    # e.g. for PMTisotope:
+    #               for PMTIsodecay:
+    #                   BG += bg*PMTIsoDecayShare[i][x]
+    # for all components!
     for i in range(len(share)):
         BG += bg*IsoShare[i]*share[i]
     return BG
