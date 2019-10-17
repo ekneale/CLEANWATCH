@@ -62,7 +62,7 @@ def inputcheck(Itype, comp):
         else:
             print('Invalid Value')
     return ians.lower()
-######Clear display func############################
+######Clear display func#############################
 def clear():
     """
     Clears output
@@ -90,7 +90,7 @@ def PMTAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#####Background Activity from VETO Region###########
+#####Background Activity from VETO Region############
 def VETOAct(PPM): #done
     """
     Calculates the background activity for the VETO region
@@ -195,10 +195,10 @@ VETOIsoEff = VETOIsoDefault
 #####################################################
 #TANK
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
-TANKIsoDefault = [Eff.TANKU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  Eff.TANKTh232,    #[Ac228, Pb212, Bi212, Tl208],
-                  Eff.TANKK40,             #[K40],
-                  Eff.TANKSTEEL]             #[Steel Activity]]
+TANKIsoDefault = [Eff.TANKU238,  #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  Eff.TANKTh232, #[Ac228, Pb212, Bi212, Tl208],
+                  Eff.TANKK40,   #[K40],
+                  Eff.TANKSTEEL] #[Steel Activity]]
 TANKIsoEff = TANKIsoDefault
 #####################################################
 #CONCRETE
@@ -221,7 +221,7 @@ WATERIsoDefault = Eff.GDWATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 ######Background Rate###############################
-scale = 1/6. #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
+scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ####################################################
 def BGRate():
     """
@@ -256,12 +256,13 @@ def BGRate():
     print('BGR due to TANK')
     #TODO Can you make TANKBGIso into a 2D list that can be accessed at the end
     # of the function?
-    TANKBGIso = list()
+    TANKBGIso = [[], [], [], []]
+    TANKBGR = 0
     for i in range(len(TANKIsoDecay)):
         for x in range(len(TANKIsoEff[i])):
-            TANKBGIso.append(dataAct[2][i]*TANKIsoEff[i][x])
-            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[x])
-    TANKBGR = sum(TANKBGIso)
+            TANKBGIso[i].append(dataAct[2][i]*TANKIsoEff[i][x])
+            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[i][x])
+        TANKBGR += sum(TANKBGIso[i])
     print('Total BGR due to Tank = %.5e' % TANKBGR)
 #####CONCRETE#######################################
     print('##################################################') 
@@ -398,13 +399,6 @@ TANK_Acc = AccBack(TANK_Pr, TANK_Nr)
 CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
 ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
-#####################################################
-#k constant
-#print('k = ' + str(k))
-#events from process (evp?) = total event rate for process (data->GetEntries()) / BGR(=tot) (results.txt, 3rd column from end) <- plot this
-#k = (BGR - x) * events from process(^)
-#different k for each component
-#read off efficiences form histogram - use command in notebook
 #####################################################
 ans = ""
 ai = False
@@ -677,7 +671,7 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc +
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
         else:
             pass
         print('##################################################')
@@ -830,10 +824,13 @@ while ans.lower() != "exit":
             ROCK_BG_CB += Iso_cb[i]*ROCKShare[i]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         print('##################################################')
-        for i in range(len(GDWAshare)):
-
-        print('Total = %.5e' % (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB))
-        diff = (Mbg - (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + ROCK_BG_CB))
+        for i in range(len(GdWAshare)):
+            GDW_BG_CB += Iso_cb[i]*GdWAshare[i]
+        print('Max BG from Gd WATER =  %.5e' %GDW_BG_CB)
+        print('##################################################')
+        tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + GDW_BG_CB
+        print('Total = %.5e' % (tot_cb))
+        diff = (Mbg - (tot_cb))
         print('Abs Diff = %.5e' %  diff)
         print('Percent Diff = %.5e' % (diff/Mbg))
         print('##################################################')
