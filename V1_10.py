@@ -24,15 +24,23 @@ Iso = [['U238', 'Th232', 'K40'], #[[PMT],
        ['U238', 'Th232', 'K40', 'Co60', 'Cs137'], # [TANK],
        ['U238', 'Th232', 'K40'], # [CONCRETE], 
        ['U238', 'Th232', 'K40'], # [ROCK],
-       ['U238', 'Th232', 'U235','U238_l', 'Th232_l', 'U235_l']] #[WATER]]
+       ['U238', 'Th232', 'U235'], # GD ,'U238_l', 'Th232_l', 'U235_l']
+       ['222Rn']] #[WATER]
+IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
+            ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
+            ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
+            ['K40'],                                       #K40 decay chain
+            ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
+            ['Co60', 'Cs137']]
 IsoDefault = [[0.043, 0.133, 16], #[[PMT],
               [0.043, 0.133, 36], # [VETO],
               [0, 0, 0, 19e-3, 0.77e-3], # [TANK],
               [61, 30, 493],      # [CONCRETE],
               [0.067, 0.125,1130],# [ROCK]
-              [10, 0.2, 0.25, 0.28, 0.35, 1.7]] # [WATER]]
+              [10, 0.2, 0.25, 0.28, 0.35, 1.7], #[GD]
+              [0.002]] # [WATER]
 ######Comp##########################################
-Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK', 'Gd WATER']
+Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK', 'GD', 'WATER']
 ######Input func####################################
 def InputVals(IType, isotope, component, x):
     """
@@ -156,13 +164,14 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
-#####Background Activity from Gd Water##############
-def WaterAct(PPM): #done
+#####Background Activity from Gd ##############
     """
-    Calculates the background activity for the Gd Water
-    Decay Chains: U238, Th232, U235, U238_l, Th232_l, U235_l
+    Calculates the background activity for the Gd
+    Decay Chains: U238, Th232, U235, (U238_l, Th232_l, 
+    U235_l to be added later)
     PPM: Parts per 1e6 for Isotope
     """
+
     #def mass of water
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     #dim vars
@@ -170,14 +179,24 @@ def WaterAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
+
+#####Background Activity from Water ###########
+
+def WaterAct(PPM): #done
+    """
+    Calculates the background activity for the Water
+    Decay Chains: Rn222
+    PPM: Parts per 1e6 for Isotope
+    """
+    
+    #def mass of water
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    #dim vars
+    PPM = IsoAct = list(range(len(Iso[6])))
+    for i in range(len(PPM)):
+        IsoAct[i] = PPM[i]*mass*0.002
+    return IsoAct
 #####Efficiences#####################################
-IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
-            ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
-            ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
-            ['K40'],                                       #K40 decay chain
-            ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
-            ['Co60', 'Cs137']]
-#####################################################
 ##dim vars
 #PMT
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
@@ -215,9 +234,15 @@ ROCKIsoDefault = [Eff.ROCKU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                 Eff.ROCKK40]               #[K40]]
 ROCKIsoEff = ROCKIsoDefault
 #####################################################
+#GD
+GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2]] 
+GDIsoDefault = [Eff.GDU238, 
+                Eff.GDU235,
+                Eff.GDTh232]
+#####################################################
 #WATER
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
-WATERIsoDefault = Eff.GDWATERRn222 #[Pb214, Bi214, Bi210, Tl210]
+WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 #print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 ######Background Rate###############################
@@ -230,8 +255,6 @@ def BGRate():
 #####PMTs###########################################
     print('##################################################') 
     print('BGR due to PMTs')
-    #TODO Can you make PMTBGIso into a 2D list that can be accessed at the end
-    # of the function?
     PMTBGIso = [[], [], []]
     PMTBGR = 0
     for i in range(len(PMTIsoDecay)):
@@ -243,8 +266,6 @@ def BGRate():
 #####VETO###########################################
     print('##################################################') 
     print('BGR due to VETO')
-    #TODO Can you make VETOBGIso into a 2D list that can be accessed at the end
-    # of the function?
     VETOBGIso = [[], [], []]
     VETOBGR = 0
     for i in range(len(VETOIsoDecay)):
@@ -256,8 +277,6 @@ def BGRate():
 #####TANK###########################################
     print('##################################################') 
     print('BGR due to TANK')
-    #TODO Can you make TANKBGIso into a 2D list that can be accessed at the end
-    # of the function?
     TANKBGIso = [[], [], [], []]
     TANKBGR = 0
     for i in range(len(TANKIsoDecay)):
@@ -269,8 +288,6 @@ def BGRate():
 #####CONCRETE#######################################
     print('##################################################') 
     print('BGR due to CONCRETE')
-    #TODO Can you make CONCRETEBGIso into a 2D list that can be accessed at the end
-    # of the function?
     CONCBGIso = [[], [], []]
     CONCBGR = 0
     for i in range(len(CONCIsoDecay)):
@@ -282,8 +299,6 @@ def BGRate():
 #####ROCK############################################
     print('##################################################') 
     print('BGR due to ROCK')
-    #TODO Can you make ROCKBGIso into a 2D list that can be accessed at the end
-    # of the function?
     ROCKBGIso = [[], [], []]
     ROCKBGR = 0
     for i in range(len(ROCKIsoDecay)):
@@ -292,14 +307,23 @@ def BGRate():
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
         ROCKBGR += sum(ROCKBGIso[i])
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
-######GdWater########################################
+######Gd########################################
     print('##################################################') 
-    print('BGR due to Gd WATER')
-    # TODO Can you make WATERBGIso into a 2D list that can be accessed at the end
-    # of the function?
+    print('BGR due to GD')
+    GDBGIso = [[],[],[]]
+    GDBGR   = 0
+    for i in range(len(GDIsoDecay)):
+        for x in range(len(GDIsoEff[i])):
+            GDBGIso[i].append(dataAct[5][i]*GDIsoEff[i][x])
+            print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
+        GDBGR += sum(GDBGIso[i])
+    print('Total BGR due to Gd = %.5e' % GDBGR)
+#######wATER###################################
+    print('##################################################')
+    print('BGR due to WATER')    
     WATERBGIso = list()
     for i in range(len(WATERIsoDecay)): #1d array
-        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i])
+        WATERBGIso.append(dataAct[6][i]*WATERIsoEff[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
