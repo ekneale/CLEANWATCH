@@ -61,7 +61,7 @@ def inputcheck(Itype, comp):
             break
         else:
             print('Invalid Value')
-    return ians
+    return ians.lower()
 ######Clear display func############################
 def clear():
     """
@@ -428,10 +428,10 @@ while ans.lower() != "exit":
         in_ans = inputcheck(InType[0], Comp[0])
         print('ans = ', in_ans)
         print('##################################################')
-        if in_ans.lower() == 'y':
+        if in_ans == 'y':
             for i in range(len(PMTPPM)):
                 PMTPPM[i] = InputVals(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
-        elif in_ans.lower() == 'n':
+        elif in_ans == 'n':
             for i in range(len(PMTPPM)):
                 disdefval(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
         in_ans = ''
@@ -440,42 +440,47 @@ while ans.lower() != "exit":
         in_ans = inputcheck(InType[0], Comp[1])
         print('ans = ', in_ans)
         print('##################################################')
-        if in_ans.lower() == 'y':
+        if in_ans == 'y':
             for i in range(len(VETOPPM)):
                 VETOPPM[i] = InputVals(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
-        elif in_ans.lower() == 'n':
+        elif in_ans == 'n':
             for i in range(len(VETOPPM)):
                 disdefval(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
         in_ans = ''
 #########TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
+        print('ans = ', in_ans)
         print('##################################################')
-        if ans.lower() == 'y':
+        if in_ans == 'y':
             for i in range(len(TANKACT)):
                 TANKACT[i] = InputVals(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
-        elif ans.lower() == 'n':
+        elif in_ans == 'n':
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
         in_ans = ''
 #########CONCRETE###################################
-        in_ans = inputcheck(InType[1], Comp[3])
         print('##################################################')
-        if ans.lower() == 'y':
+        in_ans = inputcheck(InType[1], Comp[3])
+        print('ans = ', in_ans)
+        print('##################################################')
+        if in_ans == 'y':
             for i in range(len(CONCACT)):
                 CONCACT[i] = InputVals(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
-        elif ans.lower() == 'n':
+        elif in_ans == 'n':
             for i in range(len(CONCACT)):
                 disdefval(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
 #########ROCK#######################################
+        print('##################################################')
         in_ans = inputcheck(InType[0], Comp[4])
         print('##################################################')
-        if in_ans.lower() == 'y':
+        if in_ans == 'y':
             for i in range(len(ROCKPPM)):
                 ROCKPPM[i] = InputVals(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
-        elif in_ans.lower() == 'n':
+        elif in_ans == 'n':
             disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
 #########Gd WATER###################################
+        print('##################################################')
         in_ans = inputcheck(InType[0], Comp[5])
         print('##################################################')
         if in_ans.lower() == 'y':
@@ -716,19 +721,13 @@ while ans.lower() != "exit":
         clear()
         ans = ''
     elif ans.lower() == 'cb':
-        IsoShare = [7.90973e-02, 8.87580e-2, 1.61053e-02, 1.84219e-01, 1.60078e-3, 8.42900e-02, 2.49073e-01, 3.68388e-02, 1.83681e-1, 7.63377e-2] 
         Iso_cb_labels = ['Pa234', 'Ac228', 'Pb214', 'Bi214', 'Pb212', 'Bi212', 'Tl210', 'Bi210', 'Tl208', 'K40'] 
         Iso_cb = list()
-        PMT_Iso = [4.60125e-01, 3.49298e-01, 5.37989e-01, 2.51743e-01, 5.59632e-01, 4.30561e-01, 2.37596e-01, 5.25258e-01, 3.875000e-01, 4.29666e-01]
-        VETO_Iso = [3.95017e-01, 2.59425e-01, 4.12636e-01, 2.13328e-01, 4.34460e-01, 3.65216e-01, 2.14290e-01, 4.23952e-01, 3.81624e-01, 3.51135e-01]
-        TANK_Iso = [1.44844e-01, 3.73504e-01, 4.79718e-02, 5.01133e-01, 5.90822e-03, 1.95711e-01, 5.15283e-01, 5.07907e-02, 1.12262e-01, 2.08981e-01]
-        CONC_Iso = [1.39419e-05, 2.59425e-01, 1.33521e-03, 3.23309e-02, 0, 4.32656e-03, 3.13512e-02, 0, 1.12262e-01, 9.77846e-03]
-        ROCK_Iso = [0, 4.96978e-04, 6.84725e-05, 1.46542e-03, 0, 4.18658e-03, 1.48012e-03, 0, 6.35248e-03, 4.40601e-04]
-        PMT_BG_CB = 0
-        VETO_BG_CB = 0
-        TANK_BG_CB = 0
-        CONC_BG_CB = 0
-        ROCK_BG_CB = 0
+        PMT_BG_CB = PMT_Acc
+        VETO_BG_CB = VETO_Acc
+        TANK_BG_CB = TANK_Acc
+        CONC_BG_CB = CONC_Acc
+        ROCK_BG_CB = ROCK_Acc
         #signal input
         if ai == False:
             print('##################################################')
@@ -778,13 +777,14 @@ while ans.lower() != "exit":
         sigma = 4.65
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
-        print('##################################################')
-        for i in range(len(IsoShare)):
-            Iso_cb.append(Mbg*IsoShare[i])
-            print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
+        #print('##################################################')
+        #for i in range(len(IsoShare)):
+        #    Iso_cb.append(Mbg*IsoShare[i])
+        #    print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
         for i in range(len(PMT_Iso)):
             PMT_BG_CB += Iso_cb[i]*PMT_Iso[i]
+            #PMT_BG_CB = 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
         print('##################################################')
         for i in range(len(VETO_Iso)):
