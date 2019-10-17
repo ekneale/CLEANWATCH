@@ -651,7 +651,7 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc +
         else:
             pass
         print('##################################################')
@@ -728,6 +728,7 @@ while ans.lower() != "exit":
         TANK_BG_CB = TANK_Acc
         CONC_BG_CB = CONC_Acc
         ROCK_BG_CB = ROCK_Acc
+        GDW_BG_CB = WATER_Acc
         #signal input
         if ai == False:
             print('##################################################')
@@ -778,31 +779,33 @@ while ans.lower() != "exit":
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #print('##################################################')
-        #for i in range(len(IsoShare)):
-        #    Iso_cb.append(Mbg*IsoShare[i])
+        for i in range(len(IsoShare)):
+            Iso_cb.append(Mbg*IsoShare[i])
         #    print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
-        for i in range(len(PMT_Iso)):
-            PMT_BG_CB += Iso_cb[i]*PMT_Iso[i]
+        for i in range(len(PMTShare)):
+            PMT_BG_CB += Iso_cb[i]*PMTShare[i]
             #PMT_BG_CB = 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
         print('##################################################')
-        for i in range(len(VETO_Iso)):
-            VETO_BG_CB += Iso_cb[i]*VETO_Iso[i]
+        for i in range(len(VETOShare)):
+            VETO_BG_CB += Iso_cb[i]*VETOShare[i]
         print('Max BG from VETO = %.5e' % VETO_BG_CB)
         print('##################################################')
-        for i in range(len(TANK_Iso)):
-            TANK_BG_CB += Iso_cb[i]*TANK_Iso[i]
+        for i in range(len(TANKShare)):
+            TANK_BG_CB += Iso_cb[i]*TANKShare[i]
         print('Max BG from TANK = %.5e' % TANK_BG_CB)
         print('##################################################')
-        for i in range(len(CONC_Iso)):
-            CONC_BG_CB += Iso_cb[i]*CONC_Iso[i]
+        for i in range(len(CONCShare)):
+            CONC_BG_CB += Iso_cb[i]*CONCShare[i]
         print('Max BG from CONC = %.5e' % CONC_BG_CB)
         print('##################################################')
-        for i in range(len(ROCK_Iso)):
-            ROCK_BG_CB += Iso_cb[i]*ROCK_Iso[i]
+        for i in range(len(ROCKShare)):
+            ROCK_BG_CB += Iso_cb[i]*ROCKShare[i]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         print('##################################################')
+        for i in range(len(GDWAshare)):
+
         print('Total = %.5e' % (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB))
         diff = (Mbg - (PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + ROCK_BG_CB))
         print('Abs Diff = %.5e' %  diff)
