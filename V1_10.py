@@ -54,14 +54,14 @@ def disdefval(IType, isotope, component, x):
 ######Check input###################################
 def inputcheck(Itype, comp):
     opts = ['y', 'n']
-    ans = ''
-    while ans.lower() not in opts:
-        ans = input('Do you want to input values of '+ Itype + ' for ' + comp + '? [y/n] ')
-        if ans.lower() in opts:
+    ians = ''
+    while ians.lower() not in opts:
+        ians = input('Do you want to input values of '+ Itype + ' for ' + comp + '? [y/n] ')
+        if ians.lower() in opts:
             break
         else:
             print('Invalid Value')
-    return ans
+    return ians
 ######Clear display func############################
 def clear():
     """
@@ -445,7 +445,8 @@ while ans.lower() != "exit":
                 VETOPPM[i] = InputVals(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
         elif in_ans.lower() == 'n':
             for i in range(len(VETOPPM)):
-                disdefval = InputVals(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
+                disdefval(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
+        in_ans = ''
 #########TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
@@ -456,6 +457,7 @@ while ans.lower() != "exit":
         elif ans.lower() == 'n':
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
+        in_ans = ''
 #########CONCRETE###################################
         in_ans = inputcheck(InType[1], Comp[3])
         print('##################################################')
@@ -477,11 +479,10 @@ while ans.lower() != "exit":
         in_ans = inputcheck(InType[0], Comp[5])
         print('##################################################')
         if in_ans.lower() == 'y':
-            print('Input Values of ' + InType[0] + ' for ' + Comp[5] + ': ')
             for i in range(len(GdWPPM)):
                 GdWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
         elif in_ans.lower() == 'n':
-            disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[4][i])
+            disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
 #########Get Data###################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
