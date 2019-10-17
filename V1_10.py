@@ -232,24 +232,26 @@ def BGRate():
     print('BGR due to PMTs')
     #TODO Can you make PMTBGIso into a 2D list that can be accessed at the end
     # of the function?
-    PMTBGIso = list()
+    PMTBGIso = [[], [], []]
+    PMTBGR = 0
     for i in range(len(PMTIsoDecay)):
         for x in range(len(PMTIsoEff[i])):
-            PMTBGIso.append(dataAct[0][i]*PMTIsoEff[i][x])
-            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[x]) 
-    PMTBGR = sum(PMTBGIso)
+            PMTBGIso[i].append(dataAct[0][i]*PMTIsoEff[i][x])
+            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[i][x]) 
+        PMTBGR += sum(PMTBGIso[i])
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
 #####VETO###########################################
     print('##################################################') 
     print('BGR due to VETO')
     #TODO Can you make VETOBGIso into a 2D list that can be accessed at the end
     # of the function?
-    VETOBGIso = list()
+    VETOBGIso = [[], [], []]
+    VETOBGR = 0
     for i in range(len(VETOIsoDecay)):
         for x in range(len(VETOIsoEff[i])):
-            VETOBGIso.append(dataAct[1][i]*VETOIsoEff[i][x])
-            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[x])
-    VETOBGR = sum(VETOBGIso)
+            VETOBGIso[i].append(dataAct[1][i]*VETOIsoEff[i][x])
+            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[i][x])
+        VETOBGR += sum(VETOBGIso[i])
     print('Total BRG due to Veto = %.5e' % VETOBGR)
 #####TANK###########################################
     print('##################################################') 
@@ -269,24 +271,26 @@ def BGRate():
     print('BGR due to CONCRETE')
     #TODO Can you make CONCRETEBGIso into a 2D list that can be accessed at the end
     # of the function?
-    CONCBGIso = list()
+    CONCBGIso = [[], [], []]
+    CONCBGR = 0
     for i in range(len(CONCIsoDecay)):
         for x in range(len(CONCIsoEff[i])):
-            CONCBGIso.append(dataAct[3][i]*CONCIsoEff[i][x])
-            print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[x])
-    CONCBGR = sum(CONCBGIso)
+            CONCBGIso[i].append(dataAct[3][i]*CONCIsoEff[i][x])
+            print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[i][x])
+        CONCBGR += sum(CONCBGIso[i])
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
 #####ROCK############################################
     print('##################################################') 
     print('BGR due to ROCK')
     #TODO Can you make ROCKBGIso into a 2D list that can be accessed at the end
     # of the function?
-    ROCKBGIso = list()
+    ROCKBGIso = [[], [], []]
+    ROCKBGR = 0
     for i in range(len(ROCKIsoDecay)):
         for x in range(len(ROCKIsoEff[i])):
-            ROCKBGIso.append(dataAct[4][i]*ROCKIsoEff[i][x])
-            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[x])
-    ROCKBGR = sum(ROCKBGIso)
+            ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x])
+            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
+        ROCKBGR += sum(ROCKBGIso[i])
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
 ######GdWater########################################
     print('##################################################') 
