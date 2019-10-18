@@ -57,6 +57,7 @@ def InputVals(IType, isotope, component, x):
         print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
     return i
 ######Display default value func####################
+#TODO add in GdAct
 def disdefval(IType, isotope, component, x):
     print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
 ######Check input###################################
@@ -354,6 +355,7 @@ ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17
 GdWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
 ########Max Accidental BG############################
 def Max(bg, share):
+    #TODO
     # Calculate BG using IsoDecay shares calculated in BGRate function above
     # e.g. for PMTisotope:
     #               for PMTIsodecay:
@@ -415,7 +417,9 @@ def AccBack(Prate, Nrate):
     Prate: rate with the prompt n9 cut
     Nrate: rate with the delayed n9 cut
     """
-    timeScale = 0.0001*86400*0.05
+    # perform time cut (0.0001), distance cut (0.05), 
+    # convert to per day rate
+    timeScale = 0.0001*86400*0.05  
     back = 0
     for i in range(len(Prate)):
         for x in range(len(Prate[i])):
@@ -827,6 +831,16 @@ while ans.lower() != "exit":
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #print('##################################################')
+        #TODO We will need to add an additional step. If no radioactivity rate 
+        # has been changed, then the share is as below.
+        # If a radioactivity rate has been changed for a component, 
+        # we need to calculate the new event rates due to that 
+        # isotope in that component, then do: 
+        # RBg = Mbg - sum(newRate) (remaining background)
+        # and then for each remainin background do:
+        # MaxRate = RBg * Share * normalisation
+        # where normalisation = 1/sum(RShares) so that the total of all 
+        # remaining 'share' values now adds up to 1
         for i in range(len(IsoShare)):
             Iso_cb.append(Mbg*IsoShare[i])
         #    print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
@@ -858,6 +872,14 @@ while ans.lower() != "exit":
         print('##################################################')
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + GDW_BG_CB
         print('Total = %.5e' % (tot_cb))
+        #TODO We need to output the results in the formats we discussed:
+        # 1. Max BG in events per second/day per component (as above)
+        # 2. Max BG in events per second/day per isotope in each component:
+        # 3. Max BG in ppm per isotope in each component:
+        #    MaxAct = MaxIsoDecay/IsoDecayEff/MassOrVolumeOfComponent 
+        #    (select the decay and related efficiency 
+        #    for the decay responsible for most events and then basically
+        #    reverse the BGRate and PPM calculations). 
         diff = (Mbg - (tot_cb))
         print('Abs Diff = %.5e' %  diff)
         print('Percent Diff = %.5e' % (diff/Mbg))
