@@ -38,11 +38,11 @@ IsoDefault = [[0.043, 0.133, 16], #[[PMT],
               [0.043, 0.133, 36], # [VETO],
               [0, 0, 0, 19e-3, 0.77e-3], # [TANK],
               [61, 30, 493],      # [CONCRETE],
-              [0.067, 0.125,1130],# [ROCK]
-              [10, 0.2, 0.25, 0.28, 0.35, 1.7], #[GD]
-              [0.002]] # [WATER]
+              [0.067, 0.125,1130],# [ROCK] 
+              [0.002], #[WATER]
+              [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
 ######Comp##########################################
-Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK', 'GD', 'WATER']
+Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
 ######Input func####################################
 def InputVals(IType, isotope, component, x):
     """
@@ -167,6 +167,20 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
+#####Background Activity from Water #################
+def WaterAct(PPM): #done
+    """
+    Calculates the background activity for the Water
+    Decay Chains: Rn222
+    PPM: Parts per 1e6 for Isotope
+    """
+    #def mass of water
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    #dim vars
+    PPM = IsoAct = list(range(len(Iso[5])))
+    for i in range(len(PPM)):
+        IsoAct[i] = PPM[i]*mass*0.002
+    return IsoAct
 #####Background Activity from Gd ####################
 def GdAct(PPM):
     """
@@ -177,76 +191,52 @@ def GdAct(PPM):
     #def mass of water
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     #dim vars
-    PPM = IsoAct = list(range(len(Iso[5])))
-    for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*mass*0.002
-    return IsoAct
-
-#####Background Activity from Water #################
-
-def WaterAct(PPM): #done
-    """
-    Calculates the background activity for the Water
-    Decay Chains: Rn222
-    PPM: Parts per 1e6 for Isotope
-    """
-    
-    #def mass of water
-    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
-    #dim vars
     PPM = IsoAct = list(range(len(Iso[6])))
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
 #####Efficiences#####################################
 ##dim vars
-#PMT
+#######PMT###########################################
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-PMTIsoDefault = [Eff.PMTU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210], 
-                 Eff.PMTTh232,                       #[Ac228, Pb212, Bi212, Tl208]
-                 Eff.PMTK40]                                        #[K40]]
+PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
+                 Eff.PMTTh232,   #Th232 Chain
+                 Eff.PMTK40]     #K40 Chain
 PMTIsoEff = PMTIsoDefault
-#####################################################
-#VETO
+#######VETO##########################################
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-VETOIsoDefault = [Eff.VETOU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  Eff.VETOTh232,   #[Ac228, Pb212, Bi212, Tl208],
-                  Eff.VETOK40]                      #[K40]]
+VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
+                  Eff.VETOTh232, #Th232 Chain
+                  Eff.VETOK40]   #K40 Chain
 VETOIsoEff = VETOIsoDefault
-#####################################################
-#TANK
+#######TANK##########################################
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
-TANKIsoDefault = [Eff.TANKU238,  #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  Eff.TANKTh232, #[Ac228, Pb212, Bi212, Tl208],
-                  Eff.TANKK40,   #[K40],
-                  Eff.TANKSTEEL] #[Steel Activity]]
+TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
+                  Eff.TANKTh232, #Th232 Chain
+                  Eff.TANKK40,   #K40 Chain
+                  Eff.TANKSTEEL] #Steel Activity
 TANKIsoEff = TANKIsoDefault
-#####################################################
-#CONCRETE
+#######CONC##########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
                   [0]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
-#####################################################
-#ROCK
+#######ROCK##########################################
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-ROCKIsoDefault = [Eff.ROCKU238, #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                Eff.ROCKTh232,       #[Ac228, Pb212, Bi212, Tl208],
-                Eff.ROCKK40]               #[K40]]
+ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
+                  Eff.ROCKTh232, #Th232 Chain
+                  Eff.ROCKK40]   #K40 Chain
 ROCKIsoEff = ROCKIsoDefault
-#####################################################
-#GD
+#######GD############################################
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2]] 
-#GDIsoDefault = [Eff.GDU238, 
-#                Eff.GDU235,
-#                Eff.GDTh232]
-#####################################################
-#WATER
+GDIsoDefault = [Eff.GDU238, #U238 Chain
+                Eff.GDU235, #U235 Chain
+                Eff.GDTh232]#Th232 Chain
+#######RnWater#######################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
-#print("WaterIsoEff = ", WATERIsoEff, type(WATERIsoEff))
 ######Background Rate###############################
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ####################################################
@@ -370,54 +360,50 @@ def Max(bg, share):
 #Th232 = [Ac228, Bi212, Pb212, Tl208]
 #K40   = [K40]
 #########PMT#########################################
-PMT_Pr =  [[3.20946e-4, 0, 3.36027e-3, 9.81119e-3, 0], #U238 chain
-          [2.14329e-5, 3.04153e-4, 0, 3.88494e-2], #Th232 chain
-          [7.42865e-5]]#K40 chain
-PMT_Nr =  [[1.75361e-4, 0, 2.58670e-3, 7.23630e-3, 0], #U238 chain
-          [7.07220e-6, 1.73195e-4, 0, 3.02348e-2], #Th232 chain
-          [6.57061e-5]] #K40 chain
+PMT_Pr =  [Pr.PMTU238,   #U238 chain
+           Pr.PMTTh232,  #Th232 chain
+           Pr.PMTK40]    #K40 chain
+PMT_Nr =  [Nr.PMTU238,   #U238 chain
+           Nr.PMTTh232,  #Th232 chain
+           Nr.PMTK40]    #K40 chain
 #########VETO########################################
-VETO_Pr = [[0, 0, 4.49260e-5, 1.59123e-4, 0], #U238 chain
-          [0, 0, 0, 9.69449e-4], #Th232 chain
-          [4.15627e-6]] #K40 chain
-VETO_Nr = [[0, 0, 3.94931e-5, 1.19808e-4, 0], #U238 chain
-          [0, 0, 0, 7.49615e-4], #Th232 chain
-          [0]] #K40
+VETO_Pr = [Pr.VETOU238,  #U238 chain
+           Pr.VETOTh232, #Th232 chain
+           Pr.VETOK40]   #K40 chain
+VETO_Nr = [Nr.VETOU238,  #U238 chain
+           Nr.VETOTh232, #Th232 chain
+           Nr.VETOK40]   #K40
 #########TANK########################################
-TANK_Pr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40 chain
-TANK_Nr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40
-#########CONC########################################
+TANK_Pr = [Pr.TANKU238,  #U238 chain
+           Pr.TANKTh232, #Th232 chain
+           Pr.TANKK40]   #K40 chain
+TANK_Nr = [Nr.TANKU238,  #U238 chain
+           Nr.TANKTh232, #Th232 chain
+           Nr.TANKK40]   #K40
+#########CONC#########################################No data for CONCRETE in results.root
 CONC_Pr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40 chain
-CONC_Nr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40 chain
+CONC_Nr = [[0, 0, 0, 0, 0],#U238 chain
+          [0, 0, 0, 0],  #Th232 chain
+          [0]]           #K40 chain
 #########ROCK########################################
-ROCK_Pr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40 chain
-ROCK_Nr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40
+ROCK_Pr = [Pr.ROCKU238,  #U238 chain
+           Pr.ROCKTh232, #Th232 chain
+           Pr.ROCKK40]   #K40 chain
+ROCK_Nr = [Nr.ROCKU238,  #U238 chain
+           Nr.ROCKTh232, #Th232 chain
+           Nr.ROCKK40]   #K40
 #########RnWater#####################################
-WATER_Pr = [[0, 1.73071e-2, 1.16941e-1, 1.36300e-5], #U238 Iso
-          [0, 0, 0, 0], #Th232 Iso
-          [4.33342e-4]] #K40 Iso
-WATER_Nr = [[0, 2.45325e-2, 1.13338e-1, 8.13443e-5], #U238 Iso
-          [0, 0, 0, 0], #Th232 Iso
-          [1.42567e-4]] #K40 Iso
+WATER_Pr = Pr.WATERRn222 #Rn222 chain
+WATER_Nr = Nr.WATERRn222 #Rn222 chain
 #########GD##########################################
-GD_Pr = [[], #
-         [], #
-         []] #
-GD_Nr = [[], #
-         [], #
-         []] #
+GD_Pr = [Pr.GDU238,      #U238 Chain
+         Pr.GDTh232,     #Th232 Chain
+         Pr.GDU235]      #U235 Chain
+GD_Nr = [Nr.GDU238,      #U238 Chain
+         Nr.GDTh232,     #Th232 Chain
+         Nr.GDU235]      #U235 Chain
 #####################################################
 def AccBack(Prate, Nrate):
     """
@@ -429,9 +415,13 @@ def AccBack(Prate, Nrate):
     # convert to per day rate
     timeScale = 0.0001*86400*0.05  
     back = 0
-    for i in range(len(Prate)):
-        for x in range(len(Prate[i])):
-            back += Prate[i][x]*Nrate[i][x]*timeScale
+    if isinstance(Prate[0], list) == True: #list is 2d
+        for i in range(len(Prate)):
+            for x in range(len(Prate[i])):
+                back += Prate[i][x]*Nrate[i][x]*timeScale
+    elif isinstance(Prate[0], list) == False: #list is 1d
+        for i in range(len(Prate)):
+            back += Prate[i]*Nrate[i]*timeScale
     return back
 PMT_Acc = AccBack(PMT_Pr, PMT_Nr)
 VETO_Acc = AccBack(VETO_Pr, VETO_Nr)
@@ -439,6 +429,7 @@ TANK_Acc = AccBack(TANK_Pr, TANK_Nr)
 CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
 ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
+GD_Acc = AccBack(GD_Pr, GD_Nr)
 #####################################################
 ans = ""
 ai = False
@@ -465,26 +456,26 @@ def menu(): #menu text
         print('WATCHMAN Cleanliness software')
         print('Alex Healey, UoS, 2019')
         print('Options: ')
-        print('- Input Values for Activity     [a]')
-        print('- Input Values for Efficiency   [e]')
-        print('- Calculate Background Rate     [bgr]')
-        print('- Calculate Time Detection      [td]')
-        print('- Calculate Maximum Background  [maxbg]')
-        print('- Cleanliness Budget            [cb]')
-        print('- Exit software                 [exit]')
+        print('- Input Values for Activity    [a]')
+        print('- Input Values for Efficiency  [e]')
+        print('- Calculate Background Rate    [bgr]')
+        print('- Calculate Time Detection     [td]')
+        print('- Calculate Maximum Background [maxbg]')
+        print('- Cleanliness Budget           [cb]')
+        print('- Exit software                [exit]')
         print('##################################################')
         a = str(input('Select an option: '))
         if a.lower() in options:
-            #print('Option selected')
-            #print('Loading...')
+            print('Option selected')
+            print('Loading...')
             break
     return a
 ans = ""
 while ans.lower() != "exit":
     ans = menu()
-#####Activity#######################################
+#####Activity########################################
     if ans.lower() == 'a':
-########PMT#########################################
+########PMT##########################################
         in_ans = inputcheck(InType[0], Comp[0])
         print('ans = ', in_ans)
         print('##################################################')
@@ -495,7 +486,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTPPM)):
                 disdefval(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
         in_ans = ''
-#########VETO#######################################
+#########VETO########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[1])
         print('ans = ', in_ans)
@@ -507,7 +498,7 @@ while ans.lower() != "exit":
             for i in range(len(VETOPPM)):
                 disdefval(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
         in_ans = ''
-#########TANK#######################################
+#########TANK########################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
         print('ans = ', in_ans)
@@ -519,7 +510,7 @@ while ans.lower() != "exit":
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
         in_ans = ''
-#########CONCRETE###################################
+#########CONCRETE####################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[3])
         print('ans = ', in_ans)
@@ -530,7 +521,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(CONCACT)):
                 disdefval(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
-#########ROCK#######################################
+#########ROCK########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[4])
         print('##################################################')
@@ -539,7 +530,7 @@ while ans.lower() != "exit":
                 ROCKPPM[i] = InputVals(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
         elif in_ans == 'n':
             disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
-#########Gd WATER###################################
+#########Gd WATER####################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[5])
         print('##################################################')
@@ -548,14 +539,15 @@ while ans.lower() != "exit":
                 GdWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
         elif in_ans.lower() == 'n':
             disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
-#########Get Data###################################
+#########Get Data####################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
         dataAct[2] = TankAct(TANKACT)
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
         dataAct[5] = WaterAct(GdWPPM)
-#########output#####################################
+       #dataAct[6] = GDAct(GDPPM)
+#########output######################################
         i = 0
         for i in range(len(Comp)):
             print('##################################################')
@@ -568,7 +560,7 @@ while ans.lower() != "exit":
         ans = ''
 ######Efficiency#####################################
     elif ans.lower() == 'e':
-#########PMTs########################################
+    ####PMTs########################################
         in_ans = inputcheck(InType[2], Comp[0])
         print('##################################################')
         print('Efficiency of Isotopes in PMT')
@@ -580,7 +572,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
                     disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
-#########VETOS#######################################
+    ####VETOS########################################
         in_ans = inputcheck(InType[2], Comp[1])
         print('##################################################')
         print('Efficiency of Isotopes in VETO')
@@ -592,7 +584,7 @@ while ans.lower() != "exit":
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
                     disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
-#########TANK########################################
+    ####TANK#########################################
         in_ans = inputcheck(InType[2], Comp[2])
         print('##################################################')
         print('Efficiency of Isotopes in TANK')
@@ -604,7 +596,7 @@ while ans.lower() != "exit":
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
                     disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
-#########CONCRETE####################################
+    ####CONCRETE#####################################
         in_ans = inputcheck(InType[2], Comp[3])
         print('##################################################')
         print('Efficiency of Isotopes in CONCRETE')
@@ -616,7 +608,7 @@ while ans.lower() != "exit":
             for i in range(len(CONCIsoDecay)):
                 for x in range(len(CONCIsoEff[i])):
                     disdefval(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
-#########ROCK########################################
+    #####ROCK########################################
         in_ans = inputcheck(InType[2], Comp[4])
         print('##################################################')
         print('Efficiency of Isotopes in ROCK')
@@ -628,7 +620,7 @@ while ans.lower() != "exit":
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
                     disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
-#########GdWATER#####################################
+    ####GdWATER######################################
         in_ans = inputcheck(InType[2], Comp[5])
         print('##################################################')
         print('Efficiency of Isotopes in WATER')
@@ -638,7 +630,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(WaterIsoDecay)):
                 disdefval(InType[2], WaterIsoDecay, Comp[5], WaterIsoDefault[i])
-#########reset#######################################
+    ####reset########################################
         ei = True
         clear()
         ans = ''
