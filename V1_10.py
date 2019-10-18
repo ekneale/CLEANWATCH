@@ -245,7 +245,7 @@ def BGRate():
     """
     Calculates the Background Rate for all components
     """
-#####PMTs###########################################
+    ####PMTs#########################################
     print('##################################################') 
     print('BGR due to PMTs')
     PMTBGIso = [[], [], []]
@@ -256,7 +256,7 @@ def BGRate():
             print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[i][x]) 
         PMTBGR += sum(PMTBGIso[i])
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
-#####VETO###########################################
+    ####VETO#########################################
     print('##################################################') 
     print('BGR due to VETO')
     VETOBGIso = [[], [], []]
@@ -267,7 +267,7 @@ def BGRate():
             print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[i][x])
         VETOBGR += sum(VETOBGIso[i])
     print('Total BRG due to Veto = %.5e' % VETOBGR)
-#####TANK###########################################
+    ####TANK#########################################
     print('##################################################') 
     print('BGR due to TANK')
     TANKBGIso = [[], [], [], []]
@@ -278,7 +278,7 @@ def BGRate():
             print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[i][x])
         TANKBGR += sum(TANKBGIso[i])
     print('Total BGR due to Tank = %.5e' % TANKBGR)
-#####CONCRETE#######################################
+    ####CONCRETE#####################################
     print('##################################################') 
     print('BGR due to CONCRETE')
     CONCBGIso = [[], [], []]
@@ -289,7 +289,7 @@ def BGRate():
             print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[i][x])
         CONCBGR += sum(CONCBGIso[i])
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
-#####ROCK############################################
+    ####ROCK#########################################
     print('##################################################') 
     print('BGR due to ROCK')
     ROCKBGIso = [[], [], []]
@@ -300,7 +300,7 @@ def BGRate():
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
         ROCKBGR += sum(ROCKBGIso[i])
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
-######Gd########################################
+    ####Gd###########################################
     print('##################################################') 
     print('BGR due to GD')
     GDBGIso = [[],[],[]]
@@ -311,7 +311,7 @@ def BGRate():
             print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
         GDBGR += sum(GDBGIso[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
-#######wATER###################################
+    ####RnWATER######################################
     print('##################################################')
     print('BGR due to WATER')    
     WATERBGIso = list()
@@ -467,7 +467,7 @@ def menu(): #menu text
         print('- Exit software                [exit]')
         print('##################################################')
         a = str(input('Select an option: '))
-        if a.lower() in options:
+        if a.lower() in options and a.lower != 'exit':
             print('Option selected')
             print('Loading...')
             break
@@ -479,7 +479,7 @@ while ans.lower() != "exit":
     if ans.lower() == 'a':
     ####PMT##########################################
         in_ans = inputcheck(InType[0], Comp[0])
-        print('ans = ', in_ans)
+        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(PMTPPM)):
@@ -491,7 +491,7 @@ while ans.lower() != "exit":
     ####VETO#########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[1])
-        print('ans = ', in_ans)
+        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(VETOPPM)):
@@ -503,7 +503,7 @@ while ans.lower() != "exit":
     ####TANK#########################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
-        print('ans = ', in_ans)
+        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(TANKACT)):
@@ -515,7 +515,7 @@ while ans.lower() != "exit":
     ####CONCRETE#####################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[3])
-        print('ans = ', in_ans)
+        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(CONCACT)):
@@ -531,7 +531,8 @@ while ans.lower() != "exit":
             for i in range(len(ROCKPPM)):
                 ROCKPPM[i] = InputVals(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
         elif in_ans == 'n':
-            disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
+            for i in range(len(ROCKPPM)):
+                disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
     ####Rn WATER#####################################
         print('##################################################') 
         in_ans = inputcheck(InType[0], Comp[5])
@@ -540,7 +541,8 @@ while ans.lower() != "exit":
             for i in range(len(RnWPPM)):
                 RnWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
         elif in_ans == 'n':
-            disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
+            for i in range(len(RnWPPM)):
+                disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
     ####Gd###########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[6])
@@ -548,7 +550,8 @@ while ans.lower() != "exit":
             for i in range(len(GDPPM)):
                 GDPPM[i] = InputVals(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
         elif in_ans == 'n':
-            disdefval(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
+            for i in range(len(GDPPM)):
+                disdefval(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
     ####Get Data#####################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
@@ -556,7 +559,7 @@ while ans.lower() != "exit":
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
         dataAct[5] = WaterAct(RnWPPM)
-        dataAct[6] = GDAct(GDPPM)
+        dataAct[6] = GdAct(GDPPM)
     #####output######################################
         i = 0
         for i in range(len(Comp)):
@@ -571,9 +574,10 @@ while ans.lower() != "exit":
 ######Efficiency#####################################
     elif ans.lower() == 'e':
     ####PMTs########################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[0])
         print('##################################################')
-        print('Efficiency of Isotopes in PMT')
+        print('Efficiency of Isotopes in ' + Comp[0])
         if in_ans.lower() == 'y':
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
@@ -583,9 +587,10 @@ while ans.lower() != "exit":
                 for x in range(len(PMTIsoEff[i])):
                     disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
     ####VETOS########################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[1])
         print('##################################################')
-        print('Efficiency of Isotopes in VETO')
+        print('Efficiency of Isotopes in ' + Comp[1])
         if in_ans.lower() =='y':
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
@@ -595,9 +600,10 @@ while ans.lower() != "exit":
                 for x in range(len(VETOIsoEff[i])):
                     disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
     ####TANK#########################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[2])
         print('##################################################')
-        print('Efficiency of Isotopes in TANK')
+        print('Efficiency of Isotopes in ' + Comp[2])
         if in_ans.lower() == 'y':
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
@@ -607,9 +613,10 @@ while ans.lower() != "exit":
                 for x in range(len(TANKIsoEff[i])):
                     disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
     ####CONCRETE#####################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[3])
         print('##################################################')
-        print('Efficiency of Isotopes in CONCRETE')
+        print('Efficiency of Isotopes in ' + Comp[3])
         if in_ans.lower() == 'y':
             for i in range(len(CONCIsoDecay)):
                 for x in range(len(CONCIsoEff[i])):
@@ -619,9 +626,10 @@ while ans.lower() != "exit":
                 for x in range(len(CONCIsoEff[i])):
                     disdefval(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
     #####ROCK########################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[4])
         print('##################################################')
-        print('Efficiency of Isotopes in ROCK')
+        print('Efficiency of Isotopes in ' + Comp[4])
         if in_ans.lower() == 'y':
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
@@ -630,16 +638,30 @@ while ans.lower() != "exit":
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
                     disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
-    ####GdWATER######################################
+    ####RnWATER######################################
+        print('##################################################')
         in_ans = inputcheck(InType[2], Comp[5])
         print('##################################################')
-        print('Efficiency of Isotopes in WATER')
-        if in_ans.lower() == 'y':
+        print('Efficiency of Isotopes in ' + Comp[5])
+        if in_ans == 'y':
             for i in range(len(WATERIsoDecay)): #1d list
                 WATERIsoEff[i] = InputVals(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
         elif in_ans.lower() == 'n':
-            for i in range(len(WaterIsoDecay)):
-                disdefval(InType[2], WaterIsoDecay, Comp[5], WaterIsoDefault[i])
+            for i in range(len(WATERIsoDecay)):
+                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
+    ####GD###########################################
+        print('##################################################')
+        in_ans = inputcheck(InType[2], Comp[5])
+        print('##################################################')
+        print('Efficiency of Isotopes in ' + Comp[6])
+        if in_ans == 'y':
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDecay[i])):
+                    GDIsoEff[i][x] = InputVals(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoDefault[i][x])
+        elif in_ans == 'n':
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDecay[i])):
+                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoDefault[i][x])
     ####reset########################################
         ei = True
         clear()
@@ -680,6 +702,8 @@ while ans.lower() != "exit":
         print('TANK Accidental background = %.5e' % TANK_Acc)
         print('CONC Accidental background = %.5e' % CONC_Acc)
         print('ROCK Accidental background = %.5e' % ROCK_Acc)
+        print('RnWATER Accidental background = %5e' %WATER_Acc)
+        print('GD Accidental background = %.5e' % GD_Acc)
         print('##################################################')
         tot += (PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc)
         print('Total Backgroud Rate = %.5e' % tot)
