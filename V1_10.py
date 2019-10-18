@@ -4,6 +4,8 @@ from math import log, pow
 import os
 from ast import literal_eval
 import Eff
+import Prate as Pr
+import Nrate as Nr
 #dim vars
 bgi = False
 ######Isotope properties############################
@@ -148,7 +150,7 @@ def ConcAct(Act): #done
     for i in range(len(Act)):
         IsoAct[i] = Act[i]*mass
     return IsoAct
-#####Background Activity from Rock Salt#############
+#####Background Activity from Rock Salt##############
 def RockAct(PPM): #done
     """
     Calculates the background activity for the Rock Salt
@@ -165,14 +167,13 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
-#####Background Activity from Gd ##############
+#####Background Activity from Gd ####################
+def GdAct(PPM):
     """
     Calculates the background activity for the Gd
-    Decay Chains: U238, Th232, U235, (U238_l, Th232_l, 
-    U235_l to be added later)
+    Decay Chains: U238, Th232, U235, (U238_l, Th232_l, U235_l to be added later)
     PPM: Parts per 1e6 for Isotope
     """
-
     #def mass of water
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     #dim vars
@@ -181,7 +182,7 @@ def RockAct(PPM): #done
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
 
-#####Background Activity from Water ###########
+#####Background Activity from Water #################
 
 def WaterAct(PPM): #done
     """
@@ -237,9 +238,9 @@ ROCKIsoEff = ROCKIsoDefault
 #####################################################
 #GD
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2]] 
-GDIsoDefault = [Eff.GDU238, 
-                Eff.GDU235,
-                Eff.GDTh232]
+#GDIsoDefault = [Eff.GDU238, 
+#                Eff.GDU235,
+#                Eff.GDTh232]
 #####################################################
 #WATER
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
@@ -343,7 +344,7 @@ def BGRate():
     bgi = True
     tot = tot/(60**2*24)
     return tot
-
+#####################################################
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
 #TODO Replace this with the calculation at the end of the previous function
 IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
@@ -403,13 +404,20 @@ ROCK_Pr = [[0, 0, 0, 0, 0], #U238 chain
 ROCK_Nr = [[0, 0, 0, 0, 0], #U238 chain
           [0, 0, 0, 0], #Th232 chain
           [0]] #K40
-#########GdWater#####################################
+#########RnWater#####################################
 WATER_Pr = [[0, 1.73071e-2, 1.16941e-1, 1.36300e-5], #U238 Iso
           [0, 0, 0, 0], #Th232 Iso
           [4.33342e-4]] #K40 Iso
 WATER_Nr = [[0, 2.45325e-2, 1.13338e-1, 8.13443e-5], #U238 Iso
           [0, 0, 0, 0], #Th232 Iso
           [1.42567e-4]] #K40 Iso
+#########GD##########################################
+GD_Pr = [[], #
+         [], #
+         []] #
+GD_Nr = [[], #
+         [], #
+         []] #
 #####################################################
 def AccBack(Prate, Nrate):
     """
@@ -843,7 +851,7 @@ while ans.lower() != "exit":
         # remaining 'share' values now adds up to 1
         for i in range(len(IsoShare)):
             Iso_cb.append(Mbg*IsoShare[i])
-        #    print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
+        #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
         for i in range(len(PMTShare)):
             PMT_BG_CB += Iso_cb[i]*PMTShare[i]

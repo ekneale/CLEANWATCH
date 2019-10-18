@@ -15,7 +15,7 @@ def GetEff(compNum, chainNum):
     binEff = []
     for i in range(len(iso[chainNum])):
         hist = "histWatchman_" + comp[compNum] + iso[chainNum][i]
-        binNum.append(outfile.Get(hist).FindBin(1.6, 13))
+        binNum.append(outfile.Get(hist).FindBin(1.6, 14))
         binEff.append(outfile.Get(hist).GetBinContent(binNum[i]))
     return binEff
 PMTU238 = GetEff(0, 0)
