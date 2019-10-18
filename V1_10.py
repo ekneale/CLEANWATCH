@@ -229,10 +229,13 @@ ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain
                   Eff.ROCKK40]   #K40 Chain
 ROCKIsoEff = ROCKIsoDefault
 #######GD############################################
-GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2]] 
-GDIsoDefault = [Eff.GDU238, #U238 Chain
-                Eff.GDU235, #U235 Chain
-                Eff.GDTh232]#Th232 Chain
+GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
+GDIsoDefault = [Eff.GDU238,  #U238 Chain
+                Eff.GDTh232, #Th232 Chain
+                Eff.GDU235,  #U235 Chain
+                Eff.GDU238,  #U238_l Chain
+                Eff.GDTh232, #Th232_l Chain
+                Eff.GDU235]  #U235_l Chain
 GDIsoEff = GDIsoDefault
 #######RnWater#######################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
@@ -467,7 +470,7 @@ def menu(): #menu text
         print('- Exit software                [exit]')
         print('##################################################')
         a = str(input('Select an option: '))
-        if a.lower() in options and a.lower != 'exit':
+        if a.lower() in options and a.lower() != 'exit':
             print('Option selected')
             print('Loading...')
             break
@@ -802,6 +805,7 @@ while ans.lower() != "exit":
         #def sigma
         sigma = 4.65
         S = signal*0.9
+        #def Max BG formula
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         clear()
@@ -903,8 +907,11 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(RnWAshare)):
             RnW_BG_CB += Iso_cb[i]*RnWAshare[i]
-        print('Max BG from Rn WATER =  %.5e' %RnW_BG_CB)
+        print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         print('##################################################')
+       #for i in range(len(GDshare)):
+       #   GD_BG_CB += Iso_cb[i]*GDshare[i]
+        print('Max BG from GD = %.5e' % GD_BG_CB)
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
         #TODO We need to output the results in the formats we discussed:
