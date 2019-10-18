@@ -26,8 +26,8 @@ Iso = [['U238', 'Th232', 'K40'], #[[PMT],
        ['U238', 'Th232', 'K40', 'Co60', 'Cs137'], # [TANK],
        ['U238', 'Th232', 'K40'], # [CONCRETE], 
        ['U238', 'Th232', 'K40'], # [ROCK],
-       ['U238', 'Th232', 'U235'], # GD ,'U238_l', 'Th232_l', 'U235_l']
-       ['222Rn']] #[WATER]
+       ['222Rn'],                # [WATER],
+       ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U238_l']]                      # [GD]]
 IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
@@ -41,7 +41,7 @@ IsoDefault = [[0.043, 0.133, 16], #[[PMT],
               [0.067, 0.125,1130],# [ROCK] 
               [0.002], #[WATER]
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
-######Comp##########################################
+######Components#####################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
 ######Input func####################################
 def InputVals(IType, isotope, component, x):
@@ -233,6 +233,7 @@ GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2]]
 GDIsoDefault = [Eff.GDU238, #U238 Chain
                 Eff.GDU235, #U235 Chain
                 Eff.GDTh232]#Th232 Chain
+GDIsoEff = GDIsoDefault
 #######RnWater#######################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
@@ -444,7 +445,8 @@ VETOPPM = IsoDefault[1]
 TANKACT = IsoDefault[2]
 CONCACT = IsoDefault[3]
 ROCKPPM = IsoDefault[4]
-GdWPPM = IsoDefault[5]
+RnWPPM = IsoDefault[5]
+GDPPM = IsoDefault[6]
 def menu(): #menu text
     """
     Displays options
@@ -475,7 +477,7 @@ while ans.lower() != "exit":
     ans = menu()
 #####Activity########################################
     if ans.lower() == 'a':
-########PMT##########################################
+    ####PMT##########################################
         in_ans = inputcheck(InType[0], Comp[0])
         print('ans = ', in_ans)
         print('##################################################')
@@ -486,7 +488,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTPPM)):
                 disdefval(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
         in_ans = ''
-#########VETO########################################
+    ####VETO#########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[1])
         print('ans = ', in_ans)
@@ -498,7 +500,7 @@ while ans.lower() != "exit":
             for i in range(len(VETOPPM)):
                 disdefval(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
         in_ans = ''
-#########TANK########################################
+    ####TANK#########################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
         print('ans = ', in_ans)
@@ -510,7 +512,7 @@ while ans.lower() != "exit":
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
         in_ans = ''
-#########CONCRETE####################################
+    ####CONCRETE#####################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[3])
         print('ans = ', in_ans)
@@ -521,7 +523,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(CONCACT)):
                 disdefval(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
-#########ROCK########################################
+    ####ROCK#########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[4])
         print('##################################################')
@@ -530,24 +532,32 @@ while ans.lower() != "exit":
                 ROCKPPM[i] = InputVals(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
         elif in_ans == 'n':
             disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
-#########Gd WATER####################################
-        print('##################################################')
+    ####Rn WATER#####################################
+        print('##################################################') 
         in_ans = inputcheck(InType[0], Comp[5])
         print('##################################################')
-        if in_ans.lower() == 'y':
-            for i in range(len(GdWPPM)):
-                GdWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
-        elif in_ans.lower() == 'n':
+        if in_ans == 'y':
+            for i in range(len(RnWPPM)):
+                RnWPPM[i] = InputVals(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
+        elif in_ans == 'n':
             disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
-#########Get Data####################################
+    ####Gd###########################################
+        print('##################################################')
+        in_ans = inputcheck(InType[0], Comp[6])
+        if in_ans == 'y':
+            for i in range(len(GDPPM)):
+                GDPPM[i] = InputVals(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
+        elif in_ans == 'n':
+            disdefval(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
+    ####Get Data#####################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
         dataAct[2] = TankAct(TANKACT)
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
-        dataAct[5] = WaterAct(GdWPPM)
-       #dataAct[6] = GDAct(GDPPM)
-#########output######################################
+        dataAct[5] = WaterAct(RnWPPM)
+        dataAct[6] = GDAct(GDPPM)
+    #####output######################################
         i = 0
         for i in range(len(Comp)):
             print('##################################################')
