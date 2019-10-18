@@ -344,7 +344,7 @@ VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691
 TANKShare = [1.44844e-1, 4.79718e-2, 3.62776e-2, 3.88787e-1, 5.15283e-1, 8.44188e-2, 4.08107e-1, 3.51846e-2, 3.83691e-1, 1.45410e-1] 
 CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
 ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
-GdWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
+RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
 ########Max Accidental BG############################
 def Max(bg, share):
     #TODO
@@ -705,7 +705,7 @@ while ans.lower() != "exit":
         print('RnWATER Accidental background = %5e' %WATER_Acc)
         print('GD Accidental background = %.5e' % GD_Acc)
         print('##################################################')
-        tot += (PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc)
+        tot += (PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc + GD_Acc)
         print('Total Backgroud Rate = %.5e' % tot)
         clear()
         ans = ''
@@ -814,7 +814,8 @@ while ans.lower() != "exit":
         TANK_BG_CB = TANK_Acc
         CONC_BG_CB = CONC_Acc
         ROCK_BG_CB = ROCK_Acc
-        GDW_BG_CB = WATER_Acc
+        RnW_BG_CB = WATER_Acc
+        GD_BG_CB = GD_Acc
         #signal input
         if ai == False:
             print('##################################################')
@@ -842,7 +843,7 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
+            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc + GD_Acc
         else:
             pass
         try:
@@ -900,11 +901,11 @@ while ans.lower() != "exit":
             ROCK_BG_CB += Iso_cb[i]*ROCKShare[i]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         print('##################################################')
-        for i in range(len(GdWAshare)):
-            GDW_BG_CB += Iso_cb[i]*GdWAshare[i]
-        print('Max BG from Gd WATER =  %.5e' %GDW_BG_CB)
+        for i in range(len(RnWAshare)):
+            RnW_BG_CB += Iso_cb[i]*RnWAshare[i]
+        print('Max BG from Rn WATER =  %.5e' %RnW_BG_CB)
         print('##################################################')
-        tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + GDW_BG_CB
+        tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
         #TODO We need to output the results in the formats we discussed:
         # 1. Max BG in events per second/day per component (as above)
