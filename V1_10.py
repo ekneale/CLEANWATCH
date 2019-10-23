@@ -319,7 +319,7 @@ def BGRate():
     print('BGR due to WATER')    
     WATERBGIso = list()
     for i in range(len(WATERIsoDecay)): #1d array
-        WATERBGIso.append(dataAct[6][i]*WATERIsoEff[i])
+        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
@@ -330,7 +330,7 @@ def BGRate():
     GDBGR   = 0
     for i in range(len(GDIsoDecay)):
         for x in range(len(GDIsoEff[i])):
-            GDBGIso[i].append(dataAct[5][i]*GDIsoEff[i][x])
+            GDBGIso[i].append(dataAct[6][i]*GDIsoEff[i][x])
             print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
         GDBGR += sum(GDBGIso[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
@@ -861,25 +861,26 @@ while ans.lower() != "exit":
             PMTShare = share(tot, PMTIso)
         else:
             pass
-        try:
-            signal = literal_eval(input('Input signal rate: '))
-            signal < 1
-        except:
-            signal = 0.5
-            print('Signal rate set to default value of %.3e' % signal)
-        #get number of days
-        try:
-            days = literal_eval(input('Input time dection in days: '))
-            days != 0
-        except:
-            days = 1
-            print('Time dection set to default value of %.3e days' % days)
+            try:
+                signal = literal_eval(input('Input signal rate: '))
+                signal < 1
+            except:
+                signal = 0.5
+                print('Signal rate set to default value of %.3e' % signal)
+            #get number of days
+            try:
+                days = literal_eval(input('Input time dection in days: '))
+                days != 0
+            except:
+                days = 1
+                print('Time dection set to default value of %.3e days' % days)
         #def sigma
-        B = signal*1.035 + tot
-        S = signal*0.9
-        sigma = 4.65
-        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
-        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+            B = signal*1.035 + tot
+            S = signal*0.9
+            sigma = 4.65
+            Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
+            print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+            #PMTShare = share(tot, PMTBGIso)
         #print('##################################################')
         #TODO We will need to add an additional step. If no radioactivity rate 
         # has been changed, then the share is as below.
