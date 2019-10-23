@@ -86,6 +86,9 @@ def clear():
             break
         if ui.lower() == 'n':
             break
+#####shareFunc#######################################
+def share(tot, Iso):
+
 #####Background activity from Glass in PMTs##########
 def PMTAct(PPM): #done
     """
@@ -303,6 +306,15 @@ def BGRate():
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
         ROCKBGR += sum(ROCKBGIso[i])
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
+    ####RnWATER######################################
+    print('##################################################')
+    print('BGR due to WATER')    
+    WATERBGIso = list()
+    for i in range(len(WATERIsoDecay)): #1d array
+        WATERBGIso.append(dataAct[6][i]*WATERIsoEff[i])
+        print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
+    WATERBGR = sum(WATERBGIso)
+    print('Total BGR due to Gd Water = %.5e' % WATERBGR)
     ####Gd###########################################
     print('##################################################') 
     print('BGR due to GD')
@@ -314,18 +326,9 @@ def BGRate():
             print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
         GDBGR += sum(GDBGIso[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
-    ####RnWATER######################################
-    print('##################################################')
-    print('BGR due to WATER')    
-    WATERBGIso = list()
-    for i in range(len(WATERIsoDecay)): #1d array
-        WATERBGIso.append(dataAct[6][i]*WATERIsoEff[i])
-        print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
-    WATERBGR = sum(WATERBGIso)
-    print('Total BGR due to Gd Water = %.5e' % WATERBGR)
 #####################################################
     #Total
-    tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR
+    tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR + GDBGR
 
     #TODO Define the share of events for each decay in each isotope in each component. 
     # These will need to be accessible outside the function.
