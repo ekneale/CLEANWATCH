@@ -318,7 +318,7 @@ def BGRate():
     print('##################################################')
     print('BGR due to WATER')    
     WATERBGIso = list()
-    for i in range(len(WATERIsoDecay)): #1d array
+    for i in range(len(WATERIsoEff)): #1d array
         WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
