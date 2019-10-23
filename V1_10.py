@@ -87,8 +87,16 @@ def clear():
         if ui.lower() == 'n':
             break
 #####shareFunc#######################################
-def share(tot, Iso):
-
+def share(total, Iso):
+    IsoShare = Iso
+    if isinstance(Iso[0], list) == True:
+        for i in range(Iso):
+            for x in range(Iso[i]):
+                IsoShare[i][x] = Iso[i][x]/total
+    elif isinstance(Iso[0], list) == False:
+        for i in range(Iso):
+            IsoShare[i] = Iso[i]/total
+    return IsoShare
 #####Background activity from Glass in PMTs##########
 def PMTAct(PPM): #done
     """
