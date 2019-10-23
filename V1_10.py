@@ -337,7 +337,6 @@ def BGRate():
 #####################################################
     #Total
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR + GDBGR
-
     #TODO Define the share of events for each decay in each isotope in each component. 
     # These will need to be accessible outside the function.
     # e.g.
@@ -348,17 +347,17 @@ def BGRate():
     #print('Total BGR is %.5e' % tot)
     bgi = True
     tot = tot/(60**2*24)
-    return tot
+    return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
 #####################################################
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
 #TODO Replace this with the calculation at the end of the previous function
-IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
-PMTShare = [4.60123e-1, 5.37989e-1, 4.06841e-1, 1.95302e-1, 2.37596e-1, 5.78219e-1, 1.88178e-1, 3.63865e-1, 3.62383e-1, 2.98963e-1]
-VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691e-1, 1.69719e-1, 2.93687e-1, 2.17803e-1, 2.44321e-1] 
-TANKShare = [1.44844e-1, 4.79718e-2, 3.62776e-2, 3.88787e-1, 5.15283e-1, 8.44188e-2, 4.08107e-1, 3.51846e-2, 3.83691e-1, 1.45410e-1] 
-CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
-ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
-RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
+#IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
+#PMTShare = [4.60123e-1, 5.37989e-1, 4.06841e-1, 1.95302e-1, 2.37596e-1, 5.78219e-1, 1.88178e-1, 3.63865e-1, 3.62383e-1, 2.98963e-1]
+#VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691e-1, 1.69719e-1, 2.93687e-1, 2.17803e-1, 2.44321e-1] 
+#TANKShare = [1.44844e-1, 4.79718e-2, 3.62776e-2, 3.88787e-1, 5.15283e-1, 8.44188e-2, 4.08107e-1, 3.51846e-2, 3.83691e-1, 1.45410e-1] 
+#CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
+#ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
+#RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
 ########Max Accidental BG############################
 def Max(bg, share):
     #TODO
@@ -708,7 +707,7 @@ while ans.lower() != "exit":
         else:
             pass
         #BGR Code
-        tot = BGRate()
+        tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
 #########Accidental BG Rate##########################
         print('##################################################')
         print('PMT  Accidental background = %.5e' % PMT_Acc)
@@ -859,6 +858,7 @@ while ans.lower() != "exit":
             pass
         if bgi == False:
             tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc + GD_Acc
+            PMTShare = share(tot, PMTIso)
         else:
             pass
         try:
@@ -891,13 +891,13 @@ while ans.lower() != "exit":
         # MaxRate = RBg * Share * normalisation
         # where normalisation = 1/sum(RShares) so that the total of all 
         # remaining 'share' values now adds up to 1
-        for i in range(len(IsoShare)):
-            Iso_cb.append(Mbg*IsoShare[i])
+        #for i in range(len(IsoShare)):
+        #    Iso_cb.append(Mbg*IsoShare[i])
         #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
         for i in range(len(PMTShare)):
             PMT_BG_CB += Iso_cb[i]*PMTShare[i]
-            #PMT_BG_CB = 
+            #PMT_BG_CB += Mbg*PMTShare[i] 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
         print('##################################################')
         for i in range(len(VETOShare)):
@@ -932,7 +932,7 @@ while ans.lower() != "exit":
         #    MaxAct = MaxIsoDecay/IsoDecayEff/MassOrVolumeOfComponent 
         #    (select the decay and related efficiency 
         #    for the decay responsible for most events and then basically
-        #    reverse the BGRate and PPM calculations). 
+        #    reverse the BGRate and PPM calculations)
         diff = (Mbg - (tot_cb))
         print('Abs Diff = %.5e' %  diff)
         print('Percent Diff = %.5e' % (diff/Mbg))
