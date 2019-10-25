@@ -317,16 +317,17 @@ def BGRate():
     ####RnWATER######################################
     print('##################################################')
     print('BGR due to WATER')    
-    WATERBGIso = list()
+    WATERBGIso = []
     for i in range(len(WATERIsoEff)): #1d array
-        WATERBGIso.append(dataAct[5][i]*WATERIsoEff[i])
+        print('WATERIsoEff[i] = ', WATERIsoEff[i])
+        WATERBGIso.append(dataAct[5][0]*WATERIsoEff[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
     ####Gd###########################################
     print('##################################################') 
     print('BGR due to GD')
-    GDBGIso = [[],[],[]]
+    GDBGIso = [[], [], [], [], [], []]
     GDBGR   = 0
     for i in range(len(GDIsoDecay)):
         for x in range(len(GDIsoEff[i])):
@@ -750,7 +751,8 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate() 
+            tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
         else:
             pass
         print('##################################################')
@@ -857,7 +859,7 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc + GD_Acc
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso = BGRate()
             PMTShare = share(tot, PMTIso)
         else:
             pass
