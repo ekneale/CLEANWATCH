@@ -26,7 +26,7 @@ Iso = [['U238', 'Th232', 'K40'], #[[PMT],
        ['U238', 'Th232', 'K40', 'Co60', 'Cs137'], # [TANK],
        ['U238', 'Th232', 'K40'], # [CONCRETE], 
        ['U238', 'Th232', 'K40'], # [ROCK],
-       ['222Rn'],                # [WATER],
+       ['Rn222'],                # [WATER],
        ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U238_l']]                      # [GD]]
 IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
@@ -138,7 +138,15 @@ def PMTAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#####Background Activity from VETO Region############
+######Reverse BG for PMT func########################
+def revPMTAct(BGIso):
+    Act = list()
+    mass = 1.4 #kg - mass of glass in PMT
+    n = 3542 #number of PMTs
+    for i in range(len(BGIso)):
+        Act.append((BGIso[i][0]/(mass*n))*((Ms[i]*(1e6)*Abs[i])/(Lam[i])))
+    return Act
+#####Background Activity for VETO Region#############
 def VETOAct(PPM): #done
     """
     Calculates the background activity for the VETO region
@@ -153,7 +161,15 @@ def VETOAct(PPM): #done
     for i in range(len(Iso[1])):
         IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#####Background Activity from Steel Tank############
+#####Reverse BG for VETO func########################
+def revVETOAct(BGIso):
+    Act = list()
+    mass = 1.4 #kg
+    n = 354
+    for i in range(len(BGIso)):
+        Act.append((BGIso[i][0]/(mass*n))*((Ms[i]*1e6*Abs[i])/Lam[i]))
+    return Act
+#####Background Activity from Steel Tank#############
 def TankAct(Act): #done
     """
     Calculates the background activity for the Steel Tank
@@ -161,16 +177,23 @@ def TankAct(Act): #done
     Act: Activity of the Isotope
     """
     #def mass
-    vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) #def this - use load.py defaults
+    vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) 
     den = 8000 #kg/m^3
     mass = vol * den
     #dim other vars
     Act = IsoAct = list(range(len(Iso[2])))
-    #print('##################################################')
-    #print('Activity of Tank')
     for i in range(len(Act)):
          IsoAct[i] = Act[i]*mass
     return IsoAct
+#####Reverse BG for TANK func########################
+def revTankAct(BGIso):
+    Act = list()
+    vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) 
+    den = 8000 #kg/m^3
+    mass = vol * den
+    for i in range(len(BGIso)):
+        Act.append(BGIso[i][0]/mass)
+    return Act
 #####Background Activity from concrete###############
 def ConcAct(Act): #done
     """
@@ -187,6 +210,15 @@ def ConcAct(Act): #done
     for i in range(len(Act)):
         IsoAct[i] = Act[i]*mass
     return IsoAct
+#####Reverse BG for CONC func########################
+def revCONCAct(BGIso):
+    Act = list()
+    vol = 25.5*(np.pi*pow(13.,2)-np.pi*pow(12.5,2))+0.5*np.pi*pow(13.,2)
+    den = 2300 #kg/m^3
+    mass = vol * den
+    for i in range(len(BGIso)):
+        Act.append(BGIso[i][0]/mass)
+    return Act
 #####Background Activity from Rock Salt##############
 def RockAct(PPM): #done
     """
@@ -204,7 +236,16 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
-#####Background Activity from Water #################
+#####Reverse BG for ROCK func########################
+def revROCKAct(BGIso):
+    Act = list()
+    den = 2165 #kg/m^3
+    vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
+    mass = vol*den
+    for i in range(len(BGIso)):
+        Act.append((BGIso[i][0]/mass)*((Ms[i]*1e6*Abs[i])/(Lam[i])))
+    return Act
+#####Background Activity from Water##################
 def WaterAct(PPM): #done
     """
     Calculates the background activity for the Water
@@ -218,7 +259,12 @@ def WaterAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
-#####Background Activity from Gd ####################
+#####reverse BG for Water func#######################
+def revWaterAct(BGIso):
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    Act =(BGIso[0]/(mass*0.002))
+    return Act
+#####Background Activity from Gd#####################
 def GdAct(PPM):
     """
     Calculates the background activity for the Gd
@@ -232,6 +278,13 @@ def GdAct(PPM):
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
+#####reverse BG for GD###############################
+def revGdAct(BGIso):
+    Act = list()
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    for i in range(len(BGIso)):
+        Act.append((BGIso[i][0]/(mass*0.002)))
+    return Act
 #####Efficiences#####################################
 ##dim vars
 #######PMT###########################################
@@ -907,38 +960,57 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(PMTShare)):
             for x in range(len(PMTShare[i])):
-            #PMT_BG_CB += Iso_cb[i]*PMTShare[i]
                 PMT_BG_CB += tot*PMTShare[i][x] 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
+        PMTIsoAct = revPMTAct(PMTBGIso)
+        for i in range(len(PMTIsoAct)):
+            print('%.5s = %.5e' % (Iso[0][i], PMTIsoAct[i]))
         print('##################################################')
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
                 VETO_BG_CB += tot*VETOShare[i][x]
         print('Max BG from VETO = %.5e' % VETO_BG_CB)
+        VETOIsoAct = revVETOAct(VETOBGIso)
+        for i in range(len(VETOBGIso)):
+            print('%.5s = %.5e' % (Iso[1][i], VETOIsoAct[i]))
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
                 TANK_BG_CB += tot*TANKShare[i][x]
         print('Max BG from TANK = %.5e' % TANK_BG_CB)
+        TANKIsoAct = revTankAct(TANKBGIso)
+        for i in range(len(TANKIsoAct)):
+            print('%.5s = %.5e' % (Iso[2][i], TANKIsoAct[i]))
         print('##################################################')
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
                 CONC_BG_CB += tot*CONCShare[i][x]
         print('Max BG from CONC = %.5e' % CONC_BG_CB)
+        CONCIsoAct = revCONCAct(CONCBGIso)
+        for i in range(len(CONCIsoAct)):
+            print('%.5s = %.5e' % (Iso[3][i], CONCIsoAct[i]))
         print('##################################################')
         for i in range(len(ROCKShare)):
             for x in range(len(ROCKShare[i])):
                 ROCK_BG_CB += tot*ROCKShare[i][x]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
+        ROCKIsoAct = revROCKAct(ROCKBGIso)
+        for i in range(len(ROCKIsoAct)):
+            print('%.5s = %.5e' % (Iso[4][i], ROCKIsoAct[i]))
         print('##################################################')
         for i in range(len(RnWAShare)):
             RnW_BG_CB += tot*RnWAShare[i]
         print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
+        RnWIsoAct = revWaterAct(WATERBGIso)
+        print('%.5s = %.5e' % (Iso[5][0], RnWIsoAct))
         print('##################################################')
         for i in range(len(GDShare)):
            for x in range(len(GDShare[i])):
             GD_BG_CB += tot*GDShare[i][x]
         print('Max BG from GD = %.5e' % GD_BG_CB)
+        GDIsoAct = revGdAct(GDBGIso)
+        for i in range(len(GDIsoAct)):
+            print('%.8s = %.5e' % (Iso[6][i], GDIsoAct[i]))
         print('##################################################')
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
