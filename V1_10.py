@@ -797,7 +797,8 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot = BGRate() + PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate() 
+            tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
         else:
             pass
         #signal input
@@ -859,8 +860,9 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso = BGRate()
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, GDBGIso = BGRate()
             PMTShare = share(tot, PMTIso)
+            print(PMTShare)
         else:
             pass
             try:
