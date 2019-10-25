@@ -43,6 +43,32 @@ IsoDefault = [[0.043, 0.133, 16], #[[PMT],
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
 ######Components#####################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
+######menu func######################################
+def menu(): #menu text
+    """
+    Displays options
+    """
+    a = ''
+    options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
+    while a.lower() not in options:
+        print('##################################################')
+        print('WATCHMAN Cleanliness software')
+        print('Alex Healey, UoS, 2019')
+        print('Options: ')
+        print('- Input Values for Activity    [a]')
+        print('- Input Values for Efficiency  [e]')
+        print('- Calculate Background Rate    [bgr]')
+        print('- Calculate Time Detection     [td]')
+        print('- Calculate Maximum Background [maxbg]')
+        print('- Cleanliness Budget           [cb]')
+        print('- Exit software                [exit]')
+        print('##################################################')
+        a = str(input('Select an option: '))
+        if a.lower() in options and a.lower() != 'exit':
+            print('Option selected')
+            print('Loading...')
+            break
+    return a
 ######Input func####################################
 def InputVals(IType, isotope, component, x):
     """
@@ -461,31 +487,6 @@ CONCACT = IsoDefault[3]
 ROCKPPM = IsoDefault[4]
 RnWPPM = IsoDefault[5]
 GDPPM = IsoDefault[6]
-def menu(): #menu text
-    """
-    Displays options
-    """
-    a = ''
-    options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
-    while a.lower() not in options:
-        print('##################################################')
-        print('WATCHMAN Cleanliness software')
-        print('Alex Healey, UoS, 2019')
-        print('Options: ')
-        print('- Input Values for Activity    [a]')
-        print('- Input Values for Efficiency  [e]')
-        print('- Calculate Background Rate    [bgr]')
-        print('- Calculate Time Detection     [td]')
-        print('- Calculate Maximum Background [maxbg]')
-        print('- Cleanliness Budget           [cb]')
-        print('- Exit software                [exit]')
-        print('##################################################')
-        a = str(input('Select an option: '))
-        if a.lower() in options and a.lower() != 'exit':
-            print('Option selected')
-            print('Loading...')
-            break
-    return a
 ans = ""
 while ans.lower() != "exit":
     ans = menu()
