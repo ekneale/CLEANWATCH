@@ -90,11 +90,11 @@ def clear():
 def share(total, Iso):
     IsoShare = Iso
     if isinstance(Iso[0], list) == True:
-        for i in range(Iso):
-            for x in range(Iso[i]):
+        for i in range(len(Iso)):
+            for x in range(len(Iso[i])):
                 IsoShare[i][x] = Iso[i][x]/total
     elif isinstance(Iso[0], list) == False:
-        for i in range(Iso):
+        for i in range(len(Iso)):
             IsoShare[i] = Iso[i]/total
     return IsoShare
 #####Background activity from Glass in PMTs##########
@@ -860,31 +860,35 @@ while ans.lower() != "exit":
         else:
             pass
         if bgi == False:
-            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, GDBGIso = BGRate()
-            PMTShare = share(tot, PMTIso)
-            print(PMTShare)
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
+            PMTShare = share(tot, PMTBGIso)
+            VETOShare = share(tot, VETOBGIso)
+            TANKShare = share(tot, TANKBGIso)
+            CONCShare = share(tot, CONCBGIso)
+            ROCKShare = share(tot, ROCKBGIso)
+            RnWAShare = share(tot, WATERBGIso)
+            GDShare = share(tot, GDBGIso)
         else:
             pass
-            try:
-                signal = literal_eval(input('Input signal rate: '))
-                signal < 1
-            except:
-                signal = 0.5
-                print('Signal rate set to default value of %.3e' % signal)
-            #get number of days
-            try:
-                days = literal_eval(input('Input time dection in days: '))
-                days != 0
-            except:
-                days = 1
-                print('Time dection set to default value of %.3e days' % days)
+        try:
+            signal = literal_eval(input('Input signal rate: '))
+            signal < 1
+        except:
+            signal = 0.5
+            print('Signal rate set to default value of %.3e' % signal)
+        #get number of days
+        try:
+            days = literal_eval(input('Input time dection in days: '))
+            days != 0
+        except:
+            days = 1
+            print('Time dection set to default value of %.3e days' % days)
         #def sigma
-            B = signal*1.035 + tot
-            S = signal*0.9
-            sigma = 4.65
-            Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
-            print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
-            #PMTShare = share(tot, PMTBGIso)
+        B = signal*1.035 + tot
+        S = signal*0.9
+        sigma = 4.65
+        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
+        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #print('##################################################')
         #TODO We will need to add an additional step. If no radioactivity rate 
         # has been changed, then the share is as below.
@@ -901,33 +905,40 @@ while ans.lower() != "exit":
         #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
         for i in range(len(PMTShare)):
-            PMT_BG_CB += Iso_cb[i]*PMTShare[i]
-            #PMT_BG_CB += Mbg*PMTShare[i] 
+            for x in range(len(PMTShare[i])):
+            #PMT_BG_CB += Iso_cb[i]*PMTShare[i]
+                PMT_BG_CB += tot*PMTShare[i][x] 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
         print('##################################################')
         for i in range(len(VETOShare)):
-            VETO_BG_CB += Iso_cb[i]*VETOShare[i]
+            for x in range(len(VETOShare[i])):
+                VETO_BG_CB += tot*VETOShare[i][x]
         print('Max BG from VETO = %.5e' % VETO_BG_CB)
         print('##################################################')
         for i in range(len(TANKShare)):
-            TANK_BG_CB += Iso_cb[i]*TANKShare[i]
+            for x in range(len(TANKShare[i])):
+                TANK_BG_CB += tot*TANKShare[i][x]
         print('Max BG from TANK = %.5e' % TANK_BG_CB)
         print('##################################################')
         for i in range(len(CONCShare)):
-            CONC_BG_CB += Iso_cb[i]*CONCShare[i]
+            for x in range(len(CONCShare[i])):
+                CONC_BG_CB += tot*CONCShare[i][x]
         print('Max BG from CONC = %.5e' % CONC_BG_CB)
         print('##################################################')
         for i in range(len(ROCKShare)):
-            ROCK_BG_CB += Iso_cb[i]*ROCKShare[i]
+            for x in range(len(ROCKShare[i])):
+                ROCK_BG_CB += tot*ROCKShare[i][x]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         print('##################################################')
-        for i in range(len(RnWAshare)):
-            RnW_BG_CB += Iso_cb[i]*RnWAshare[i]
+        for i in range(len(RnWAShare)):
+            RnW_BG_CB += tot*RnWAShare[i]
         print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         print('##################################################')
-       #for i in range(len(GDshare)):
-       #   GD_BG_CB += Iso_cb[i]*GDshare[i]
+        for i in range(len(GDShare)):
+           for x in range(len(GDShare[i])):
+            GD_BG_CB += tot*GDShare[i][x]
         print('Max BG from GD = %.5e' % GD_BG_CB)
+        print('##################################################')
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
         #TODO We need to output the results in the formats we discussed:
