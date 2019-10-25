@@ -951,7 +951,7 @@ while ans.lower() != "exit":
         #    reverse the BGRate and PPM calculations)
         diff = (Mbg - (tot_cb))
         print('Abs Diff = %.5e' %  diff)
-        print('Percent Diff = %.5e' % (diff/Mbg))
+        print('%% Diff = %.5e' % (diff/Mbg))
         print('##################################################')
         clear()
         ans = ''
