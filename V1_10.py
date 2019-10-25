@@ -453,7 +453,7 @@ dataAct = list()
 for i in range(len(IsoDefault)):
     dataAct.append(IsoDefault[i])
 options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
-#Activity lists initialised to default values
+#Activity lists initialised to default values########
 PMTPPM = IsoDefault[0]
 VETOPPM = IsoDefault[1]
 TANKACT = IsoDefault[2]
