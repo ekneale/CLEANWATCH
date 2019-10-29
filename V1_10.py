@@ -10,12 +10,11 @@ import Nrate as Nr
 bgi = False
 ######Isotope properties############################
 Ms = [3.953e-25, 3.853145e-26, 6.636286e-26] #[U238, Th232, K40] kg per atom
-Lam = [1, 1, 1.842e-18] #Natural abudance only applies to K40
-#[4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
+Lam = [4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
 halfL = list(range(len(Lam)))
 for i in range(len(Lam)):
     halfL[i] = (log(2)/Lam[i])/(60**2*24*365*1e9) #half life in billions of years
-Abs = [0.992745, 1.0, 0.00117] #[U238, Th232, K40] Natural Abundance
+Abs = [1, 1, 0.00117] #[U238, Th232, K40] Natural Abundance
 #####measurements###################################
 TankR = 10026.35e-3 #m
 Height = 10026.35e-3 #m
@@ -36,15 +35,15 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60', 'Cs137']]
 IsoDefault = [[0.043, 0.133, 16], #[[PMT],
-              [0.043, 0.133, 36], # [VETO],
+        [0.043, 0.133, 16], # [VETO],
               [0, 0, 0, 19e-3, 0.77e-3], # [TANK],
               [61, 30, 493],      # [CONCRETE],
-              [0.067, 0.125,1130],# [ROCK] 
+              [0.067, 0.125, 1130],# [ROCK] 
               [0.002], #[WATER]
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
-######Components#####################################
+######Components###################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
-######menu func######################################
+######menu func####################################
 def menu(): #menu text
     """
     Displays options
@@ -70,7 +69,7 @@ def menu(): #menu text
             print('Loading...')
             break
     return a
-######Input func####################################
+######Input func###################################
 def InputVals(IType, isotope, component, x):
     """
         IType = Input Type (str)
@@ -85,11 +84,11 @@ def InputVals(IType, isotope, component, x):
         i = x
         print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
     return i
-######Display default value func####################
+######Display default value func###################
 #TODO add in GdAct
 def disdefval(IType, isotope, component, x):
     print(IType + ' of ' + isotope + ' for ' + component + ' set to default value of %.5e' % x)
-######Check input###################################
+######Check input##################################
 def inputcheck(Itype, comp):
     opts = ['y', 'n']
     ians = ''
@@ -100,7 +99,7 @@ def inputcheck(Itype, comp):
         else:
             print('Invalid Value')
     return ians.lower()
-######Clear display func#############################
+######Clear display func###########################
 def clear():
     """
     Clears output
@@ -113,7 +112,7 @@ def clear():
             break
         if ui.lower() == 'n':
             break
-#####shareFunc#######################################
+#####shareFunc#####################################
 def share(total, Iso):
     IsoShare = Iso
     if isinstance(Iso[0], list) == True:
@@ -124,7 +123,7 @@ def share(total, Iso):
         for i in range(len(Iso)):
             IsoShare[i] = Iso[i]/(total*(24*60**2)) #changes total to events per sec
     return IsoShare
-#####Background activity from Glass in PMTs##########
+#####Background activity from Glass in PMTs########
 def PMTAct(PPM): #done
     """
     Calculates the background activity for the PMTs
@@ -137,9 +136,21 @@ def PMTAct(PPM): #done
     n = 3542 #number of PMTs
     IsoAct = list(range(len(Iso[0])))
     for i in range(len(PPM)):
-        IsoAct[i] = (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
+        #print('PPM = %.5e' % PPM[i])
+        #step1 = Lam[i]*PPM[i]
+        #print('Step 1 = %.5e' % step1)
+        #step2 = step1/Ms[i]
+        #print('Step 2 = %.5e' % step2)
+        #step3 = step2/(1e6)
+        #print('Step 3 = %.5e' % step3)
+        #step4 = step3/Abs[i]
+        #print('Step 4 = %.5e' % step4)
+        #step5 = step4*mass*n
+        #print('Step 5 = %.5e' % step5)
+        IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass*n
+        #print('Diff = %.5e' % (IsoAct[i] - step5))
     return IsoAct
-######Reverse BG for PMT func########################
+######Reverse BG for PMT func######################
 def revPMTAct(BGIso, IsoEff):
     Act = list()
     mass = 1.4 #kg - mass of glass in PMT
@@ -148,7 +159,7 @@ def revPMTAct(BGIso, IsoEff):
         x = np.argmax(BGIso[i])
         Act.append(((BGIso[i][x]/(mass*n))*((Ms[i]*(1e6)*Abs[i])/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
     return Act
-#####Background Activity for VETO Region#############
+#####Background Activity for VETO Region###########
 def VETOAct(PPM): #done
     """
     Calculates the background activity for the VETO region
@@ -163,7 +174,7 @@ def VETOAct(PPM): #done
     for i in range(len(Iso[1])):
         IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
     return IsoAct
-#####Reverse BG for VETO func########################
+#####Reverse BG for VETO func######################
 def revVETOAct(BGIso, IsoEff):
     Act = list()
     mass = 1.4 #kg
@@ -171,7 +182,7 @@ def revVETOAct(BGIso, IsoEff):
     for i in range(len(BGIso)):
         Act.append(((BGIso[i][0]/(mass*n))*((Ms[i]*1e6*Abs[i])/Lam[i]))/(IsoEff[i][0]*0.0001*0.05))
     return Act
-#####Background Activity from Steel Tank#############
+#####Background Activity from Steel Tank###########
 def TankAct(Act): #done
     """
     Calculates the background activity for the Steel Tank
@@ -187,7 +198,7 @@ def TankAct(Act): #done
     for i in range(len(Act)):
          IsoAct[i] = Act[i]*mass
     return IsoAct
-#####Reverse BG for TANK func########################
+#####Reverse BG for TANK func######################
 def revTankAct(BGIso, IsoEff):
     Act = list()
     vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) 
@@ -196,7 +207,7 @@ def revTankAct(BGIso, IsoEff):
     for i in range(len(BGIso)):
         Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
     return Act
-#####Background Activity from concrete###############
+#####Background Activity from concrete#############
 def ConcAct(Act): #done
     """
     Calculates the background activity for the Concrete
@@ -212,7 +223,7 @@ def ConcAct(Act): #done
     for i in range(len(Act)):
         IsoAct[i] = Act[i]*mass
     return IsoAct
-#####Reverse BG for CONC func########################
+#####Reverse BG for CONC func######################
 def revCONCAct(BGIso, IsoEff):
     Act = list()
     vol = 25.5*(np.pi*pow(13.,2)-np.pi*pow(12.5,2))+0.5*np.pi*pow(13.,2)
@@ -221,7 +232,7 @@ def revCONCAct(BGIso, IsoEff):
     for i in range(len(BGIso)):
         Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
     return Act
-#####Background Activity from Rock Salt##############
+#####Background Activity from Rock Salt############
 def RockAct(PPM): #done
     """
     Calculates the background activity for the Rock Salt
@@ -238,7 +249,7 @@ def RockAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
     return IsoAct
-#####Reverse BG for ROCK func########################
+#####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff):
     Act = list()
     den = 2165 #kg/m^3
@@ -247,7 +258,7 @@ def revROCKAct(BGIso, IsoEff):
     for i in range(len(BGIso)):
         Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6*Abs[i])/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
     return Act
-#####Background Activity from Water##################
+#####Background Activity from Water################
 def WaterAct(PPM): #done
     """
     Calculates the background activity for the Water
@@ -261,12 +272,12 @@ def WaterAct(PPM): #done
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
-#####reverse BG for Water func#######################
+#####reverse BG for Water func#####################
 def revWaterAct(BGIso, IsoEff):
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     Act =(BGIso[0]/(mass*0.002)/(IsoEff[0]*0.0001*0.05))
     return Act
-#####Background Activity from Gd#####################
+#####Background Activity from Gd###################
 def GdAct(PPM):
     """
     Calculates the background activity for the Gd
@@ -280,47 +291,47 @@ def GdAct(PPM):
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002
     return IsoAct
-#####reverse BG for GD###############################
+#####reverse BG for GD#############################
 def revGdAct(BGIso, IsoEff):
     Act = list()
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
     for i in range(len(BGIso)):
         Act.append(BGIso[i][0]/(mass*0.002)/(IsoEff[i][0]*0.0001*0.05))
     return Act
-#####Efficiences#####################################
+#####Efficiences###################################
 ##dim vars
-#######PMT###########################################
+#######PMT#########################################
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
                  Eff.PMTTh232,   #Th232 Chain
                  Eff.PMTK40]     #K40 Chain
 PMTIsoEff = PMTIsoDefault
-#######VETO##########################################
+#######VETO########################################
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
                   Eff.VETOTh232, #Th232 Chain
                   Eff.VETOK40]   #K40 Chain
 VETOIsoEff = VETOIsoDefault
-#######TANK##########################################
+#######TANK########################################
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
 TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
                   Eff.TANKTh232, #Th232 Chain
                   Eff.TANKK40,   #K40 Chain
                   Eff.TANKSTEEL] #Steel Activity
 TANKIsoEff = TANKIsoDefault
-#######CONC##########################################
+#######CONC########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 CONCIsoDefault = [[1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5],    #[Ac228, Pb212, Bi212, Tl208],
                   [1.25e-5]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
-#######ROCK##########################################
+#######ROCK########################################
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
                   Eff.ROCKTh232, #Th232 Chain
                   Eff.ROCKK40]   #K40 Chain
 ROCKIsoEff = ROCKIsoDefault
-#######GD############################################
+#######GD##########################################
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
 GDIsoDefault = [Eff.GDU238,  #U238 Chain
                 Eff.GDTh232, #Th232 Chain
@@ -329,19 +340,19 @@ GDIsoDefault = [Eff.GDU238,  #U238 Chain
                 Eff.GDTh232, #Th232_l Chain
                 Eff.GDU235]  #U235_l Chain
 GDIsoEff = GDIsoDefault
-#######RnWater#######################################
+#######RnWater#####################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
-######Background Rate###############################
+######Background Rate##############################
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
-####################################################
+###################################################
 def BGRate():
     """
     Calculates the Background Rate for all components
     Unit: Events per day
     """
-    ####PMTs#########################################
+    ####PMTs#######################################
     print('##################################################') 
     print('BGR due to PMTs')
     PMTBGIso = [[], [], []]
@@ -352,7 +363,7 @@ def BGRate():
             print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[i][x]) 
         PMTBGR += sum(PMTBGIso[i])
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
-    ####VETO#########################################
+    ####VETO#######################################
     print('##################################################') 
     print('BGR due to VETO')
     VETOBGIso = [[], [], []]
@@ -363,7 +374,7 @@ def BGRate():
             print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[i][x])
         VETOBGR += sum(VETOBGIso[i])
     print('Total BRG due to Veto = %.5e' % VETOBGR)
-    ####TANK#########################################
+    ####TANK#######################################
     print('##################################################') 
     print('BGR due to TANK')
     TANKBGIso = [[], [], [], []]
@@ -374,7 +385,7 @@ def BGRate():
             print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[i][x])
         TANKBGR += sum(TANKBGIso[i])
     print('Total BGR due to Tank = %.5e' % TANKBGR)
-    ####CONCRETE#####################################
+    ####CONCRETE###################################
     print('##################################################') 
     print('BGR due to CONCRETE')
     CONCBGIso = [[], [], []]
@@ -385,7 +396,7 @@ def BGRate():
             print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[i][x])
         CONCBGR += sum(CONCBGIso[i])
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
-    ####ROCK#########################################
+    ####ROCK#######################################
     print('##################################################') 
     print('BGR due to ROCK')
     ROCKBGIso = [[], [], []]
@@ -396,7 +407,7 @@ def BGRate():
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
         ROCKBGR += sum(ROCKBGIso[i])
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
-    ####RnWATER######################################
+    ####RnWATER####################################
     print('##################################################')
     print('BGR due to WATER')    
     WATERBGIso = []
@@ -406,7 +417,7 @@ def BGRate():
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
     WATERBGR = sum(WATERBGIso)
     print('Total BGR due to Gd Water = %.5e' % WATERBGR)
-    ####Gd###########################################
+    ####Gd#########################################
     print('##################################################') 
     print('BGR due to GD')
     GDBGIso = [[], [], [], [], [], []]
@@ -417,8 +428,8 @@ def BGRate():
             print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
         GDBGR += sum(GDBGIso[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
-#####################################################
-    #Total
+###################################################
+    #Total#########################################
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR + GDBGR
     #TODO Define the share of events for each decay in each isotope in each component. 
     # These will need to be accessible outside the function.
@@ -431,7 +442,7 @@ def BGRate():
     bgi = True
     tot = tot/(60**2*24)
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
-#####################################################
+###################################################
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
 #TODO Replace this with the calculation at the end of the previous function
 #IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
@@ -441,7 +452,7 @@ def BGRate():
 #CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
 #ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
 #RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
-########Max Accidental BG############################
+########Max Accidental BG##########################
 def Max(bg, share):
     #TODO
     # Calculate BG using IsoDecay shares calculated in BGRate function above
@@ -452,25 +463,25 @@ def Max(bg, share):
     for i in range(len(share)):
         BG += bg*IsoShare[i]*share[i]
     return BG
-########Accidental Background########################
+########Accidental Background######################
 #U238  = [Pa234, Pb214, Bi214, Tl210, Bi210]
 #Th232 = [Ac228, Bi212, Pb212, Tl208]
 #K40   = [K40]
-#########PMT#########################################
+#########PMT#######################################
 PMT_Pr =  [Pr.PMTU238,   #U238 chain
            Pr.PMTTh232,  #Th232 chain
            Pr.PMTK40]    #K40 chain
 PMT_Nr =  [Nr.PMTU238,   #U238 chain
            Nr.PMTTh232,  #Th232 chain
            Nr.PMTK40]    #K40 chain
-#########VETO########################################
+#########VETO######################################
 VETO_Pr = [Pr.VETOU238,  #U238 chain
            Pr.VETOTh232, #Th232 chain
            Pr.VETOK40]   #K40 chain
 VETO_Nr = [Nr.VETOU238,  #U238 chain
            Nr.VETOTh232, #Th232 chain
            Nr.VETOK40]   #K40
-#########TANK########################################
+#########TANK######################################
 TANK_Pr = [Pr.TANKU238,  #U238 chain
            Pr.TANKTh232, #Th232 chain
            Pr.TANKK40]   #K40 chain
@@ -484,24 +495,24 @@ CONC_Pr = [[0, 0, 0, 0, 0], #U238 chain
 CONC_Nr = [[0, 0, 0, 0, 0],#U238 chain
           [0, 0, 0, 0],  #Th232 chain
           [0]]           #K40 chain
-#########ROCK########################################
+#########ROCK######################################
 ROCK_Pr = [Pr.ROCKU238,  #U238 chain
            Pr.ROCKTh232, #Th232 chain
            Pr.ROCKK40]   #K40 chain
 ROCK_Nr = [Nr.ROCKU238,  #U238 chain
            Nr.ROCKTh232, #Th232 chain
            Nr.ROCKK40]   #K40
-#########RnWater#####################################
+#########RnWater###################################
 WATER_Pr = Pr.WATERRn222 #Rn222 chain
 WATER_Nr = Nr.WATERRn222 #Rn222 chain
-#########GD##########################################
+#########GD########################################
 GD_Pr = [Pr.GDU238,      #U238 Chain
          Pr.GDTh232,     #Th232 Chain
          Pr.GDU235]      #U235 Chain
 GD_Nr = [Nr.GDU238,      #U238 Chain
          Nr.GDTh232,     #Th232 Chain
          Nr.GDU235]      #U235 Chain
-#####################################################
+###################################################
 def AccBack(Prate, Nrate):
     """
     Caculates Accidental Background rate
@@ -527,7 +538,7 @@ CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
 ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
 GD_Acc = AccBack(GD_Pr, GD_Nr)
-#####################################################
+###################################################
 ans = ""
 ai = False
 ei = False
@@ -551,11 +562,10 @@ dataAct[6] = GdAct(GDPPM)
 ans = ""
 while ans.lower() != "exit":
     ans = menu()
-#####Activity######################################
+#######Activity####################################
     if ans.lower() == 'a':
     ####PMT########################################
         in_ans = inputcheck(InType[0], Comp[0])
-        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(PMTPPM)):
@@ -567,7 +577,6 @@ while ans.lower() != "exit":
     ####VETO#######################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[1])
-        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(VETOPPM)):
@@ -579,7 +588,6 @@ while ans.lower() != "exit":
     ####TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
-        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(TANKACT)):
@@ -591,7 +599,6 @@ while ans.lower() != "exit":
     ####CONCRETE###################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[3])
-        #print('ans = ', in_ans)
         print('##################################################')
         if in_ans == 'y':
             for i in range(len(CONCACT)):
@@ -832,6 +839,7 @@ while ans.lower() != "exit":
         print('Time to detection @ 3 sigma rate = %.5e' % t + ' days')
         clear()
         ans = ''
+######Calculate max background#####################
     elif ans.lower() == 'maxbg':
         if ai == False:
             print('##################################################')
@@ -980,7 +988,6 @@ while ans.lower() != "exit":
         sigma = 4.65
         Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S)) #Events per day
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
-        #print('##################################################')
         #TODO We will need to add an additional step. If no radioactivity rate 
         # has been changed, then the share is as below.
         # If a radioactivity rate has been changed for a component, 
