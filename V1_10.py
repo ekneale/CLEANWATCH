@@ -10,7 +10,8 @@ import Nrate as Nr
 bgi = False
 ######Isotope properties############################
 Ms = [3.953e-25, 3.853145e-26, 6.636286e-26] #[U238, Th232, K40] kg per atom
-Lam = [4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
+Lam = [1, 1, 1.842e-18] #Natural abudance only applies to K40
+#[4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
 halfL = list(range(len(Lam)))
 for i in range(len(Lam)):
     halfL[i] = (log(2)/Lam[i])/(60**2*24*365*1e9) #half life in billions of years
@@ -118,10 +119,10 @@ def share(total, Iso):
     if isinstance(Iso[0], list) == True:
         for i in range(len(Iso)):
             for x in range(len(Iso[i])):
-                IsoShare[i][x] = Iso[i][x]/total
+                IsoShare[i][x] = Iso[i][x]/(total*(24*60**2)) #changes total to events per sec
     elif isinstance(Iso[0], list) == False:
         for i in range(len(Iso)):
-            IsoShare[i] = Iso[i]/total
+            IsoShare[i] = Iso[i]/(total*(24*60**2)) #changes total to events per sec
     return IsoShare
 #####Background activity from Glass in PMTs##########
 def PMTAct(PPM): #done
@@ -337,6 +338,7 @@ scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*dec
 def BGRate():
     """
     Calculates the Background Rate for all components
+    Unit: Events per day
     """
     ####PMTs#########################################
     print('##################################################') 
