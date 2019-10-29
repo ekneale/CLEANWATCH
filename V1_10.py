@@ -145,7 +145,8 @@ def revPMTAct(BGIso, IsoEff):
     mass = 1.4 #kg - mass of glass in PMT
     n = 3542 #number of PMTs
     for i in range(len(BGIso)):
-        Act.append(((BGIso[i][0]/(mass*n))*((Ms[i]*(1e6)*Abs[i])/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
+        x = np.argmax(BGIso[i])
+        Act.append(((BGIso[i][x]/(mass*n))*((Ms[i]*(1e6)*Abs[i])/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
     return Act
 #####Background Activity for VETO Region#############
 def VETOAct(PPM): #done
@@ -530,11 +531,9 @@ GD_Acc = AccBack(GD_Pr, GD_Nr)
 ans = ""
 ai = False
 ei = False
-dataAct = list()
-for i in range(len(IsoDefault)):
-    dataAct.append(IsoDefault[i])
+dataAct = [[], [], [], [], [], [], []]
 options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
-#Activity lists initialised to default values########
+#Activity lists initialised to default values######
 PMTPPM = IsoDefault[0]
 VETOPPM = IsoDefault[1]
 TANKACT = IsoDefault[2]
@@ -542,12 +541,19 @@ CONCACT = IsoDefault[3]
 ROCKPPM = IsoDefault[4]
 RnWPPM = IsoDefault[5]
 GDPPM = IsoDefault[6]
+dataAct[0] = PMTAct(PMTPPM)
+dataAct[1] = VETOAct(VETOPPM)
+dataAct[2] = TankAct(TANKACT)
+dataAct[3] = ConcAct(CONCACT)
+dataAct[4] = RockAct(ROCKPPM)
+dataAct[5] = WaterAct(RnWPPM)
+dataAct[6] = GdAct(GDPPM)
 ans = ""
 while ans.lower() != "exit":
     ans = menu()
-#####Activity########################################
+#####Activity######################################
     if ans.lower() == 'a':
-    ####PMT##########################################
+    ####PMT########################################
         in_ans = inputcheck(InType[0], Comp[0])
         #print('ans = ', in_ans)
         print('##################################################')
@@ -558,7 +564,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTPPM)):
                 disdefval(InType[0], Iso[0][i], Comp[0], IsoDefault[0][i])
         in_ans = ''
-    ####VETO#########################################
+    ####VETO#######################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[1])
         #print('ans = ', in_ans)
@@ -570,7 +576,7 @@ while ans.lower() != "exit":
             for i in range(len(VETOPPM)):
                 disdefval(InType[0], Iso[1][i], Comp[1], IsoDefault[1][i])
         in_ans = ''
-    ####TANK#########################################
+    ####TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[2])
         #print('ans = ', in_ans)
@@ -582,7 +588,7 @@ while ans.lower() != "exit":
             for i in range(len(TANKACT)):
                 disdefval(InType[1], Iso[2][i], Comp[2], IsoDefault[2][i])
         in_ans = ''
-    ####CONCRETE#####################################
+    ####CONCRETE###################################
         print('##################################################')
         in_ans = inputcheck(InType[1], Comp[3])
         #print('ans = ', in_ans)
@@ -593,7 +599,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(CONCACT)):
                 disdefval(InType[1], Iso[3][i], Comp[3], IsoDefault[3][i])
-    ####ROCK#########################################
+    ####ROCK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[4])
         print('##################################################')
@@ -603,7 +609,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(ROCKPPM)):
                 disdefval(InType[0], Iso[4][i], Comp[4], IsoDefault[4][i])
-    ####Rn WATER#####################################
+    ####Rn WATER###################################
         print('##################################################') 
         in_ans = inputcheck(InType[0], Comp[5])
         print('##################################################')
@@ -613,7 +619,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(RnWPPM)):
                 disdefval(InType[0], Iso[5][i], Comp[5], IsoDefault[5][i])
-    ####Gd###########################################
+    ####Gd#########################################
         print('##################################################')
         in_ans = inputcheck(InType[0], Comp[6])
         if in_ans == 'y':
@@ -622,7 +628,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(GDPPM)):
                 disdefval(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
-    ####Get Data#####################################
+    ####Get Data###################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
         dataAct[2] = TankAct(TANKACT)
@@ -630,7 +636,7 @@ while ans.lower() != "exit":
         dataAct[4] = RockAct(ROCKPPM)
         dataAct[5] = WaterAct(RnWPPM)
         dataAct[6] = GdAct(GDPPM)
-    #####output######################################
+    #####output####################################
         i = 0
         for i in range(len(Comp)):
             print('##################################################')
@@ -641,9 +647,9 @@ while ans.lower() != "exit":
         ai = True
         clear()
         ans = ''
-######Efficiency#####################################
+######Efficiency###################################
     elif ans.lower() == 'e':
-    ####PMTs########################################
+    ####PMTs#######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[0])
         print('##################################################')
@@ -656,7 +662,7 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
                     disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
-    ####VETOS########################################
+    ####VETOS######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[1])
         print('##################################################')
@@ -669,7 +675,7 @@ while ans.lower() != "exit":
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
                     disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
-    ####TANK#########################################
+    ####TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[2])
         print('##################################################')
@@ -682,7 +688,7 @@ while ans.lower() != "exit":
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
                     disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
-    ####CONCRETE#####################################
+    ####CONCRETE###################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[3])
         print('##################################################')
@@ -695,7 +701,7 @@ while ans.lower() != "exit":
             for i in range(len(CONCIsoDecay)):
                 for x in range(len(CONCIsoEff[i])):
                     disdefval(InType[2], CONCIsoDecay[i][x], Comp[4], CONCIsoDefault[i][x])
-    #####ROCK########################################
+    #####ROCK######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[4])
         print('##################################################')
@@ -708,7 +714,7 @@ while ans.lower() != "exit":
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
                     disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
-    ####RnWATER######################################
+    ####RnWATER####################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[5])
         print('##################################################')
@@ -719,7 +725,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(WATERIsoDecay)):
                 disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
-    ####GD###########################################
+    ####GD#########################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[5])
         print('##################################################')
@@ -732,11 +738,11 @@ while ans.lower() != "exit":
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDecay[i])):
                     disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoDefault[i][x])
-    ####reset########################################
+    ####reset######################################
         ei = True
         clear()
         ans = ''
-########Background Rate##############################
+########Background Rate############################
     elif ans.lower() == 'bgr':
         if ai == False:
             print('##################################################')
@@ -765,7 +771,7 @@ while ans.lower() != "exit":
             pass
         #BGR Code
         tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
-#########Accidental BG Rate##########################
+#########Accidental BG Rate########################
         print('##################################################')
         print('PMT  Accidental background = %.5e' % PMT_Acc)
         print('VETO Accidental background = %.5e' % VETO_Acc)
@@ -779,7 +785,7 @@ while ans.lower() != "exit":
         print('Total Backgroud Rate = %.5e' % tot)
         clear()
         ans = ''
-######time detection calculation#####################
+######time detection calculation###################
     elif ans.lower() == 'td':
         if ai == False:
             print('##################################################')
@@ -879,7 +885,7 @@ while ans.lower() != "exit":
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         clear()
         ans = ''
-####Cleanliness budget calculation
+####Cleanliness budget calculation#################
     elif ans.lower() == 'cb':
         Iso_cb_labels = ['Pa234', 'Ac228', 'Pb214', 'Bi214', 'Pb212', 'Bi212', 'Tl210', 'Bi210', 'Tl208', 'K40'] 
         Iso_cb = list()
@@ -890,7 +896,7 @@ while ans.lower() != "exit":
         ROCK_BG_CB = ROCK_Acc
         RnW_BG_CB = WATER_Acc
         GD_BG_CB = GD_Acc
-        #signal input
+        #signal input##############################
         if ai == False:
             print('##################################################')
             print('Setting Activity values to default values')
@@ -908,13 +914,40 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Setting Efficiency values to default values')
             #just print out lists as set to default when lists are defined
-            #PMT
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
-                for x in range(len(PMTIsoDefault[i])):
-                    disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
-            #add other compontents
+                for x in range(len(PMTIsoEff[i])):
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[1])
+            for i in range(len(VETOIsoDecay)):
+                for x in range(len(VETOIsoEff[i])):
+                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[2])
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[3])
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[4])
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoDefault[i])):
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[5])
+            for i in range(len(WATERIsoDecay)):
+                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[6])
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDefault[i])):
+                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
         else:
             pass
         if bgi == False:
@@ -945,7 +978,7 @@ while ans.lower() != "exit":
         B = signal*1.035 + tot
         S = signal*0.9
         sigma = 4.65
-        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
+        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S)) #Events per day
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #print('##################################################')
         #TODO We will need to add an additional step. If no radioactivity rate 
@@ -962,11 +995,13 @@ while ans.lower() != "exit":
         #    Iso_cb.append(Mbg*IsoShare[i])
         #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
+        PMTBGIsoCB = PMTShare
         for i in range(len(PMTShare)):
             for x in range(len(PMTShare[i])):
-                PMT_BG_CB += Mbg*(PMTShare[i][x]) 
+                PMT_BG_CB += Mbg*(PMTShare[i][x])
+                PMTBGIsoCB[i][x] = Mbg*PMTShare[i][x]
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
-        PMTIsoAct = revPMTAct(PMTBGIso, PMTIsoEff)
+        PMTIsoAct = revPMTAct(PMTBGIsoCB, PMTIsoEff)
         for i in range(len(PMTIsoAct)):
             print('%.5s = %.5e' % (Iso[0][i], PMTIsoAct[i]))
         print('##################################################')
