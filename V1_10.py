@@ -114,15 +114,15 @@ def clear():
         if ui.lower() == 'n':
             break
 #####shareFunc#######################################
-def share(total, Iso):
+def share(total, Iso, Efficiency):
     IsoShare = Iso
     if isinstance(Iso[0], list) == True:
         for i in range(len(Iso)):
             for x in range(len(Iso[i])):
-                IsoShare[i][x] = Iso[i][x]/(total*(24*60**2)) #changes total to events per sec
+                IsoShare[i][x] = Iso[i][x]/Efficiency[i][x]/(total*(24*60**2))/(0.0001*0.05) #changes total to events per sec
     elif isinstance(Iso[0], list) == False:
         for i in range(len(Iso)):
-            IsoShare[i] = Iso[i]/(total*(24*60**2)) #changes total to events per sec
+            IsoShare[i] = Iso[i]/Efficiency[i]/(total*(24*60**2))/(0.0001*0.05) #changes total to events per sec
     return IsoShare
 #####Background activity from Glass in PMTs##########
 def PMTAct(PPM): #done
@@ -309,9 +309,9 @@ TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
 TANKIsoEff = TANKIsoDefault
 #######CONC##########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
-                  [0]]             #[K40]]
+CONCIsoDefault = [[1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  [1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5],    #[Ac228, Pb212, Bi212, Tl208],
+                  [1.25e-5]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
 #######ROCK##########################################
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
@@ -879,6 +879,7 @@ while ans.lower() != "exit":
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         clear()
         ans = ''
+####Cleanliness budget calculation
     elif ans.lower() == 'cb':
         Iso_cb_labels = ['Pa234', 'Ac228', 'Pb214', 'Bi214', 'Pb212', 'Bi212', 'Tl210', 'Bi210', 'Tl208', 'K40'] 
         Iso_cb = list()
@@ -913,17 +914,18 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
                     disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+            #add other compontents
         else:
             pass
         if bgi == False:
             tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
-            PMTShare = share(tot, PMTBGIso)
-            VETOShare = share(tot, VETOBGIso)
-            TANKShare = share(tot, TANKBGIso)
-            CONCShare = share(tot, CONCBGIso)
-            ROCKShare = share(tot, ROCKBGIso)
-            RnWAShare = share(tot, WATERBGIso)
-            GDShare = share(tot, GDBGIso)
+            PMTShare = share(tot, PMTBGIso, PMTIsoEff)
+            VETOShare = share(tot, VETOBGIso, VETOIsoEff)
+            TANKShare = share(tot, TANKBGIso, TANKIsoEff)
+            CONCShare = share(tot, CONCBGIso, CONCIsoEff)
+            ROCKShare = share(tot, ROCKBGIso, ROCKIsoEff)
+            RnWAShare = share(tot, WATERBGIso, WATERIsoEff)
+            GDShare = share(tot, GDBGIso, GDIsoEff)
         else:
             pass
         try:
@@ -962,7 +964,7 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(PMTShare)):
             for x in range(len(PMTShare[i])):
-                PMT_BG_CB += tot*PMTShare[i][x] 
+                PMT_BG_CB += Mbg*(PMTShare[i][x]) 
         print('Max BG from PMT = %.5e' % PMT_BG_CB)
         PMTIsoAct = revPMTAct(PMTBGIso)
         for i in range(len(PMTIsoAct)):
@@ -970,7 +972,7 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
-                VETO_BG_CB += tot*VETOShare[i][x]
+                VETO_BG_CB += Mbg*VETOShare[i][x]
         print('Max BG from VETO = %.5e' % VETO_BG_CB)
         VETOIsoAct = revVETOAct(VETOBGIso)
         for i in range(len(VETOBGIso)):
@@ -978,7 +980,7 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
-                TANK_BG_CB += tot*TANKShare[i][x]
+                TANK_BG_CB += Mbg*TANKShare[i][x]
         print('Max BG from TANK = %.5e' % TANK_BG_CB)
         TANKIsoAct = revTankAct(TANKBGIso)
         for i in range(len(TANKIsoAct)):
@@ -986,7 +988,7 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
-                CONC_BG_CB += tot*CONCShare[i][x]
+                CONC_BG_CB += Mbg*CONCShare[i][x]
         print('Max BG from CONC = %.5e' % CONC_BG_CB)
         CONCIsoAct = revCONCAct(CONCBGIso)
         for i in range(len(CONCIsoAct)):
@@ -994,21 +996,21 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(ROCKShare)):
             for x in range(len(ROCKShare[i])):
-                ROCK_BG_CB += tot*ROCKShare[i][x]
+                ROCK_BG_CB += Mbg*ROCKShare[i][x]
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         ROCKIsoAct = revROCKAct(ROCKBGIso)
         for i in range(len(ROCKIsoAct)):
             print('%.5s = %.5e' % (Iso[4][i], ROCKIsoAct[i]))
         print('##################################################')
         for i in range(len(RnWAShare)):
-            RnW_BG_CB += tot*RnWAShare[i]
+            RnW_BG_CB += Mbg*RnWAShare[i]
         print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         RnWIsoAct = revWaterAct(WATERBGIso)
         print('%.5s = %.5e' % (Iso[5][0], RnWIsoAct))
         print('##################################################')
         for i in range(len(GDShare)):
            for x in range(len(GDShare[i])):
-            GD_BG_CB += tot*GDShare[i][x]
+            GD_BG_CB += Mbg*GDShare[i][x]
         print('Max BG from GD = %.5e' % GD_BG_CB)
         GDIsoAct = revGdAct(GDBGIso)
         for i in range(len(GDIsoAct)):
