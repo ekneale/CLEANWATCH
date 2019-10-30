@@ -9,7 +9,7 @@ import Nrate as Nr
 #dim vars
 bgi = False
 ######Isotope properties############################
-Ms = [3.953e-25, 3.853145e-26, 6.636286e-26] #[U238, Th232, K40] kg per atom
+Ms = [3.953e-25, 3.853145e-25, 6.636286e-26] #[U238, Th232, K40] kg per atom
 Lam = [4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
 halfL = list(range(len(Lam)))
 for i in range(len(Lam)):
