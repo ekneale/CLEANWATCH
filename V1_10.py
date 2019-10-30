@@ -27,7 +27,7 @@ Iso = [['U238', 'Th232', 'K40'], #[[PMT],
        ['U238', 'Th232', 'K40'], # [CONCRETE], 
        ['U238', 'Th232', 'K40'], # [ROCK],
        ['Rn222'],                # [WATER],
-       ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U238_l']]                      # [GD]]
+       ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']]                      # [GD]]
 IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
@@ -118,8 +118,10 @@ def share(total, Iso):
     if isinstance(Iso[0], list) == True:
         for i in range(len(Iso)):
             for x in range(len(Iso[i])):
+            #x = np.argmax(Iso[i])
                 IsoShare[i][x] = Iso[i][x]/(total*(24*60**2)) #changes total to events per sec
     elif isinstance(Iso[0], list) == False:
+        #i = np.argmax(Iso)
         for i in range(len(Iso)):
             IsoShare[i] = Iso[i]/(total*(24*60**2)) #changes total to events per sec
     return IsoShare
