@@ -147,7 +147,7 @@ def PMTAct(PPM): #done
         #print('Step 4 = %.5e' % step4)
         #step5 = step4*mass*n
         #print('Step 5 = %.5e' % step5)
-        IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass*n
+        IsoAct[i] = ((Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6))*mass*n
         #print('Diff = %.5e' % (IsoAct[i] - step5))
     return IsoAct
 ######Reverse BG for PMT func######################
@@ -157,7 +157,7 @@ def revPMTAct(BGIso, IsoEff):
     n = 3542 #number of PMTs
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
-        Act.append(((BGIso[i][x]/(mass*n))*((Ms[i]*(1e6)*Abs[i])/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
+        Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*(1e6))/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
     return Act
 #####Background Activity for VETO Region###########
 def VETOAct(PPM): #done
@@ -172,7 +172,7 @@ def VETOAct(PPM): #done
     n = 354
     IsoAct = list(range(len(Iso[1])))
     for i in range(len(Iso[1])):
-        IsoAct[i] += (Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i])*mass*n
+        IsoAct[i] += (Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6)*mass*n
     return IsoAct
 #####Reverse BG for VETO func######################
 def revVETOAct(BGIso, IsoEff):
@@ -180,7 +180,7 @@ def revVETOAct(BGIso, IsoEff):
     mass = 1.4 #kg
     n = 354
     for i in range(len(BGIso)):
-        Act.append(((BGIso[i][0]/(mass*n))*((Ms[i]*1e6*Abs[i])/Lam[i]))/(IsoEff[i][0]*0.0001*0.05))
+        Act.append(((BGIso[i][0]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][0]*0.0001*0.05))
     return Act
 #####Background Activity from Steel Tank###########
 def TankAct(Act): #done
@@ -256,7 +256,7 @@ def revROCKAct(BGIso, IsoEff):
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     for i in range(len(BGIso)):
-        Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6*Abs[i])/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
+        Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6)/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
     return Act
 #####Background Activity from Water################
 def WaterAct(PPM): #done
@@ -438,7 +438,7 @@ def BGRate():
     # ...for each component
  
     #print('##################################################')
-    #print('Total BGR is %.5e' % tot)
+    print('Total BGR is %.5e' % tot)
     bgi = True
     tot = tot/(60**2*24)
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
