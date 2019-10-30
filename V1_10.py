@@ -35,10 +35,10 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60', 'Cs137']]
 IsoDefault = [[0.043, 0.133, 16], #[[PMT],
-        [0.043, 0.133, 16], # [VETO],
+              [0.043, 0.133, 16], # [VETO],
               [0, 0, 0, 19e-3, 0.77e-3], # [TANK],
               [61, 30, 493],      # [CONCRETE],
-              [0.067, 0.125, 1130],# [ROCK] 
+              [10e-3, 220e-3, 750e-3],# [ROCK] 
               [0.002], #[WATER]
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
 ######Components###################################
@@ -247,7 +247,7 @@ def RockAct(PPM): #done
     PPM = IsoAct = list(range(len(Iso[4])))
     #Activity Loop
     for i in range(len(PPM)):
-        IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6*Abs[i]))*mass
+        IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff):
