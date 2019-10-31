@@ -787,6 +787,36 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
                     disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[1])
+            for i in range(len(VETOIsoDecay)):
+                for x in range(len(VETOIsoEff[i])):
+                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[2])
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[3])
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[4])
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoDefault[i])):
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[5])
+            for i in range(len(WATERIsoDecay)):
+                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[6])
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDefault[i])):
+                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
+
         else:
             pass
         #BGR Code
@@ -828,7 +858,36 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
-                    disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[1])
+            for i in range(len(VETOIsoDecay)):
+                for x in range(len(VETOIsoEff[i])):
+                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[2])
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[3])
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[4])
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoDefault[i])):
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[5])
+            for i in range(len(WATERIsoDecay)):
+                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[6])
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDefault[i])):
+                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
         else:
             pass
         if bgi == False:
@@ -876,6 +935,35 @@ while ans.lower() != "exit":
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
                     disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[1])
+            for i in range(len(VETOIsoDecay)):
+                for x in range(len(VETOIsoEff[i])):
+                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[2])
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[3])
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[4])
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoDefault[i])):
+                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[5])
+            for i in range(len(WATERIsoDecay)):
+                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[6])
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDefault[i])):
+                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
         else:
             pass
         if bgi == False:
