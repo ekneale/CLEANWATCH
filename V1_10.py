@@ -182,7 +182,8 @@ def revVETOAct(BGIso, IsoEff):
     mass = 1.4 #kg
     n = 354
     for i in range(len(BGIso)):
-        Act.append(((BGIso[i][0]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][0]*0.0001*0.05))
+        x = np.argmax(BGIso[i])
+        Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][x]*0.0001*0.05))
     return Act
 #####Background Activity from Steel Tank###########
 def TankAct(Act): #done
