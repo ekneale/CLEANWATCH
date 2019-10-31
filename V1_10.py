@@ -442,7 +442,7 @@ def BGRate():
     #print('##################################################')
     print('Total BGR is %.5e' % tot)
     bgi = True
-    tot = tot/(60**2*24)
+    tot = tot*0.05*0.0001
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
 ###################################################
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
@@ -523,7 +523,7 @@ def AccBack(Prate, Nrate):
     """
     # perform time cut (0.0001), distance cut (0.05), 
     # convert to per day rate
-    timeScale = 0.0001*86400*0.05  
+    timeScale = 0.0001*0.05  
     back = 0
     if isinstance(Prate[0], list) == True: #list is 2d
         for i in range(len(Prate)):
@@ -761,9 +761,9 @@ while ans.lower() != "exit":
                 print('Activity of Isotopes in ' + Comp[i])
                 for x in range(len(Iso[i])):
                     if i == 2 or i == 3:
-                        disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[1], Iso[i][x], Comp[i], IsoDefault[i][x])
                     else:
-                        disdefval(InType[0], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[0], Iso[i][x], Comp[i], IsoDefault[i][x])
         else:
             pass
         if ei == False:
@@ -804,9 +804,9 @@ while ans.lower() != "exit":
                 print('Activity of Isotopes in ' + Comp[i])
                 for x in range(len(Iso[i])):
                     if i == 2 or i == 3:
-                        disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[1], Iso[i][x], Comp[i], IsoDefault[i][x])
                     else:
-                        disdefval(InType[0], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[0], Iso[i][x], Comp[i], IsoDefault[i][x])
         else:
             pass
         if ei == False:
@@ -851,9 +851,9 @@ while ans.lower() != "exit":
                 print('Activity of Isotopes in ' + Comp[i])
                 for x in range(len(Iso[i])):
                     if i == 2 or i == 3:
-                        disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[1], Iso[i][x], Comp[i], IsoDefault[i][x])
                     else:
-                        disdefval(InType[0], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[0], Iso[i][x], Comp[i], IsoDefault[i][x])
         else:
             pass
         if ei == False:
@@ -915,9 +915,9 @@ while ans.lower() != "exit":
                 print('Activity of Isotopes in ' + Comp[i])
                 for x in range(len(Iso[i])):
                     if i == 2 or i == 3:
-                        disdefval(InType[1], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[1], Iso[i][x], Comp[i], IsoDefault[i][x])
                     else:
-                        disdefval(InType[0], Iso[i][x], Comp[i], dataAct[i][x])
+                        disdefval(InType[0], Iso[i][x], Comp[i], IsoDefault[i][x])
         else:
             pass
         if ei == False:
