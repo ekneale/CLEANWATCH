@@ -25,22 +25,23 @@ Iso = [['U238', 'Th232', 'K40'], #[[PMT],
        ['U238', 'Th232', 'K40'], # [VETO], 
        ['U238', 'Th232', 'K40', 'Co60', 'Cs137'], # [TANK],
        ['U238', 'Th232', 'K40'], # [CONCRETE], 
-       ['U238', 'Th232', 'K40'], # [ROCK],
-       ['Rn222'],                # [WATER],
-       ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']]                      # [GD]]
+       ['U238', 'Th232', 'K40', 'Fast Neutron'], # [ROCK],
+       ['Rn222','RadioNuclide'], # [WATER],
+       ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']] # [GD]]
 IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Ac228', 'Pb212', 'Bi212', 'Tl208'],          #Th232 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
             ['K40'],                                       #K40 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60', 'Cs137']]
-IsoDefault = [[0.043, 0.133, 16], #[[PMT], ppm
-              [0.043, 0.133, 16], # [VETO], ppm
-              [0, 0, 0, 19e-3, 0.77e-3], # [TANK], 
-              [61, 30, 493],      # [CONCRETE], 
-              [10e-3, 220e-3, 750e-3],# [ROCK] 
-              [0.002], #[WATER]
-              [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
+=======
+IsoDefault = [[0.043, 0.133, 16], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
+              [0.043, 0.133, 16], # [VETO], [U238(ppm), Th232(ppm), K40(ppm)]
+              [1.4e-3, 0.93e-3, 34e-3, 14e-3, 4e-3], # [TANK], [U238 (ppb), Th232(ppb), K40(mBq), Co60(mBq), Cs137(mBq)]
+              [61, 30, 493],      # [CONCRETE], [U238(Bq), Th232(Bq), K40(Bq)]
+              [10e-3, 220e-3, 750, 0.01],# [ROCK], [U238(ppb), Th232(ppb), K40(ppm)] 
+              [0.002e-3, 0.02], #[WATER], [Rn222(mBq), FN (events/day)]
+              [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD]] [
 ######Components###################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
 ######menu func####################################
@@ -174,7 +175,7 @@ def VETOAct(PPM): #done
     n = 296
     IsoAct = list(range(len(Iso[1])))
     for i in range(len(Iso[1])):
-        IsoAct[i] += (Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6)*mass*n
+        IsoAct[i] = (Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6)*mass*n
     return IsoAct
 #####Reverse BG for VETO func######################
 def revVETOAct(BGIso, IsoEff):
@@ -224,7 +225,10 @@ def ConcAct(Act): #done
     #defaults
     IsoAct = list(range(len(Iso[3])))
     for i in range(len(Act)):
-        IsoAct[i] = Act[i]*mass
+        if i < 2:
+            IsoAct[i] = ((Lam[i]*Act[i]*Abs[i])/(Ms[i]*(1e6)))*mass
+        else:
+            IsoAct[i] = Act[i]*mass
     return IsoAct
 #####Reverse BG for CONC func######################
 def revCONCAct(BGIso, IsoEff):
@@ -233,7 +237,11 @@ def revCONCAct(BGIso, IsoEff):
     den = 2300 #kg/m^3
     mass = vol * den
     for i in range(len(BGIso)):
-        Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
+        x = np.argmax(BGIso[i])
+        if i < 2:
+            Act.append((BGIso[i][x]*Ms[i]*(1e6))/(Lam[i]*Abs[i])/mass/IsoEff[i][x]*0.0001*0.05)
+        else:
+            Act.append(BGIso[i][x]/mass/(IsoEff[i][x]*0.0001*0.05))
     return Act
 #####Background Activity from Rock Salt############
 def RockAct(PPM): #done
@@ -247,9 +255,9 @@ def RockAct(PPM): #done
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     #dim vars
-    PPM = IsoAct = list(range(len(Iso[4])))
+    PPM = IsoAct = list(range(len(Iso[4])-1))
     #Activity Loop
-    for i in range(len(PPM)):
+    for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
     return IsoAct
 #####Reverse BG for ROCK func######################
