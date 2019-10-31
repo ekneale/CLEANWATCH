@@ -34,10 +34,10 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['K40'],                                       #K40 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60', 'Cs137']]
-IsoDefault = [[0.043, 0.133, 16], #[[PMT],
-              [0.043, 0.133, 16], # [VETO],
-              [0, 0, 0, 19e-3, 0.77e-3], # [TANK],
-              [61, 30, 493],      # [CONCRETE],
+IsoDefault = [[0.043, 0.133, 16], #[[PMT], ppm
+              [0.043, 0.133, 16], # [VETO], ppm
+              [0, 0, 0, 19e-3, 0.77e-3], # [TANK], 
+              [61, 30, 493],      # [CONCRETE], 
               [10e-3, 220e-3, 750e-3],# [ROCK] 
               [0.002], #[WATER]
               [10, 0.2, 0.25, 0.28, 0.35, 1.7]] #[GD]
@@ -135,7 +135,7 @@ def PMTAct(PPM): #done
     #def mass
     mass = 1.4 #kg - mass of glass in PMT
     #DimVars
-    n = 3542 #number of PMTs
+    n = 3258 #number of PMTs
     IsoAct = list(range(len(Iso[0])))
     for i in range(len(PPM)):
         #print('PPM = %.5e' % PPM[i])
@@ -156,7 +156,7 @@ def PMTAct(PPM): #done
 def revPMTAct(BGIso, IsoEff):
     Act = list()
     mass = 1.4 #kg - mass of glass in PMT
-    n = 3542 #number of PMTs
+    n = 3258 #number of PMTs
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
         Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*(1e6))/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
@@ -171,7 +171,7 @@ def VETOAct(PPM): #done
     #def mass
     mass = 1.4 #kg
     #Dim Vars
-    n = 354
+    n = 296
     IsoAct = list(range(len(Iso[1])))
     for i in range(len(Iso[1])):
         IsoAct[i] += (Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6)*mass*n
@@ -180,7 +180,7 @@ def VETOAct(PPM): #done
 def revVETOAct(BGIso, IsoEff):
     Act = list()
     mass = 1.4 #kg
-    n = 354
+    n = 296
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
         Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][x]*0.0001*0.05))
@@ -978,7 +978,7 @@ while ans.lower() != "exit":
             signal < 1
         except:
             signal = 0.430
-            print('Signal rate set to default value of %.5e' % s)
+            print('Signal rate set to default value of %.5e' % signal)
         #get number of days
         try:
             days = literal_eval(input('Input time dection in days: '))
@@ -1097,7 +1097,14 @@ while ans.lower() != "exit":
         #    Iso_cb.append(Mbg*IsoShare[i])
         #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
         print('##################################################')
-        PMTBGIsoCB = PMTShare
+        PMTBGIsoCB  = PMTShare
+        VETOBGIsoCB = VETOShare
+        TANKBGIsoCB = TANKShare
+        CONCBGIsoCB = CONCShare
+        ROCKBGIsoCB = ROCKShare
+        RnWBGIsoCB  = RnWAShare
+        GDBGIsoCB   = GDShare
+        
         for i in range(len(PMTShare)):
             for x in range(len(PMTShare[i])):
                 PMT_BG_CB = Mbg*(PMTShare[i][x])
@@ -1110,14 +1117,16 @@ while ans.lower() != "exit":
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
                 VETO_BG_CB = Mbg*VETOShare[i][x]
+                VETOBGIsoCB[i][x] = VETO_BG_CB
         print('Max BG from VETO = %.5e' % VETO_BG_CB)
-        VETOIsoAct = revVETOAct(VETOBGIso,VETOIsoEff)
+        VETOIsoAct = revVETOAct(VETOBGIsoCB,VETOIsoEff)
         for i in range(len(VETOBGIso)):
             print('%.5s = %.5e' % (Iso[1][i], VETOIsoAct[i]))
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
                 TANK_BG_CB = Mbg*TANKShare[i][x]
+                TANKBGIsoCB[i][x] = TANK_BG_CB
         print('Max BG from TANK = %.5e' % TANK_BG_CB)
         TANKIsoAct = revTankAct(TANKBGIso, TANKIsoEff)
         for i in range(len(TANKIsoAct)):
@@ -1126,6 +1135,7 @@ while ans.lower() != "exit":
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
                 CONC_BG_CB = Mbg*CONCShare[i][x]
+                CONCBGIsoCB[i][x] = CONC_BG_CB
         print('Max BG from CONC = %.5e' % CONC_BG_CB)
         CONCIsoAct = revCONCAct(CONCBGIso, CONCIsoEff)
         for i in range(len(CONCIsoAct)):
@@ -1134,6 +1144,7 @@ while ans.lower() != "exit":
         for i in range(len(ROCKShare)):
             for x in range(len(ROCKShare[i])):
                 ROCK_BG_CB = Mbg*ROCKShare[i][x]
+                ROCKBGIsoCB[i][x] = ROCK_BG_CB
         print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         ROCKIsoAct = revROCKAct(ROCKBGIso, ROCKIsoEff)
         for i in range(len(ROCKIsoAct)):
@@ -1141,6 +1152,7 @@ while ans.lower() != "exit":
         print('##################################################')
         for i in range(len(RnWAShare)):
             RnW_BG_CB = Mbg*RnWAShare[i]
+            RnWBGIsoCB[i] = RnW_BG_CB
         print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         RnWIsoAct = revWaterAct(WATERBGIso, WATERIsoEff)
         print('%.5s = %.5e' % (Iso[5][0], RnWIsoAct))
@@ -1148,6 +1160,7 @@ while ans.lower() != "exit":
         for i in range(len(GDShare)):
            for x in range(len(GDShare[i])):
             GD_BG_CB = Mbg*GDShare[i][x]
+            GDBGIsoCB[i][x] = GD_BG_CB
         print('Max BG from GD = %.5e' % GD_BG_CB)
         GDIsoAct = revGdAct(GDBGIso, GDIsoEff)
         for i in range(len(GDIsoAct)):
