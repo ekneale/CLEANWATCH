@@ -440,7 +440,7 @@ def BGRate():
     # ...for each component
  
     #print('##################################################')
-    print('Total BGR is %.5e' % tot)
+    print('Total singles rate per second is %.5e' % tot)
     bgi = True
     tot = tot*0.05*0.0001
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
@@ -454,6 +454,16 @@ def BGRate():
 #CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
 #ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
 #RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
+
+def MaxBG(s,t):
+    sigma = 4.65
+    S = s*0.9
+    #def Max BG formula
+    B = (1.5*t*S**2)/(2.5*sigma**2) - S/2.5
+    Mbg = B - (S*1.15)
+    print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+    return Mbg
+
 ########Max Accidental BG##########################
 def Max(bg, share):
     #TODO
@@ -791,7 +801,7 @@ while ans.lower() != "exit":
         print('GD Accidental background = %.5e' % GD_Acc)
         print('##################################################')
         tot += (PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc + GD_Acc)
-        print('Total Backgroud Rate = %.5e' % tot)
+        print('Total Backgroud Rate = %.5e per day' % tot)
         clear()
         ans = ''
 ######time detection calculation###################
@@ -878,21 +888,17 @@ while ans.lower() != "exit":
             signal = literal_eval(input('Input signal rate: '))
             signal < 1
         except:
-            signal = 0.5
+            signal = 0.430
             print('Signal rate set to default value of %.5e' % s)
         #get number of days
         try:
             days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
-            days = 1
+            days = 201.7
             print('Time dection set to default value of %.5e days' % days)
-        #def sigma
-        sigma = 4.65
-        S = signal*0.9
-        #def Max BG formula
-        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S))
-        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+        Mbg = MaxBG(signal,days) 
+        
         clear()
         ans = ''
 ####Cleanliness budget calculation#################
@@ -982,13 +988,11 @@ while ans.lower() != "exit":
             days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
-            days = 1
+            days = 201.7
             print('Time dection set to default value of %.3e days' % days)
         #def sigma
-        B = signal*1.035 + tot
-        S = signal*0.9
-        sigma = 4.65
-        Mbg = ((1/5)*(((3*days*pow(S,2))/(pow(sigma,2))) - 2*S)) #Events per day
+        #B = signal*1.035 + tot
+        Mbg = MaxBG(signal,days) #Events per day
         print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #TODO We will need to add an additional step. If no radioactivity rate 
         # has been changed, then the share is as below.
