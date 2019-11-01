@@ -19,6 +19,8 @@ Abs = [1, 1, 0.00117] #[U238, Th232, K40] Natural Abundance
 TankR = 10026.35e-3 #m
 Height = 10026.35e-3 #m
 SThick = 6.35e-3 #m
+RN = 0.01 #radionuclides events per day
+FN = 0.02 #rock events per day
 ######User input Type###############################
 InType = ['PPM', 'Activity', 'Efficiency', 'Signal Rate']
 Iso = [['U238', 'Th232', 'K40'], #[[PMT], 
@@ -34,14 +36,13 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['K40'],                                       #K40 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
             ['Co60', 'Cs137']]
-=======
-IsoDefault = [[0.043, 0.133, 16], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
-              [0.043, 0.133, 16], # [VETO], [U238(ppm), Th232(ppm), K40(ppm)]
-              [1.4e-3, 0.93e-3, 34e-3, 14e-3, 4e-3], # [TANK], [U238 (ppb), Th232(ppb), K40(mBq), Co60(mBq), Cs137(mBq)]
-              [61, 30, 493],      # [CONCRETE], [U238(Bq), Th232(Bq), K40(Bq)]
-              [10e-3, 220e-3, 750, 0.01],# [ROCK], [U238(ppb), Th232(ppb), K40(ppm)] 
-              [0.002e-3, 0.02], #[WATER], [Rn222(mBq), FN (events/day)]
-              [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD]] [
+IsoDefault = [[0.043, 0.133, 36], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
+              [0.043, 0.133, 36], # [VETO], [U238(ppm), Th232(ppm), K40(ppm)]
+              [0.17, 3.8e-3, 34e-3, 14e-3, 4e-3], # [TANK], [U238 (1.4e-3ppm), Th232(0.93e-3ppm), K40(Bq/kg), Co60(Bq/kg), Cs137(Bq/kg)]
+              [61, 30, 493],      # [CONCRETE], [U238(Bq/kg), Th232(Bq/kg), K40(Bq/kg)]
+              [10e-3, 220e-3, 750, 0.02],# [ROCK], [U238(ppm), Th232(ppm), K40(ppm), fast neutrons(events per day)] 
+              [0.002,0.01], #[WATER], [Rn222(Bqm-3), radionuclides(events per day)]
+              [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD](Bq/kg)] [
 ######Components###################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
 ######menu func####################################
@@ -194,7 +195,7 @@ def TankAct(Act): #done
     Act: Activity of the Isotope
     """
     #def mass
-    vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) 
+    vol = np.pi*2*Height*TankR**2 - np.pi*2*(Height-SThick)*pow(TankR-SThick,2) 
     den = 8000 #kg/m^3
     mass = vol * den
     #dim other vars
@@ -205,7 +206,7 @@ def TankAct(Act): #done
 #####Reverse BG for TANK func######################
 def revTankAct(BGIso, IsoEff):
     Act = list()
-    vol = (np.pi*Height*TankR**2) - (np.pi*(Height-2*SThick)*(TankR-(SThick**2))) 
+    vol = np.pi*2*Height*pow(TankR,2) - np.pi*2*(Height-SThick)*pow(TankR-SThick,2)
     den = 8000 #kg/m^3
     mass = vol * den
     for i in range(len(BGIso)):
@@ -225,10 +226,7 @@ def ConcAct(Act): #done
     #defaults
     IsoAct = list(range(len(Iso[3])))
     for i in range(len(Act)):
-        if i < 2:
-            IsoAct[i] = ((Lam[i]*Act[i]*Abs[i])/(Ms[i]*(1e6)))*mass
-        else:
-            IsoAct[i] = Act[i]*mass
+        IsoAct[i] = Act[i]*mass
     return IsoAct
 #####Reverse BG for CONC func######################
 def revCONCAct(BGIso, IsoEff):
@@ -238,10 +236,7 @@ def revCONCAct(BGIso, IsoEff):
     mass = vol * den
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
-        if i < 2:
-            Act.append((BGIso[i][x]*Ms[i]*(1e6))/(Lam[i]*Abs[i])/mass/IsoEff[i][x]*0.0001*0.05)
-        else:
-            Act.append(BGIso[i][x]/mass/(IsoEff[i][x]*0.0001*0.05))
+        Act.append(BGIso[i][x]/mass/(IsoEff[i][x]*0.0001*0.05))
     return Act
 #####Background Activity from Rock Salt############
 def RockAct(PPM): #done
@@ -259,6 +254,7 @@ def RockAct(PPM): #done
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
+       
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff):
@@ -274,38 +270,36 @@ def WaterAct(PPM): #done
     """
     Calculates the background activity for the Water
     Decay Chains: Rn222
-    PPM: Parts per 1e6 for Isotope
     """
     #def mass of water
-    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    vol = np.pi*pow(TankR, 2)*2*Height #volume in m3
     #dim vars
     PPM = IsoAct = list(range(len(Iso[5])))
-    for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*mass*0.002
+    for i in range(len(PPM)-1):
+        IsoAct[i] = PPM[i]*vol #Bqm-3*m3
     return IsoAct
 #####reverse BG for Water func#####################
 def revWaterAct(BGIso, IsoEff):
-    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
-    Act =(BGIso[0]/(mass*0.002)/(IsoEff[0]*0.0001*0.05))
+    vol = np.pi*pow(TankR, 2)*(2*Height) # m3
+    Act =(BGIso[0]/(vol*0.002)/(IsoEff[0]*0.0001*0.05))
     return Act
 #####Background Activity from Gd###################
 def GdAct(PPM):
     """
     Calculates the background activity for the Gd
-    Decay Chains: U238, Th232, U235, (U238_l, Th232_l, U235_l to be added later)
-    PPM: Parts per 1e6 for Isotope
+    Decay Chains: U238, Th232, U235
     """
     #def mass of water
-    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e3 #mass in kg
     #dim vars
     PPM = IsoAct = list(range(len(Iso[6])))
     for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*mass*0.002
+        IsoAct[i] = PPM[i]*mass*0.002 #Gdmass*Bqkg-1
     return IsoAct
 #####reverse BG for GD#############################
 def revGdAct(BGIso, IsoEff):
     Act = list()
-    mass = np.pi*pow(TankR, 2)*(2*Height)*1e-3
+    mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     for i in range(len(BGIso)):
         Act.append(BGIso[i][0]/(mass*0.002)/(IsoEff[i][0]*0.0001*0.05))
     return Act
@@ -452,7 +446,8 @@ def BGRate():
     print('Total singles rate per second is %.5e' % tot)
     bgi = True
     tot*=0.05*0.0001
-    print('Total accidental rate per day is %.5e' % tot)
+    tot+=FN+RN
+    print('Total accidental + cosmic muon background rate per day is %.5e' % tot)
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
 ###################################################
 #Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
@@ -992,7 +987,7 @@ while ans.lower() != "exit":
             days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
-            days = 201.7
+            days = 2.02667e+02
             print('Time dection set to default value of %.5e days' % days)
         Mbg = MaxBG(signal,days) 
         
@@ -1085,7 +1080,7 @@ while ans.lower() != "exit":
             days = literal_eval(input('Input time dection in days: '))
             days != 0
         except:
-            days = 201.7
+            days = 2.02667e+02
             print('Time dection set to default value of %.3e days' % days)
         #def sigma
         #B = signal*1.035 + tot
