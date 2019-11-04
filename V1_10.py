@@ -140,19 +140,7 @@ def PMTAct(PPM): #done
     n = 3258 #number of PMTs
     IsoAct = list(range(len(Iso[0])))
     for i in range(len(IsoAct)):
-        #print('PPM = %.5e' % PPM[i])
-        #step1 = Lam[i]*PPM[i]
-        #print('Step 1 = %.5e' % step1)
-        #step2 = step1/Ms[i]
-        #print('Step 2 = %.5e' % step2)
-        #step3 = step2/(1e6)
-        #print('Step 3 = %.5e' % step3)
-        #step4 = step3/Abs[i]
-        #print('Step 4 = %.5e' % step4)
-        #step5 = step4*mass*n
-        #print('Step 5 = %.5e' % step5)
         IsoAct[i] = ((Lam[i]*PPM[i]*Abs[i])/(Ms[i]*1e6))*mass*n
-        #print('Diff = %.5e' % (IsoAct[i] - step5))
     return IsoAct
 ######Reverse BG for PMT func######################
 def revPMTAct(BGIso, IsoEff):
@@ -989,8 +977,7 @@ while ans.lower() != "exit":
         except:
             days = 2.02667e+02
             print('Time dection set to default value of %.5e days' % days)
-        Mbg = MaxBG(signal,days) 
-        
+        Mbg = MaxBG(signal,days)   
         clear()
         ans = ''
 ####Cleanliness budget calculation#################
