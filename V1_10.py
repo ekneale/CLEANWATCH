@@ -149,7 +149,10 @@ def revPMTAct(BGIso, IsoEff):
     n = 3258 #number of PMTs
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
-        Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*(1e6))/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*(1e6))/(Lam[i])))/(IsoEff[i][x]*0.0001*0.05))
+        else:
+            Act.append(IsoDefault[0][i])
     return Act
 #####Background Activity for VETO Region###########
 def VETOAct(PPM): #done
@@ -173,7 +176,10 @@ def revVETOAct(BGIso, IsoEff):
     n = 296
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
-        Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][x]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][x]*0.0001*0.05))
+        else
+            Act.append(IsoDefault[1][i])
     return Act
 #####Background Activity from Steel Tank###########
 def TankAct(Act): #done
@@ -198,7 +204,10 @@ def revTankAct(BGIso, IsoEff):
     den = 8000 #kg/m^3
     mass = vol * den
     for i in range(len(BGIso)):
-        Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
+        else:
+            Act.append(IsoDefault[2][i])
     return Act
 #####Background Activity from concrete#############
 def ConcAct(Act): #done
@@ -224,7 +233,10 @@ def revCONCAct(BGIso, IsoEff):
     mass = vol * den
     for i in range(len(BGIso)):
         x = np.argmax(BGIso[i])
-        Act.append(BGIso[i][x]/mass/(IsoEff[i][x]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(BGIso[i][x]/mass/(IsoEff[i][x]*0.0001*0.05))
+        else:
+            Act.append(IsoDefault[3][i])
     return Act
 #####Background Activity from Rock Salt############
 def RockAct(PPM): #done
@@ -242,7 +254,6 @@ def RockAct(PPM): #done
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
-       
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff):
@@ -251,7 +262,10 @@ def revROCKAct(BGIso, IsoEff):
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     for i in range(len(BGIso)):
-        Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6)/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6)/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
+        else:
+            Act.append(IsoDefault[4][i])
     return Act
 #####Background Activity from Water################
 def WaterAct(PPM): #done
@@ -269,7 +283,10 @@ def WaterAct(PPM): #done
 #####reverse BG for Water func#####################
 def revWaterAct(BGIso, IsoEff):
     vol = np.pi*pow(TankR, 2)*(2*Height) # m3
-    Act =(BGIso[0]/(vol*0.002)/(IsoEff[0]*0.0001*0.05))
+    if IsoEff[i][x] != 0:
+        Act = (BGIso[0]/(vol*0.002)/(IsoEff[0]*0.0001*0.05))
+    else:
+        Act = IsoEff[5]
     return Act
 #####Background Activity from Gd###################
 def GdAct(PPM):
@@ -289,10 +306,12 @@ def revGdAct(BGIso, IsoEff):
     Act = list()
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     for i in range(len(BGIso)):
-        Act.append(BGIso[i][0]/(mass*0.002)/(IsoEff[i][0]*0.0001*0.05))
+        if IsoEff[i][x] != 0:
+            Act.append(BGIso[i][0]/(mass*0.002)/(IsoEff[i][0]*0.0001*0.05))
+        else:
+            Act.append(IsoDefault[6][i])
     return Act
 #####Efficiences###################################
-##dim vars
 #######PMT#########################################
 PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
