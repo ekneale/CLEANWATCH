@@ -127,6 +127,12 @@ def share(total, Iso):
         for i in range(len(Iso)):
             IsoShare[i] = Iso[i]/(total/0.05/0.0001)
     return IsoShare
+def CBOUT(IsoAct, BGIsoCB, BGIso, n):
+    for i in range(len(IsoAct)):
+        print('Singles Budget for %.5s = %.5e' % (Iso[n][i], sum(BGIsoCB[i])))
+        print('Accidentals Budget for %.5s = %.5e' % (Iso[n][i], (sum(BGIsoCB[i])*0.05*0.0001)))
+        print('Radioactivity Budget for %.5s = %.5e' % (Iso[n][i], IsoAct[i]))
+        print('Nominals Budget for %.5s = %.5e' % (Iso[n][i], sum(BGIso[i])))
 #####Background activity from Glass in PMTs########
 def PMTAct(PPM): #done
     """
@@ -1094,7 +1100,7 @@ while ans.lower() != "exit":
         #def sigma
         #B = signal*1.035 + tot
         Mbg = MaxBG(signal,days) #Events per day
-        print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+        #print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
         #TODO We will need to add an additional step. If no radioactivity rate 
         # has been changed, then the share is as below.
         # If a radioactivity rate has been changed for a component, 
@@ -1115,68 +1121,70 @@ while ans.lower() != "exit":
         CONCBGIsoCB = CONCShare
         ROCKBGIsoCB = ROCKShare
         RnWBGIsoCB  = RnWAShare
-        GDBGIsoCB   = GDShare
-        
+        GDBGIsoCB   = GDShare 
         for i in range(len(PMTShare)):
             for x in range(len(PMTShare[i])):
                 PMT_BG_CB = Mbg*(PMTShare[i][x])
-                PMTBGIsoCB[i][x] = Mbg*PMTShare[i][x]
-        print('Max BG from PMT = %.5e' % PMT_BG_CB)
+                PMTBGIsoCB[i][x] = Mbg*PMTShare[i][x] 
         PMTIsoAct = revPMTAct(PMTBGIsoCB, PMTIsoEff)
-        for i in range(len(PMTIsoAct)):
-            print('%.5s = %.5e' % (Iso[0][i], PMTIsoAct[i]))
+        #for i in range(len(PMTIsoAct)):
+            #print('Singles Budget for %.5s       = %.5e' % (Iso[0][i], sum(PMTBGIsoCB[i])))
+            #print('Accidentals Budget for %.5s   = %.5e' % (Iso[0][i], ((sum(PMTBGIsoCB[i])*0.05*0.0001))))
+            #print('Radioactivity Budget for %.5s = %.5e PPM' % (Iso[0][i], PMTIsoAct[i]))
+            #print('Nominals Budget for %.5s      = %.5e' % (Iso[0][i], sum(PMTBGIso[i])))
+        CBOUT(PMTIsoAct, PMTBGIsoCB, PMTBGIso, 0)
+        print('Max BG from PMT = %.5e' % PMT_BG_CB)
         print('##################################################')
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
                 VETO_BG_CB = Mbg*VETOShare[i][x]
                 VETOBGIsoCB[i][x] = VETO_BG_CB
-        print('Max BG from VETO = %.5e' % VETO_BG_CB)
+                #print('Share = ', VETOShare[i][x])
         VETOIsoAct = revVETOAct(VETOBGIsoCB,VETOIsoEff)
-        for i in range(len(VETOBGIso)):
-            print('%.5s = %.5e' % (Iso[1][i], VETOIsoAct[i]))
+        CBOUT(VETOIsoAct, VETOBGIsoCB, VETOBGIso, 1)
+        print('Max BG from VETO = %.5e' % VETO_BG_CB)
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
                 TANK_BG_CB = Mbg*TANKShare[i][x]
                 TANKBGIsoCB[i][x] = TANK_BG_CB
-        print('Max BG from TANK = %.5e' % TANK_BG_CB)
         TANKIsoAct = revTankAct(TANKBGIso, TANKIsoEff)
-        for i in range(len(TANKIsoAct)):
-            print('%.5s = %.5e' % (Iso[2][i], TANKIsoAct[i]))
+        CBOUT(TANKIsoAct, TANKBGIsoCB, TANKBGIso, 2)
+        print('Max BG from TANK = %.5e' % TANK_BG_CB)
         print('##################################################')
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
                 CONC_BG_CB = Mbg*CONCShare[i][x]
                 CONCBGIsoCB[i][x] = CONC_BG_CB
-        print('Max BG from CONC = %.5e' % CONC_BG_CB)
         CONCIsoAct = revCONCAct(CONCBGIso, CONCIsoEff)
-        for i in range(len(CONCIsoAct)):
-            print('%.5s = %.5e' % (Iso[3][i], CONCIsoAct[i]))
+        CBOUT(CONCIsoAct, CONCBGIsoCB, CONCBGIso, 3)
+        print('Max BG from CONC = %.5e' % CONC_BG_CB)
         print('##################################################')
         for i in range(len(ROCKShare)):
             for x in range(len(ROCKShare[i])):
                 ROCK_BG_CB = Mbg*ROCKShare[i][x]
                 ROCKBGIsoCB[i][x] = ROCK_BG_CB
-        print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         ROCKIsoAct = revROCKAct(ROCKBGIso, ROCKIsoEff)
-        for i in range(len(ROCKIsoAct)):
-            print('%.5s = %.5e' % (Iso[4][i], ROCKIsoAct[i]))
+        CBOUT(ROCKIsoAct, ROCKBGIsoCB, ROCKBGIso, 4)
+        print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
         print('##################################################')
         for i in range(len(RnWAShare)):
             RnW_BG_CB = Mbg*RnWAShare[i]
             RnWBGIsoCB[i] = RnW_BG_CB
-        print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         RnWIsoAct = revWaterAct(WATERBGIso, WATERIsoEff)
-        print('%.5s = %.5e' % (Iso[5][0], RnWIsoAct))
+        print('Singles Budget for %.5s = %.5e' % (Iso[5][0], sum(RnWBGIsoCB)))
+        print('Accidentals Budget for %.5s = %.5e' % (Iso[5][0], (sum(RnWBGIsoCB)*0.05*0.0001)))
+        print('Radioactivty Budget for %.5s = %.5e' % (Iso[5][0], RnWIsoAct))
+        print('Nominals Budget for %.5s = %.5e' % (Iso[5][0], sum(WATERBGIso)))
+        print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
         print('##################################################')
         for i in range(len(GDShare)):
            for x in range(len(GDShare[i])):
             GD_BG_CB = Mbg*GDShare[i][x]
             GDBGIsoCB[i][x] = GD_BG_CB
-        print('Max BG from GD = %.5e' % GD_BG_CB)
         GDIsoAct = revGdAct(GDBGIso, GDIsoEff)
-        for i in range(len(GDIsoAct)):
-            print('%.8s = %.5e' % (Iso[6][i], GDIsoAct[i]))
+        CBOUT(GDIsoAct, GDBGIsoCB, GDBGIso, 6)
+        print('Max BG from GD = %.5e' % GD_BG_CB)
         print('##################################################')
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
