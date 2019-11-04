@@ -178,7 +178,7 @@ def revVETOAct(BGIso, IsoEff):
         x = np.argmax(BGIso[i])
         if IsoEff[i][x] != 0:
             Act.append(((BGIso[i][x]/(mass*n*Abs[i]))*((Ms[i]*1e6)/Lam[i]))/(IsoEff[i][x]*0.0001*0.05))
-        else
+        else:
             Act.append(IsoDefault[1][i])
     return Act
 #####Background Activity from Steel Tank###########
@@ -204,6 +204,7 @@ def revTankAct(BGIso, IsoEff):
     den = 8000 #kg/m^3
     mass = vol * den
     for i in range(len(BGIso)):
+        x = np.argmax(BGIso[i])
         if IsoEff[i][x] != 0:
             Act.append(BGIso[i][0]/mass/(IsoEff[i][0]*0.0001*0.05))
         else:
@@ -262,6 +263,7 @@ def revROCKAct(BGIso, IsoEff):
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     for i in range(len(BGIso)):
+        x = np.argmax(BGIso[i])
         if IsoEff[i][x] != 0:
             Act.append(((BGIso[i][0]/mass)*((Ms[i]*1e6)/(Lam[i])))/(IsoEff[i][0]*0.0001*0.05))
         else:
@@ -283,10 +285,10 @@ def WaterAct(PPM): #done
 #####reverse BG for Water func#####################
 def revWaterAct(BGIso, IsoEff):
     vol = np.pi*pow(TankR, 2)*(2*Height) # m3
-    if IsoEff[i][x] != 0:
+    if IsoEff[0] != 0:
         Act = (BGIso[0]/(vol*0.002)/(IsoEff[0]*0.0001*0.05))
     else:
-        Act = IsoEff[5]
+        Act = IsoDefault[5][0]
     return Act
 #####Background Activity from Gd###################
 def GdAct(PPM):
@@ -306,6 +308,7 @@ def revGdAct(BGIso, IsoEff):
     Act = list()
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     for i in range(len(BGIso)):
+        x = np.argmax(BGIso[i])
         if IsoEff[i][x] != 0:
             Act.append(BGIso[i][0]/(mass*0.002)/(IsoEff[i][0]*0.0001*0.05))
         else:
@@ -333,9 +336,9 @@ TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
 TANKIsoEff = TANKIsoDefault
 #######CONC########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-CONCIsoDefault = [[1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  [1.25e-5, 1.25e-5, 1.25e-5, 1.25e-5],    #[Ac228, Pb212, Bi212, Tl208],
-                  [1.25e-5]]             #[K40]]
+CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
+                  [0]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
 #######ROCK########################################
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
