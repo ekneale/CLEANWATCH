@@ -139,7 +139,7 @@ def PMTAct(PPM): #done
     #DimVars
     n = 3258 #number of PMTs
     IsoAct = list(range(len(Iso[0])))
-    for i in range(len(PPM)):
+    for i in range(len(IsoAct)):
         #print('PPM = %.5e' % PPM[i])
         #step1 = Lam[i]*PPM[i]
         #print('Step 1 = %.5e' % step1)
@@ -199,8 +199,8 @@ def TankAct(Act): #done
     den = 8000 #kg/m^3
     mass = vol * den
     #dim other vars
-    Act = IsoAct = list(range(len(Iso[2])))
-    for i in range(len(Act)):
+    IsoAct = list(range(len(Iso[2])))
+    for i in range(len(IsoAct)):
          IsoAct[i] = Act[i]*mass
     return IsoAct
 #####Reverse BG for TANK func######################
@@ -250,7 +250,7 @@ def RockAct(PPM): #done
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     #dim vars
-    PPM = IsoAct = list(range(len(Iso[4])-1))
+    IsoAct = list(range(len(Iso[4])-1))
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
@@ -274,7 +274,7 @@ def WaterAct(PPM): #done
     #def mass of water
     vol = np.pi*pow(TankR, 2)*2*Height #volume in m3
     #dim vars
-    PPM = IsoAct = list(range(len(Iso[5])))
+    IsoAct = list(range(len(Iso[5])))
     for i in range(len(PPM)-1):
         IsoAct[i] = PPM[i]*vol #Bqm-3*m3
     return IsoAct
@@ -292,7 +292,7 @@ def GdAct(PPM):
     #def mass of water
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3 #mass in kg
     #dim vars
-    PPM = IsoAct = list(range(len(Iso[6])))
+    IsoAct = list(range(len(Iso[6])))
     for i in range(len(PPM)):
         IsoAct[i] = PPM[i]*mass*0.002 #Gdmass*Bqkg-1
     return IsoAct
