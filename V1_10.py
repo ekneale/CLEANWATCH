@@ -927,7 +927,9 @@ while ans.lower() != "exit":
         S = signal*0.9
         sigma = 4.65
         t = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days]
-        print('Time to detection @ 3 sigma rate = %.5e' % t + ' days')
+        print('Reactor off time to detection @ 3 sigma rate = %.5e' % t + ' days')
+        t*=6/2. 
+        print('Total time to detection = %.5e days' %t)
         clear()
         ans = ''
 ######Calculate max background#####################
@@ -1092,11 +1094,14 @@ while ans.lower() != "exit":
             print('Signal rate set to default value of %.3e' % signal)
         #get number of days
         try:
-            days = literal_eval(input('Input time dection in days: '))
+            days = literal_eval(input('Input desired total time dection in days: '))
+            days *=2/6.
             days != 0
+            print('Off time to detection set to %.3e days'%days)
         except:
-            days = 2.02667e+02
-            print('Time dection set to default value of %.3e days' % days)
+            days = 365.*2/6.
+            print('Off time to dection set to default value of %.3e days' % days)
+        
         #def sigma
         #B = signal*1.035 + tot
         Mbg = MaxBG(signal,days) #Events per day
