@@ -129,10 +129,10 @@ def share(total, Iso):
     return IsoShare
 def CBOUT(IsoAct, BGIsoCB, BGIso, n):
     for i in range(len(IsoAct)):
-        print('Singles Budget for %.5s = %.5e Hz' % (Iso[n][i], sum(BGIsoCB[i])))
-        print('Accidentals Budget for %.5s = %.5e Hz' % (Iso[n][i], (sum(BGIsoCB[i])*0.05*0.0001)))
-        print('Radioactivity Budget for %.5s = %.5e' % (Iso[n][i], IsoAct[i]))
-        print('Nominal singles rate for %.5s = %.5e Hz' % (Iso[n][i], sum(BGIso[i])))
+        print('Singles Budget for %.7s = %.5e Hz' % (Iso[n][i], sum(BGIsoCB[i])))
+        print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[n][i], (sum(BGIsoCB[i])*0.05*0.0001)))
+        print('Radioactivity Budget for %.7s = %.5e' % (Iso[n][i], IsoAct[i]))
+        print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[n][i], sum(BGIso[i])))
 #####Background activity from Glass in PMTs########
 def PMTAct(PPM): #done
     """
