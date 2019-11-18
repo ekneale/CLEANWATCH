@@ -327,12 +327,18 @@ PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
                  Eff.PMTTh232,   #Th232 Chain
                  Eff.PMTK40]     #K40 Chain
 PMTIsoEff = PMTIsoDefault
+PMTErr = [Eff.PMTU238Err,        #U238 Chain
+          Eff.PMTTh232Err,       #Th232 Chain
+          Eff.PMTK40Err]         #K40 Chain
 #######VETO########################################
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
                   Eff.VETOTh232, #Th232 Chain
                   Eff.VETOK40]   #K40 Chain
 VETOIsoEff = VETOIsoDefault
+VETOErr = [Eff.VETOU238Err,      #U238 Chain
+           Eff.VETOTh232Err,     #Th232 Chain
+           Eff.VETOK40Err]       #K40 Chain
 #######TANK########################################
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
 TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
@@ -340,18 +346,26 @@ TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
                   Eff.TANKK40,   #K40 Chain
                   Eff.TANKSTEEL] #Steel Activity
 TANKIsoEff = TANKIsoDefault
+TANKErr = [Eff.TANKU238Err,      #U238 Chain
+           Eff.TANKTh232Err,     #Th232 Chain
+           Eff.TANKK40Err,       #K40 Chain
+           Eff.TANKSTEELErr]     #Steel Activity
 #######CONC########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
                   [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
                   [0]]             #[K40]]
 CONCIsoEff = CONCIsoDefault
+CONCErr = [] #no data
 #######ROCK########################################
 ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
                   Eff.ROCKTh232, #Th232 Chain
                   Eff.ROCKK40]   #K40 Chain
 ROCKIsoEff = ROCKIsoDefault
+ROCKErr = [Eff.ROCKU238Err,      #U238 Chain
+           Eff.ROCKTh232Err,     #Th232 Chain
+           Eff.ROCKK40Err]       #K40 Chain
 #######GD##########################################
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
 GDIsoDefault = [Eff.GDU238,  #U238 Chain
@@ -361,10 +375,17 @@ GDIsoDefault = [Eff.GDU238,  #U238 Chain
                 Eff.GDTh232, #Th232_l Chain
                 Eff.GDU235]  #U235_l Chain
 GDIsoEff = GDIsoDefault
+GDErr = [Eff.GDU238Err,      #U238 Chain
+         Eff.GDTh232Err,     #Th232 Chain
+         Eff.GDU235Err,       #U235 Chain
+         Eff.GDU238Err,      #U238_l Chain
+         Eff.GDTh232Err,     #Th232_l Chain
+         Eff.GDU235Err]       #U235_l Chain
 #######RnWater#####################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
+WATERErr = Eff.WATERRn222Err
 ######Background Rate##############################
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ###################################################
@@ -606,11 +627,11 @@ WATER_Nr = Nr.WATERRn222 #Rn222 chain
 GD_Pr = [Pr.GDU238,      #U238 Chain
          Pr.GDTh232,     #Th232 Chain
          Pr.GDU235]      #U235 Chain
-GD_Nr = [Nr.GDU238,
-         Nr.GDTh232,      #U238 Chain
-         Nr.GDU235,
-         Nr.GDU238,     #Th232 Chain
-         Nr.GDTh232,
+GD_Nr = [Nr.GDU238,      #U238 Chain
+         Nr.GDTh232,     #U238 Chain
+         Nr.GDU235,      #U235 Chain
+         Nr.GDU238,      #U238 Chain
+         Nr.GDTh232,     #Th232 Chain
          Nr.GDU235]      #U235 Chain
 ###################################################
 def AccBack(Prate, Nrate):
@@ -768,7 +789,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
     ####VETOS######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[1])
@@ -781,7 +802,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
-                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoDefault[i][x])
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
     ####TANK#######################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[2])
@@ -794,7 +815,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
-                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[3], TANKIsoDefault[i][x])
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
     ####CONCRETE###################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[3])
@@ -820,7 +841,7 @@ while ans.lower() != "exit":
         elif in_ans.lower() == 'n':
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoEff[i])):
-                    disdefval(InType[2], ROCKIsoDecay[i][x], Comp[4], ROCKIsoDefault[i][x])
+                    print(InType[2] + ' of ' + ROCKIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value of %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
     ####RnWATER####################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[5])
@@ -831,7 +852,7 @@ while ans.lower() != "exit":
                 WATERIsoEff[i] = InputVals(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
         elif in_ans.lower() == 'n':
             for i in range(len(WATERIsoDecay)):
-                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoDefault[i])
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value of %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
     ####GD#########################################
         print('##################################################')
         in_ans = inputcheck(InType[2], Comp[5])
@@ -844,7 +865,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDecay[i])):
-                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoDefault[i][x])
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoDecay[i][x], GDErr[i][x]))
     ####reset######################################
         ei = True
         clear()
@@ -872,18 +893,18 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
-                for x in range(len(PMTIsoDefault[i])):
-                    disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+                for x in range(len(PMTIsoEff[i])):
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' +  Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[1])
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
-                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[2])
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
-                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[3])
             for i in range(len(CONCIsoDecay)):
@@ -893,17 +914,16 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[4])
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoDefault[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value of %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
-                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value of %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[6])
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDefault[i])):
-                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
-
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
         else:
             pass
         #BGR Code
@@ -945,17 +965,17 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[1])
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
-                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[2])
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
-                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[3])
             for i in range(len(CONCIsoDecay)):
@@ -965,21 +985,21 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[4])
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoDefault[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + ROCKIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value of %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
-                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value of %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[6])
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDefault[i])):
-                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
         else:
             pass
         if bgi == False:
             tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate() 
-#            tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
+#           tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
         else:
             pass
         print('##################################################')
@@ -1023,17 +1043,17 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoDefault[i])):
-                    disdefval(InType[0], PMTIsoDecay[i][x], Comp[0], PMTIsoDefault[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[1])
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
-                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[2])
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
-                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[3])
             for i in range(len(CONCIsoDecay)):
@@ -1043,16 +1063,16 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[4])
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoDefault[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value of %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
-                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[6])
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDefault[i])):
-                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
         else:
             pass
         if bgi == False:
@@ -1110,17 +1130,17 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[0])
             for i in range(len(PMTIsoDecay)):
                 for x in range(len(PMTIsoEff[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[0], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[1])
             for i in range(len(VETOIsoDecay)):
                 for x in range(len(VETOIsoEff[i])):
-                    disdefval(InType[2], VETOIsoDecay[i][x], Comp[1], VETOIsoEff[i][x])
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[2])
             for i in range(len(TANKIsoDecay)):
                 for x in range(len(TANKIsoEff[i])):
-                    disdefval(InType[2], TANKIsoDecay[i][x], Comp[2], TANKIsoEff[i][x])
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[3])
             for i in range(len(CONCIsoDecay)):
@@ -1130,16 +1150,16 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[4])
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoDefault[i])):
-                    disdefval(InType[2], PMTIsoDecay[i][x], Comp[4], PMTIsoEff[i][x])
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
-                disdefval(InType[2], WATERIsoDecay[i], Comp[5], WATERIsoEff[i])
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value of %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[6])
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDefault[i])):
-                    disdefval(InType[2], GDIsoDecay[i][x], Comp[6], GDIsoEff[i][x])
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
         else:
             pass
         if bgi == False:
