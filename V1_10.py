@@ -127,12 +127,23 @@ def share(total, Iso):
         for i in range(len(Iso)):
             IsoShare[i] = Iso[i]/(total/0.05/0.0001)
     return IsoShare
+#####Cleanliness Budget Output#####################
 def CBOUT(IsoAct, BGIsoCB, BGIso, n):
     for i in range(len(IsoAct)):
         print('Singles Budget for %.7s = %.5e Hz' % (Iso[n][i], sum(BGIsoCB[i])))
         print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[n][i], (sum(BGIsoCB[i])*0.05*0.0001)))
         print('Radioactivity Budget for %.7s = %.5e' % (Iso[n][i], IsoAct[i]))
         print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[n][i], sum(BGIso[i])))
+#####Error propergation############################
+def ErrProp(EffErr, Act, Iso):
+    """
+    Returns error of BGR
+    """
+    if Iso == 'Tl210':
+        err =  Act*EffErr*0.002
+    else:
+        err = Act*EffErr
+    return err
 #####Background activity from Glass in PMTs########
 def PMTAct(PPM): #done
     """
@@ -865,7 +876,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(GDIsoDecay)):
                 for x in range(len(GDIsoDecay[i])):
-                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoDecay[i][x], GDErr[i][x]))
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
     ####reset######################################
         ei = True
         clear()
