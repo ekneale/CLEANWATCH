@@ -341,6 +341,7 @@ PMTIsoEff = PMTIsoDefault
 PMTErr = [Eff.PMTU238Err,        #U238 Chain
           Eff.PMTTh232Err,       #Th232 Chain
           Eff.PMTK40Err]         #K40 Chain
+PMTBGErr = PMTErr
 #######VETO########################################
 VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
 VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
@@ -350,6 +351,7 @@ VETOIsoEff = VETOIsoDefault
 VETOErr = [Eff.VETOU238Err,      #U238 Chain
            Eff.VETOTh232Err,     #Th232 Chain
            Eff.VETOK40Err]       #K40 Chain
+VETOBGErr = VETOErr
 #######TANK########################################
 TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
 TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
@@ -361,6 +363,7 @@ TANKErr = [Eff.TANKU238Err,      #U238 Chain
            Eff.TANKTh232Err,     #Th232 Chain
            Eff.TANKK40Err,       #K40 Chain
            Eff.TANKSTEELErr]     #Steel Activity
+TANKBGErr = TANKErr
 #######CONC########################################
 CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
 CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
@@ -377,6 +380,7 @@ ROCKIsoEff = ROCKIsoDefault
 ROCKErr = [Eff.ROCKU238Err,      #U238 Chain
            Eff.ROCKTh232Err,     #Th232 Chain
            Eff.ROCKK40Err]       #K40 Chain
+ROCKBGErr = ROCKErr
 #######GD##########################################
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
 GDIsoDefault = [Eff.GDU238,  #U238 Chain
@@ -392,11 +396,13 @@ GDErr = [Eff.GDU238Err,      #U238 Chain
          Eff.GDU238Err,      #U238_l Chain
          Eff.GDTh232Err,     #Th232_l Chain
          Eff.GDU235Err]       #U235_l Chain
+GDBGErr = GDErr
 #######RnWater#####################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
 WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
 WATERIsoEff = WATERIsoDefault
 WATERErr = Eff.WATERRn222Err
+WATERBGErr = WATERErr
 ######Background Rate##############################
 scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ###################################################
@@ -420,11 +426,11 @@ def BGRate():
             else: 
                 PMTBGIso[i].append(dataAct[0][i]*PMTIsoEff[i][x])
                 PMTBGIsoN[i].append(dataAct[0][i]*PMT_Nr[i][x])
-            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e'  % PMTBGIso[i][x]) 
-            
+            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], dataAct[0][i], PMTIsoDecay[i][x]) 
+            print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e +/- %.5e'  % (PMTBGIso[i][x], PMTBGErr[i][x]))             
         PMTBGR += sum(PMTBGIso[i])
         PMTBGR_N += sum(PMTBGIsoN[i])
-        print(sum(PMTBGIso[i]))
+        #print(sum(PMTBGIso[i]))
     print('Total BGR due to PMTs = %.5e' % PMTBGR)
     ####VETO#######################################
     print('##################################################') 
@@ -441,10 +447,11 @@ def BGRate():
             else:
                 VETOBGIso[i].append(dataAct[1][i]*VETOIsoEff[i][x])
                 VETOBGIsoN[i].append(dataAct[1][i]*VETO_Nr[i][x])
-            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e' % VETOBGIso[i][x])
+            VETOBGErr[i][x] = ErrProp(VETOErr[i][x], dataAct[1][i], VETOIsoDecay[i][x])
+            print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETOBGIso[i][x], VETOBGErr[i][x]))
         VETOBGR += sum(VETOBGIso[i])
         VETOBGR_N += sum(VETOBGIsoN[i])
-        print(sum(VETOBGIso[i]))
+        #print(sum(VETOBGIso[i]))
     print('Total BRG due to Veto = %.5e' % VETOBGR)
     ####TANK#######################################
     print('##################################################') 
@@ -461,10 +468,11 @@ def BGRate():
             else:
                 TANKBGIso[i].append(dataAct[2][i]*TANKIsoEff[i][x])            
                 TANKBGIsoN[i].append(dataAct[2][i]*TANK_Nr[i][x])
-            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e' % TANKBGIso[i][x])
+            TANKBGErr[i][x] = ErrProp(TANKErr[i][x], dataAct[2][i], TANKIsoDecay[i][x])
+            print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (TANKBGIso[i][x], TANKBGErr[i][x]))
         TANKBGR += sum(TANKBGIso[i])
         TANKBGR_N += sum(TANKBGIsoN[i])
-        print(sum(TANKBGIso[i]))
+        #print(sum(TANKBGIso[i]))
     print('Total BGR due to Tank = %.5e' % TANKBGR)
     ####CONCRETE###################################
     print('##################################################') 
@@ -484,7 +492,7 @@ def BGRate():
             print('BGR due to ' + CONCIsoDecay[i][x] + ' = %.5e' % CONCBGIso[i][x])
         CONCBGR += sum(CONCBGIso[i])
         CONCBGR_N += sum(CONCBGIsoN[i])
-        print(sum(CONCBGIso[i]))
+        #print(sum(CONCBGIso[i]))
     print('Total BGR due to Concrete = %.5e' % CONCBGR)
     ####ROCK#######################################
     print('##################################################') 
@@ -501,10 +509,11 @@ def BGRate():
             else:
                 ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x])
                 ROCKBGIsoN[i].append(dataAct[4][i]*ROCK_Nr[i][x])
-            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e' % ROCKBGIso[i][x])
+            ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], dataAct[4][i], ROCKIsoDecay[i][x])    
+            print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBGIso[i][x], ROCKBGErr[i][x]))
         ROCKBGR += sum(ROCKBGIso[i])
         ROCKBGR_N += sum(ROCKBGIsoN[i])
-        print(sum(ROCKBGIso[i]))
+        #print(sum(ROCKBGIso[i]))
     print('Total BGR due to Rock = %.5e' % ROCKBGR)
     ####RnWATER####################################
     print('##################################################')
@@ -512,16 +521,17 @@ def BGRate():
     WATERBGIso = []
     WATERBGIsoN = []
     for i in range(len(WATERIsoEff)): #1d array
-        print('WATERIsoEff[i] = ', WATERIsoEff[i])
+        #print('WATERIsoEff[i] = ', WATERIsoEff[i])
         if WATERIsoDecay[i]=='Tl210':
             WATERBGIso.append(dataAct[5][0]*WATERIsoEff[i]*0.002)
             WATERBGIsoN.append(dataAct[5][0]*WATER_Nr[i]*0.002)
         else:
             WATERBGIso.append(dataAct[5][0]*WATERIsoEff[i])
             WATERBGIsoN.append(dataAct[5][0]*WATER_Nr[i])
-        print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e' % WATERBGIso[i])
+        WATERBGErr[i] = ErrProp(WATERErr[i], dataAct[5][0], WATERIsoDecay[i])
+        print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e +/- %.5e' % (WATERBGIso[i], WATERBGErr[i]))
     WATERBGR = sum(WATERBGIso)
-    print(sum(WATERBGIso))
+    #print(sum(WATERBGIso))
     WATERBGR_N = sum(WATERBGIsoN)
     print('Total BGR due to Rn in water = %.5e' % WATERBGR)
     ####Gd#########################################
@@ -539,9 +549,10 @@ def BGRate():
             else:
                 GDBGIso[i].append(dataAct[6][i]*GDIsoEff[i][x])
                 GDBGIsoN[i].append(dataAct[6][i]*GD_Nr[i][x])
-            print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e' % GDBGIso[i][x])
+            GDBGErr[i][x] = ErrProp(GDErr[i][x], dataAct[6][i], GDIsoDecay[i][x])*0.002
+            print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x]))
         GDBGR += sum(GDBGIso[i])
-        print(sum(GDBGIso[i]))
+        #print(sum(GDBGIso[i]))
         GDBGR_N += sum(GDBGIsoN[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
 ###################################################
@@ -1078,7 +1089,7 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
-                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i][x]))
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[6])
             for i in range(len(GDIsoDecay)):
