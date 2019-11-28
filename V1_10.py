@@ -797,8 +797,199 @@ while ans.lower() != "exit":
             print('Activity of Isotopes in ' + Comp[i] + ': ')
             for x in range(len(Iso[i])):
                 print('   Activity of ' + Iso[i][x] + ' = %.5e Bq' % dataAct[i][x])
-        ans = ""
-        ai = True
+        if ei == False:
+            print('##################################################')
+            print('Setting Efficiency values to default values')
+            #just print out lists as set to default when lists are defined
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[0])
+            for i in range(len(PMTIsoDecay)):
+                for x in range(len(PMTIsoEff[i])):
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[0] + ' set to default value of %.5e +/- %.5e' % (PMTIsoEff[i][x], PMTErr[i][x]))
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[1])
+            for i in range(len(VETOIsoDecay)):
+                for x in range(len(VETOIsoEff[i])):
+                    print(InType[2] + ' of ' + VETOIsoDecay[i][x] + ' for ' + Comp[1] + ' set to default value of %.5e +/- %.5e' % (VETOIsoEff[i][x], VETOErr[i][x]))
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[2])
+            for i in range(len(TANKIsoDecay)):
+                for x in range(len(TANKIsoEff[i])):
+                    print(InType[2] + ' of ' + TANKIsoDecay[i][x] + ' for ' + Comp[2] + ' set to default value of %.5e +/- %.5e' % (TANKIsoEff[i][x], TANKErr[i][x]))
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[3])
+            for i in range(len(CONCIsoDecay)):
+                for x in range(len(CONCIsoEff[i])):
+                    disdefval(InType[2], CONCIsoDecay[i][x], Comp[3], CONCIsoEff[i][x])
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[4])
+            for i in range(len(ROCKIsoDecay)):
+                for x in range(len(ROCKIsoDefault[i])):
+                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[5])
+            for i in range(len(WATERIsoDecay)):
+                print(InType[2] + ' of ' + WATERIsoDecay[i] + ' for ' + Comp[5] + ' set to default value of %.5e +/- %.5e' % (WATERIsoEff[i], WATERErr[i]))
+            print('##################################################')
+            print('Efficiency of Isotopes in ' + Comp[6])
+            for i in range(len(GDIsoDecay)):
+                for x in range(len(GDIsoDefault[i])):
+                    print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
+        else:
+            pass
+        if bgi == False:
+            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
+            PMTShare = share(tot, PMTBGIso)
+            VETOShare = share(tot, VETOBGIso)
+            TANKShare = share(tot, TANKBGIso)
+            CONCShare = share(tot, CONCBGIso)
+            ROCKShare = share(tot, ROCKBGIso)
+            RnWAShare = share(tot, WATERBGIso)
+            GDShare = share(tot, GDBGIso)
+        else:
+            pass
+        try:
+            signal = literal_eval(input('Input signal rate: '))
+            signal < 1
+        except:
+            signal = 0.564
+            print('Signal rate set to default value of %.3e' % signal)
+        #get number of days
+        try:
+            days = literal_eval(input('Input desired total time dection in days: '))
+#            days *=2/3.
+            days != 0
+            print('Off time to detection set to %.3e days'%days)
+        except:
+            days = 304.166666666*2/3.
+            print('Off time to dection set to default value of %.3e days' % days)
+    
+        totalTime=days*3/2
+        print('Total time to detection set to %.3e days' %totalTime) 
+        
+        #def sigma
+        #B = signal*1.035 + tot
+        Mbg = MaxBG(signal,days) #Events per day
+        #print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
+        #TODO We will need to add an additional step. If no radioactivity rate 
+        # has been changed, then the share is as below.
+        # If a radioactivity rate has been changed for a component, 
+        # we need to calculate the new event rates due to that 
+        # isotope in that component, then do: 
+        # RBg = Mbg - sum(newRate) (remaining background)
+        # and then for each remainin background do:
+        # MaxRate = RBg * Share * normalisation
+        # where normalisation = 1/sum(RShares) so that the total of all 
+        # remaining 'share' values now adds up to 1
+        #for i in range(len(IsoShare)):
+        #    Iso_cb.append(Mbg*IsoShare[i])
+        #   print(Iso_cb_labels[i] + ' = %.5e' % Iso_cb[i])
+        print('##################################################')
+        PMTBGIsoCB  = PMTShare
+        VETOBGIsoCB = VETOShare
+        TANKBGIsoCB = TANKShare
+        CONCBGIsoCB = CONCShare
+        ROCKBGIsoCB = ROCKShare
+        RnWBGIsoCB  = RnWAShare
+        GDBGIsoCB   = GDShare 
+        branchingFraction=1
+        for i in range(len(PMTShare)):
+            for x in range(len(PMTShare[i])):
+                PMT_BG_CB = Mbg*(PMTShare[i][x])
+                PMTBGIsoCB[i][x] = Mbg*PMTShare[i][x] 
+                if PMTIsoDecay[i][x]=='Tl210':
+                    branchingFraction=0.002
+        PMTIsoAct = revPMTAct(PMTBGIsoCB, PMTIsoEff,branchingFraction)
+        CBOUT(PMTIsoAct, PMTBGIsoCB, PMTBGIso, 0)
+        PMTTotErr = 0
+        for i in range(len(PMTBGErr)):
+            PMTTotErr += sum(PMTBGErr[i])
+        print('Max BG from PMT = %.5e' % (PMT_BG_CB))
+        print('##################################################')
+        for i in range(len(VETOShare)):
+            for x in range(len(VETOShare[i])):
+                VETO_BG_CB = Mbg*VETOShare[i][x]
+                VETOBGIsoCB[i][x] = VETO_BG_CB
+                if VETOIsoDecay[i][x]=='Tl210':
+                    branchingFraction=0.002
+                #print('Share = ', VETOShare[i][x])
+        VETOIsoAct = revVETOAct(VETOBGIsoCB,VETOIsoEff,branchingFraction)
+        CBOUT(VETOIsoAct, VETOBGIsoCB, VETOBGIso, 1)
+        VETOTotErr = 0
+        for i in range(len(VETOBGErr)):
+            VETOTotErr += sum(VETOBGErr[i])
+        print('Max BG from VETO = %.5e +/- %.5e' % (VETO_BG_CB, VETOTotErr))
+        print('##################################################')
+        for i in range(len(TANKShare)):
+            for x in range(len(TANKShare[i])):
+                TANK_BG_CB = Mbg*TANKShare[i][x]
+                TANKBGIsoCB[i][x] = TANK_BG_CB
+                if TANKIsoDecay[i][x]=='Tl210':
+                    branchingFraction=0.002
+        TANKIsoAct = revTankAct(TANKBGIso, TANKIsoEff,branchingFraction)
+        CBOUT(TANKIsoAct, TANKBGIsoCB, TANKBGIso, 2)
+        TANKTotErr = 0
+        for i in range(len(TANKBGErr)):
+            TANKTotErr += sum(TANKBGErr[i])
+        print('Max BG from TANK = %.5e +/- %.5e' % (TANK_BG_CB, TANKTotErr))
+        print('##################################################')
+        for i in range(len(CONCShare)):
+            for x in range(len(CONCShare[i])):
+                CONC_BG_CB = Mbg*CONCShare[i][x]
+                CONCBGIsoCB[i][x] = CONC_BG_CB
+                if CONCIsoDecay[i][x]=='Tl210':
+                    branchingFraction=0.002
+        CONCIsoAct = revCONCAct(CONCBGIso, CONCIsoEff,branchingFraction)
+        CBOUT(CONCIsoAct, CONCBGIsoCB, CONCBGIso, 3)
+        #CONCTotErr = 0
+        #for i in range(len(CONCBGErr)):
+        #    CONCTotErr += sum(CONCBGErr[i])
+        print('Max BG from CONC = %.5e' % (CONC_BG_CB)) #, CONCTotErr))
+        print('##################################################')
+        for i in range(len(ROCKShare)):
+            for x in range(len(ROCKShare[i])):
+                ROCK_BG_CB = Mbg*ROCKShare[i][x]
+                ROCKBGIsoCB[i][x] = ROCK_BG_CB
+                if ROCKIsoDecay[i][x]=='Tl210':
+                    branchingFraction=0.002
+        ROCKIsoAct = revROCKAct(ROCKBGIso, ROCKIsoEff,branchingFraction)
+        CBOUT(ROCKIsoAct, ROCKBGIsoCB, ROCKBGIso, 4)
+        ROCKTotErr = 0
+        for i in range(len(ROCKBGErr)):
+            ROCKTotErr += sum(ROCKBGErr[i])
+        print('Max BG from ROCK = %.5e +/- %.5e' % (ROCK_BG_CB, ROCKTotErr))
+        print('##################################################')
+        for i in range(len(RnWAShare)):
+            RnW_BG_CB = Mbg*RnWAShare[i]
+            RnWBGIsoCB[i] = RnW_BG_CB
+            if WATERIsoDecay[i]=='Tl210':
+                branchingFraction=0.002
+        RnWIsoAct = revWaterAct(WATERBGIso, WATERIsoEff,branchingFraction)
+        print('Singles Budget for %.5s = %.5e' % (Iso[5][0], sum(RnWBGIsoCB)))
+        print('Accidentals Budget for %.5s = %.5e' % (Iso[5][0], (sum(RnWBGIsoCB)*0.05*0.0001)))
+        print('Radioactivty Budget for %.5s = %.5e' % (Iso[5][0], RnWIsoAct))
+        print('Nominals Budget for %.5s = %.5e' % (Iso[5][0], sum(WATERBGIso)))
+        print('Max BG from Rn WATER =  %.5e +/- %.5e' % (RnW_BG_CB, sum(WATERBGErr)))
+        print('##################################################')
+        for i in range(len(GDShare)):
+           for x in range(len(GDShare[i])):
+            GD_BG_CB = Mbg*GDShare[i][x]
+            GDBGIsoCB[i][x] = GD_BG_CB
+            if GDIsoDecay[i][x]=='Tl210':
+                branchingFraction=0.002
+        GDIsoAct = revGdAct(GDBGIso, GDIsoEff,branchingFraction)
+        CBOUT(GDIsoAct, GDBGIsoCB, GDBGIso, 6)
+        GDTotErr = 0
+        for i in range(len(GDBGErr)):
+            GDTotErr += sum(GDBGErr[i])
+        print('Max BG from GD = %.5e +/- %.5e' % (GD_BG_CB, GDTotErr))
+        print('##################################################')
+        tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
+        print('Total = %.5e' % (tot_cb))
+        diff = (Mbg - (tot_cb))
+        print('Abs Diff = %.5e' %  diff)
+        print('%% Diff = %.5e' % (diff/Mbg))
+        print('##################################################')
         clear()
         ans = ''
 ######Efficiency###################################
