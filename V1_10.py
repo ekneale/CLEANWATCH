@@ -651,7 +651,7 @@ GD_Pr = [Pr.GDU238,      #U238 Chain
          Pr.GDTh232,     #Th232 Chain
          Pr.GDU235,      #U235 Chain
          Pr.GDU238,      #U238 Chain
-         Pr.Th232,       #Th232 Chain
+         Pr.GDTh232,     #Th232 Chain
          Pr.GDU235]      #U235 Chain
 GD_Nr = [Nr.GDU238,      #U238 Chain
          Nr.GDTh232,     #U238 Chain
@@ -1255,7 +1255,7 @@ while ans.lower() != "exit":
         PMTTotErr = 0
         for i in range(len(PMTBGErr)):
             PMTTotErr += sum(PMTBGErr[i])
-        print('Max BG from PMT = %.5e' % (PMT_BG_C))
+        print('Max BG from PMT = %.5e' % (PMT_BG_CB))
         print('##################################################')
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
@@ -1266,7 +1266,10 @@ while ans.lower() != "exit":
                 #print('Share = ', VETOShare[i][x])
         VETOIsoAct = revVETOAct(VETOBGIsoCB,VETOIsoEff,branchingFraction)
         CBOUT(VETOIsoAct, VETOBGIsoCB, VETOBGIso, 1)
-        print('Max BG from VETO = %.5e' % (VETO_BG_CB))
+        VETOTotErr = 0
+        for i in range(len(VETOBGErr)):
+            VETOTotErr += sum(VETOBGErr[i])
+        print('Max BG from VETO = %.5e +/- %.5e' % (VETO_BG_CB, VETOTotErr))
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
@@ -1276,7 +1279,10 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         TANKIsoAct = revTankAct(TANKBGIso, TANKIsoEff,branchingFraction)
         CBOUT(TANKIsoAct, TANKBGIsoCB, TANKBGIso, 2)
-        print('Max BG from TANK = %.5e +/- %.5e' % (TANK_BG_CB, sum(TANKBGErr)))
+        TANKTotErr = 0
+        for i in range(len(TANKBGErr)):
+            TANKTotErr += sum(TANKBGErr[i])
+        print('Max BG from TANK = %.5e +/- %.5e' % (TANK_BG_CB, TANKTotErr))
         print('##################################################')
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
@@ -1286,7 +1292,10 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         CONCIsoAct = revCONCAct(CONCBGIso, CONCIsoEff,branchingFraction)
         CBOUT(CONCIsoAct, CONCBGIsoCB, CONCBGIso, 3)
-        print('Max BG from CONC = %.5e' % CONC_BG_CB)
+        #CONCTotErr = 0
+        #for i in range(len(CONCBGErr)):
+        #    CONCTotErr += sum(CONCBGErr[i])
+        print('Max BG from CONC = %.5e' % (CONC_BG_CB)) #, CONCTotErr))
         print('##################################################')
         for i in range(len(ROCKShare)):
             for x in range(len(ROCKShare[i])):
@@ -1296,7 +1305,10 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         ROCKIsoAct = revROCKAct(ROCKBGIso, ROCKIsoEff,branchingFraction)
         CBOUT(ROCKIsoAct, ROCKBGIsoCB, ROCKBGIso, 4)
-        print('Max BG from ROCK = %.5e +/- %.5e' % (ROCK_BG_CB, sum(ROCKBGErr)))
+        ROCKTotErr = 0
+        for i in range(len(ROCKBGErr)):
+            ROCKTotErr += sum(ROCKBGErr[i])
+        print('Max BG from ROCK = %.5e +/- %.5e' % (ROCK_BG_CB, ROCKTotErr))
         print('##################################################')
         for i in range(len(RnWAShare)):
             RnW_BG_CB = Mbg*RnWAShare[i]
@@ -1308,7 +1320,7 @@ while ans.lower() != "exit":
         print('Accidentals Budget for %.5s = %.5e' % (Iso[5][0], (sum(RnWBGIsoCB)*0.05*0.0001)))
         print('Radioactivty Budget for %.5s = %.5e' % (Iso[5][0], RnWIsoAct))
         print('Nominals Budget for %.5s = %.5e' % (Iso[5][0], sum(WATERBGIso)))
-        print('Max BG from Rn WATER =  %.5e' % RnW_BG_CB)
+        print('Max BG from Rn WATER =  %.5e +/- %.5e' % (RnW_BG_CB, sum(WATERBGErr)))
         print('##################################################')
         for i in range(len(GDShare)):
            for x in range(len(GDShare[i])):
@@ -1318,7 +1330,10 @@ while ans.lower() != "exit":
                 branchingFraction=0.002
         GDIsoAct = revGdAct(GDBGIso, GDIsoEff,branchingFraction)
         CBOUT(GDIsoAct, GDBGIsoCB, GDBGIso, 6)
-        print('Max BG from GD = %.5e' % GD_BG_CB)
+        GDTotErr = 0
+        for i in range(len(GDBGErr)):
+            GDTotErr += sum(GDBGErr[i])
+        print('Max BG from GD = %.5e +/- %.5e' % (GD_BG_CB, GDTotErr))
         print('##################################################')
         tot_cb = PMT_BG_CB + VETO_BG_CB + TANK_BG_CB + CONC_BG_CB + ROCK_BG_CB + RnW_BG_CB + GD_BG_CB
         print('Total = %.5e' % (tot_cb))
