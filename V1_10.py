@@ -8,20 +8,20 @@ import Prate as Pr
 import Nrate as Nr
 #dim vars
 bgi = False
-######Isotope properties############################
+######Isotope properties###########################
 Ms = [3.953e-25, 3.853145e-25, 6.636286e-26] #[U238, Th232, K40] kg per atom
 Lam = [4.916e-18, 1.57e-18, 1.842e-18] #[U238, Th232, K40] decay constant
 halfL = list(range(len(Lam)))
 for i in range(len(Lam)):
     halfL[i] = (log(2)/Lam[i])/(60**2*24*365*1e9) #half life in billions of years
 Abs = [1, 1, 0.00117] #[U238, Th232, K40] Natural Abundance
-#####measurements###################################
+#####measurements##################################
 TankR = 10026.35e-3 #m
 Height = 10026.35e-3 #m
 SThick = 6.35e-3 #m
 RN = 0.01 #radionuclides events per day
 FN = 0.02 #rock events per day
-######User input Type###############################
+######User input Type##############################
 InType = ['PPM', 'Activity', 'Efficiency', 'Signal Rate']
 Iso = [['U238', 'Th232', 'K40'], #[[PMT], 
        ['U238', 'Th232', 'K40'], # [VETO], 
@@ -135,14 +135,15 @@ def CBOUT(IsoAct, BGIsoCB, BGIso, n):
         print('Radioactivity Budget for %.7s = %.5e' % (Iso[n][i], IsoAct[i]))
         print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[n][i], sum(BGIso[i])))
 #####Error propergation############################
-def ErrProp(EffErr, Act, Iso):
+def ErrProp(EffErr, Eff, BG):
     """
     Returns error of BGR
     """
-    if Iso == 'Tl210':
-        err =  Act*EffErr*0.002
+    if Eff != 0:
+        centErr = EffErr/Eff
+        err = BG*centErr
     else:
-        err = Act*EffErr
+        err = 0
     return err
 #####Background activity from Glass in PMTs########
 def PMTAct(PPM): #done
@@ -392,10 +393,10 @@ GDIsoDefault = [Eff.GDU238,  #U238 Chain
 GDIsoEff = GDIsoDefault
 GDErr = [Eff.GDU238Err,      #U238 Chain
          Eff.GDTh232Err,     #Th232 Chain
-         Eff.GDU235Err,       #U235 Chain
+         Eff.GDU235Err,      #U235 Chain
          Eff.GDU238Err,      #U238_l Chain
          Eff.GDTh232Err,     #Th232_l Chain
-         Eff.GDU235Err]       #U235_l Chain
+         Eff.GDU235Err]      #U235_l Chain
 GDBGErr = GDErr
 #######RnWater#####################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
@@ -426,7 +427,7 @@ def BGRate():
             else: 
                 PMTBGIso[i].append(dataAct[0][i]*PMTIsoEff[i][x])
                 PMTBGIsoN[i].append(dataAct[0][i]*PMT_Nr[i][x])
-            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], dataAct[0][i], PMTIsoDecay[i][x]) 
+            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTIsoEff[i][x], PMTBGIso[i][x])
             print('BGR due to ' + PMTIsoDecay[i][x] + ' =  %.5e +/- %.5e'  % (PMTBGIso[i][x], PMTBGErr[i][x]))             
         PMTBGR += sum(PMTBGIso[i])
         PMTBGR_N += sum(PMTBGIsoN[i])
@@ -447,7 +448,7 @@ def BGRate():
             else:
                 VETOBGIso[i].append(dataAct[1][i]*VETOIsoEff[i][x])
                 VETOBGIsoN[i].append(dataAct[1][i]*VETO_Nr[i][x])
-            VETOBGErr[i][x] = ErrProp(VETOErr[i][x], dataAct[1][i], VETOIsoDecay[i][x])
+            VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOIsoEff[i][x], VETOBGIso[i][x])
             print('BGR due to ' + VETOIsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETOBGIso[i][x], VETOBGErr[i][x]))
         VETOBGR += sum(VETOBGIso[i])
         VETOBGR_N += sum(VETOBGIsoN[i])
@@ -468,7 +469,7 @@ def BGRate():
             else:
                 TANKBGIso[i].append(dataAct[2][i]*TANKIsoEff[i][x])            
                 TANKBGIsoN[i].append(dataAct[2][i]*TANK_Nr[i][x])
-            TANKBGErr[i][x] = ErrProp(TANKErr[i][x], dataAct[2][i], TANKIsoDecay[i][x])
+            TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKIsoEff[i][x], TANKBGIso[i][x])
             print('BGR due to ' + TANKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (TANKBGIso[i][x], TANKBGErr[i][x]))
         TANKBGR += sum(TANKBGIso[i])
         TANKBGR_N += sum(TANKBGIsoN[i])
@@ -509,7 +510,7 @@ def BGRate():
             else:
                 ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x])
                 ROCKBGIsoN[i].append(dataAct[4][i]*ROCK_Nr[i][x])
-            ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], dataAct[4][i], ROCKIsoDecay[i][x])    
+            ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKIsoEff[i][x], ROCKBGIso[i][x])    
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBGIso[i][x], ROCKBGErr[i][x]))
         ROCKBGR += sum(ROCKBGIso[i])
         ROCKBGR_N += sum(ROCKBGIsoN[i])
@@ -528,7 +529,7 @@ def BGRate():
         else:
             WATERBGIso.append(dataAct[5][0]*WATERIsoEff[i])
             WATERBGIsoN.append(dataAct[5][0]*WATER_Nr[i])
-        WATERBGErr[i] = ErrProp(WATERErr[i], dataAct[5][0], WATERIsoDecay[i])
+        WATERBGErr[i] = ErrProp(WATERErr[i], WATERIsoEff[i], WATERBGIso[i])
         print('BGR due to ' + WATERIsoDecay[i] + ' = %.5e +/- %.5e' % (WATERBGIso[i], WATERBGErr[i]))
     WATERBGR = sum(WATERBGIso)
     #print(sum(WATERBGIso))
@@ -549,8 +550,10 @@ def BGRate():
             else:
                 GDBGIso[i].append(dataAct[6][i]*GDIsoEff[i][x])
                 GDBGIsoN[i].append(dataAct[6][i]*GD_Nr[i][x])
-            GDBGErr[i][x] = ErrProp(GDErr[i][x], dataAct[6][i], GDIsoDecay[i][x])*0.002
-            print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x]))
+            GDBGErr[i][x] = ErrProp(GDErr[i][x], GDIsoEff[i][x], GDBGIso[i][x])
+            #print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x])
+            print('Error of ' + GDIsoDecay[i][x] + ' = %.5e' % GDErr[i][x])
+            print('Efficiency of ' + GDIsoDecay[i][x] + ' = %.5e' % GDIsoEff[i][x])
         GDBGR += sum(GDBGIso[i])
         #print(sum(GDBGIso[i]))
         GDBGR_N += sum(GDBGIsoN[i])
@@ -582,7 +585,6 @@ def BGRate():
 #CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
 #ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
 #RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
-
 def MaxBG(s,t):
     sigma = 4.65
     S = s*0.9
@@ -591,7 +593,6 @@ def MaxBG(s,t):
     Mbg = B - (S*1.15)
     print('Maximum Background for this time dection @ 3 sigma rate is %.5e' % Mbg)
     return Mbg
-
 ########Max Accidental BG##########################
 def Max(bg, share):
     #TODO
@@ -648,6 +649,9 @@ WATER_Nr = Nr.WATERRn222 #Rn222 chain
 #########GD########################################
 GD_Pr = [Pr.GDU238,      #U238 Chain
          Pr.GDTh232,     #Th232 Chain
+         Pr.GDU235,      #U235 Chain
+         Pr.GDU238,      #U238 Chain
+         Pr.Th232,       #Th232 Chain
          Pr.GDU235]      #U235 Chain
 GD_Nr = [Nr.GDU238,      #U238 Chain
          Nr.GDTh232,     #U238 Chain
@@ -1099,7 +1103,7 @@ while ans.lower() != "exit":
             pass
         if bgi == False:
             tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate() 
-#            tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
+#           tot += PMT_Acc + VETO_Acc + TANK_Acc + CONC_Acc + ROCK_Acc + WATER_Acc
         else:
             pass
         #signal input
@@ -1248,7 +1252,10 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         PMTIsoAct = revPMTAct(PMTBGIsoCB, PMTIsoEff,branchingFraction)
         CBOUT(PMTIsoAct, PMTBGIsoCB, PMTBGIso, 0)
-        print('Max BG from PMT = %.5e' % PMT_BG_CB)
+        PMTTotErr = 0
+        for i in range(len(PMTBGErr)):
+            PMTTotErr += sum(PMTBGErr[i])
+        print('Max BG from PMT = %.5e' % (PMT_BG_C))
         print('##################################################')
         for i in range(len(VETOShare)):
             for x in range(len(VETOShare[i])):
@@ -1259,7 +1266,7 @@ while ans.lower() != "exit":
                 #print('Share = ', VETOShare[i][x])
         VETOIsoAct = revVETOAct(VETOBGIsoCB,VETOIsoEff,branchingFraction)
         CBOUT(VETOIsoAct, VETOBGIsoCB, VETOBGIso, 1)
-        print('Max BG from VETO = %.5e' % VETO_BG_CB)
+        print('Max BG from VETO = %.5e' % (VETO_BG_CB))
         print('##################################################')
         for i in range(len(TANKShare)):
             for x in range(len(TANKShare[i])):
@@ -1269,7 +1276,7 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         TANKIsoAct = revTankAct(TANKBGIso, TANKIsoEff,branchingFraction)
         CBOUT(TANKIsoAct, TANKBGIsoCB, TANKBGIso, 2)
-        print('Max BG from TANK = %.5e' % TANK_BG_CB)
+        print('Max BG from TANK = %.5e +/- %.5e' % (TANK_BG_CB, sum(TANKBGErr)))
         print('##################################################')
         for i in range(len(CONCShare)):
             for x in range(len(CONCShare[i])):
@@ -1289,7 +1296,7 @@ while ans.lower() != "exit":
                     branchingFraction=0.002
         ROCKIsoAct = revROCKAct(ROCKBGIso, ROCKIsoEff,branchingFraction)
         CBOUT(ROCKIsoAct, ROCKBGIsoCB, ROCKBGIso, 4)
-        print('Max BG from ROCK = %.5e' % ROCK_BG_CB)
+        print('Max BG from ROCK = %.5e +/- %.5e' % (ROCK_BG_CB, sum(ROCKBGErr)))
         print('##################################################')
         for i in range(len(RnWAShare)):
             RnW_BG_CB = Mbg*RnWAShare[i]
