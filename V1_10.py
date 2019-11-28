@@ -269,10 +269,11 @@ def RockAct(PPM): #done
     vol = np.pi*((pow(18,2)*35.5)-(pow(13,2)*25.5)) #m^3
     mass = vol*den
     #dim vars
-    IsoAct = list(range(len(Iso[4])-1))
+    IsoAct = list(range(len(Iso[4])))
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
+    IsoAct[-1] = FN
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff,fraction):
@@ -788,6 +789,7 @@ while ans.lower() != "exit":
         dataAct[2] = TankAct(TANKACT)
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
+        print(dataAct[4])
         dataAct[5] = WaterAct(RnWPPM)
         dataAct[6] = GdAct(GDPPM)
     #####output####################################
@@ -796,6 +798,8 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Activity of Isotopes in ' + Comp[i] + ': ')
             for x in range(len(Iso[i])):
+                print('Iso[i][x] = ', Iso[i][x])
+                print('dataAct[i][x] = ', dataAct[i][x])
                 print('   Activity of ' + Iso[i][x] + ' = %.5e Bq' % dataAct[i][x])
         if ei == False:
             print('##################################################')
