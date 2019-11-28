@@ -45,6 +45,136 @@ IsoDefault = [[0.043, 0.133, 36], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
               [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD](Bq/kg)] [
 ######Components###################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
+#####Efficiences###################################
+#######PMT#########################################
+PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
+PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
+                 Eff.PMTTh232,   #Th232 Chain
+                 Eff.PMTK40]     #K40 Chain
+PMTIsoEff = PMTIsoDefault
+PMTErr = [Eff.PMTU238Err,        #U238 Chain
+          Eff.PMTTh232Err,       #Th232 Chain
+          Eff.PMTK40Err]         #K40 Chain
+PMTBGErr = PMTErr
+#######VETO########################################
+VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
+VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
+                  Eff.VETOTh232, #Th232 Chain
+                  Eff.VETOK40]   #K40 Chain
+VETOIsoEff = VETOIsoDefault
+VETOErr = [Eff.VETOU238Err,      #U238 Chain
+           Eff.VETOTh232Err,     #Th232 Chain
+           Eff.VETOK40Err]       #K40 Chain
+VETOBGErr = VETOErr
+#######TANK########################################
+TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
+TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
+                  Eff.TANKTh232, #Th232 Chain
+                  Eff.TANKK40,   #K40 Chain
+                  Eff.TANKSTEEL] #Steel Activity
+TANKIsoEff = TANKIsoDefault
+TANKErr = [Eff.TANKU238Err,      #U238 Chain
+           Eff.TANKTh232Err,     #Th232 Chain
+           Eff.TANKK40Err,       #K40 Chain
+           Eff.TANKSTEELErr]     #Steel Activity
+TANKBGErr = TANKErr
+#######CONC########################################
+CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
+CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
+                  [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
+                  [0]]             #[K40]]
+CONCIsoEff = CONCIsoDefault
+CONCErr = [] #no data
+#######ROCK########################################
+ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
+ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
+                  Eff.ROCKTh232, #Th232 Chain
+                  Eff.ROCKK40]   #K40 Chain
+ROCKIsoEff = ROCKIsoDefault
+ROCKErr = [Eff.ROCKU238Err,      #U238 Chain
+           Eff.ROCKTh232Err,     #Th232 Chain
+           Eff.ROCKK40Err]       #K40 Chain
+ROCKBGErr = ROCKErr
+#######GD##########################################
+GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
+GDIsoDefault = [Eff.GDU238,  #U238 Chain
+                Eff.GDTh232, #Th232 Chain
+                Eff.GDU235,  #U235 Chain
+                Eff.GDU238,  #U238_l Chain
+                Eff.GDTh232, #Th232_l Chain
+                Eff.GDU235]  #U235_l Chain
+GDIsoEff = GDIsoDefault
+GDErr = [Eff.GDU238Err,      #U238 Chain
+         Eff.GDTh232Err,     #Th232 Chain
+         Eff.GDU235Err,      #U235 Chain
+         Eff.GDU238Err,      #U238_l Chain
+         Eff.GDTh232Err,     #Th232_l Chain
+         Eff.GDU235Err]      #U235_l Chain
+GDBGErr = GDErr
+#######RnWater#####################################
+WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
+WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
+WATERIsoEff = WATERIsoDefault
+WATERErr = Eff.WATERRn222Err
+WATERBGErr = WATERErr
+######Scaling##############################
+scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
+########Accidental Background######################
+#U238  = [Pa234, Pb214, Bi214, Tl210, Bi210]
+#Th232 = [Ac228, Bi212, Pb212, Tl208]
+#K40   = [K40]
+#########PMT#######################################
+PMT_Pr =  [Pr.PMTU238,   #U238 chain
+           Pr.PMTTh232,  #Th232 chain
+           Pr.PMTK40]    #K40 chain
+PMT_Nr =  [Nr.PMTU238,   #U238 chain
+           Nr.PMTTh232,  #Th232 chain
+           Nr.PMTK40]    #K40 chain
+#########VETO######################################
+VETO_Pr = [Pr.VETOU238,  #U238 chain
+           Pr.VETOTh232, #Th232 chain
+           Pr.VETOK40]   #K40 chain
+VETO_Nr = [Nr.VETOU238,  #U238 chain
+           Nr.VETOTh232, #Th232 chain
+           Nr.VETOK40]   #K40
+#########TANK######################################
+TANK_Pr = [Pr.TANKU238,  #U238 chain
+           Pr.TANKTh232, #Th232 chain
+           Pr.TANKK40]   #K40 chain
+TANK_Nr = [Nr.TANKU238,  #U238 chain
+           Nr.TANKTh232, #Th232 chain
+           Nr.TANKK40,   #K40
+           Nr.TANKSTEEL]  #CO60, CS137
+CONC_Pr = [[0, 0, 0, 0, 0], #U238 chain
+          [0, 0, 0, 0], #Th232 chain
+          [0]] #K40 chain
+CONC_Nr = [[0, 0, 0, 0, 0],#U238 chain
+          [0, 0, 0, 0],  #Th232 chain
+          [0]]           #K40 chain
+#########ROCK######################################
+ROCK_Pr = [Pr.ROCKU238,  #U238 chain
+           Pr.ROCKTh232, #Th232 chain
+           Pr.ROCKK40]   #K40 chain
+ROCK_Nr = [Nr.ROCKU238,  #U238 chain
+           Nr.ROCKTh232, #Th232 chain
+           Nr.ROCKK40]   #K40
+#########RnWater###################################
+WATER_Pr = Pr.WATERRn222 #Rn222 chain
+WATER_Nr = Nr.WATERRn222 #Rn222 chain
+#########GD########################################
+GD_Pr = [Pr.GDU238,      #U238 Chain
+         Pr.GDTh232,     #Th232 Chain
+         Pr.GDU235,      #U235 Chain
+         Pr.GDU238,      #U238 Chain
+         Pr.GDTh232,     #Th232 Chain
+         Pr.GDU235]      #U235 Chain
+GD_Nr = [Nr.GDU238,      #U238 Chain
+         Nr.GDTh232,     #U238 Chain
+         Nr.GDU235,      #U235 Chain
+         Nr.GDU238,      #U238 Chain
+         Nr.GDTh232,     #Th232 Chain
+         Nr.GDU235]      #U235 Chain
+
 ######menu func####################################
 def menu(): #menu text
     """
@@ -333,80 +463,6 @@ def revGdAct(BGIso, IsoEff,fraction):
         else:
             Act.append(IsoDefault[6][i])
     return Act
-#####Efficiences###################################
-#######PMT#########################################
-PMTIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-PMTIsoDefault = [Eff.PMTU238,    #U238 Chain
-                 Eff.PMTTh232,   #Th232 Chain
-                 Eff.PMTK40]     #K40 Chain
-PMTIsoEff = PMTIsoDefault
-PMTErr = [Eff.PMTU238Err,        #U238 Chain
-          Eff.PMTTh232Err,       #Th232 Chain
-          Eff.PMTK40Err]         #K40 Chain
-PMTBGErr = PMTErr
-#######VETO########################################
-VETOIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]] #[[U238 chain], [Th232 chain], [K40 chain]]
-VETOIsoDefault = [Eff.VETOU238,  #U238 Chain
-                  Eff.VETOTh232, #Th232 Chain
-                  Eff.VETOK40]   #K40 Chain
-VETOIsoEff = VETOIsoDefault
-VETOErr = [Eff.VETOU238Err,      #U238 Chain
-           Eff.VETOTh232Err,     #Th232 Chain
-           Eff.VETOK40Err]       #K40 Chain
-VETOBGErr = VETOErr
-#######TANK########################################
-TANKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[5]]
-TANKIsoDefault = [Eff.TANKU238,  #U238 Chain
-                  Eff.TANKTh232, #Th232 Chain
-                  Eff.TANKK40,   #K40 Chain
-                  Eff.TANKSTEEL] #Steel Activity
-TANKIsoEff = TANKIsoDefault
-TANKErr = [Eff.TANKU238Err,      #U238 Chain
-           Eff.TANKTh232Err,     #Th232 Chain
-           Eff.TANKK40Err,       #K40 Chain
-           Eff.TANKSTEELErr]     #Steel Activity
-TANKBGErr = TANKErr
-#######CONC########################################
-CONCIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
-                  [0, 0, 0, 0],    #[Ac228, Pb212, Bi212, Tl208],
-                  [0]]             #[K40]]
-CONCIsoEff = CONCIsoDefault
-CONCErr = [] #no data
-#######ROCK########################################
-ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
-ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
-                  Eff.ROCKTh232, #Th232 Chain
-                  Eff.ROCKK40]   #K40 Chain
-ROCKIsoEff = ROCKIsoDefault
-ROCKErr = [Eff.ROCKU238Err,      #U238 Chain
-           Eff.ROCKTh232Err,     #Th232 Chain
-           Eff.ROCKK40Err]       #K40 Chain
-ROCKBGErr = ROCKErr
-#######GD##########################################
-GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
-GDIsoDefault = [Eff.GDU238,  #U238 Chain
-                Eff.GDTh232, #Th232 Chain
-                Eff.GDU235,  #U235 Chain
-                Eff.GDU238,  #U238_l Chain
-                Eff.GDTh232, #Th232_l Chain
-                Eff.GDU235]  #U235_l Chain
-GDIsoEff = GDIsoDefault
-GDErr = [Eff.GDU238Err,      #U238 Chain
-         Eff.GDTh232Err,     #Th232 Chain
-         Eff.GDU235Err,      #U235 Chain
-         Eff.GDU238Err,      #U238_l Chain
-         Eff.GDTh232Err,     #Th232_l Chain
-         Eff.GDU235Err]      #U235_l Chain
-GDBGErr = GDErr
-#######RnWater#####################################
-WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
-WATERIsoDefault = Eff.WATERRn222 #[Pb214, Bi214, Bi210, Tl210]
-WATERIsoEff = WATERIsoDefault
-WATERErr = Eff.WATERRn222Err
-WATERBGErr = WATERErr
-######Background Rate##############################
-scale = 1/6 #(pow(fiducialRaduis, 2)*fiducialHeight)/(pow(detectorRaduis, 2)*decetorHeight)
 ###################################################
 def BGRate():
     """
@@ -605,61 +661,6 @@ def Max(bg, share):
     for i in range(len(share)):
         BG += bg*IsoShare[i]*share[i]
     return BG
-########Accidental Background######################
-#U238  = [Pa234, Pb214, Bi214, Tl210, Bi210]
-#Th232 = [Ac228, Bi212, Pb212, Tl208]
-#K40   = [K40]
-#########PMT#######################################
-PMT_Pr =  [Pr.PMTU238,   #U238 chain
-           Pr.PMTTh232,  #Th232 chain
-           Pr.PMTK40]    #K40 chain
-PMT_Nr =  [Nr.PMTU238,   #U238 chain
-           Nr.PMTTh232,  #Th232 chain
-           Nr.PMTK40]    #K40 chain
-#########VETO######################################
-VETO_Pr = [Pr.VETOU238,  #U238 chain
-           Pr.VETOTh232, #Th232 chain
-           Pr.VETOK40]   #K40 chain
-VETO_Nr = [Nr.VETOU238,  #U238 chain
-           Nr.VETOTh232, #Th232 chain
-           Nr.VETOK40]   #K40
-#########TANK######################################
-TANK_Pr = [Pr.TANKU238,  #U238 chain
-           Pr.TANKTh232, #Th232 chain
-           Pr.TANKK40]   #K40 chain
-TANK_Nr = [Nr.TANKU238,  #U238 chain
-           Nr.TANKTh232, #Th232 chain
-           Nr.TANKK40,   #K40
-           Nr.TANKSTEEL]  #CO60, CS137
-CONC_Pr = [[0, 0, 0, 0, 0], #U238 chain
-          [0, 0, 0, 0], #Th232 chain
-          [0]] #K40 chain
-CONC_Nr = [[0, 0, 0, 0, 0],#U238 chain
-          [0, 0, 0, 0],  #Th232 chain
-          [0]]           #K40 chain
-#########ROCK######################################
-ROCK_Pr = [Pr.ROCKU238,  #U238 chain
-           Pr.ROCKTh232, #Th232 chain
-           Pr.ROCKK40]   #K40 chain
-ROCK_Nr = [Nr.ROCKU238,  #U238 chain
-           Nr.ROCKTh232, #Th232 chain
-           Nr.ROCKK40]   #K40
-#########RnWater###################################
-WATER_Pr = Pr.WATERRn222 #Rn222 chain
-WATER_Nr = Nr.WATERRn222 #Rn222 chain
-#########GD########################################
-GD_Pr = [Pr.GDU238,      #U238 Chain
-         Pr.GDTh232,     #Th232 Chain
-         Pr.GDU235,      #U235 Chain
-         Pr.GDU238,      #U238 Chain
-         Pr.GDTh232,     #Th232 Chain
-         Pr.GDU235]      #U235 Chain
-GD_Nr = [Nr.GDU238,      #U238 Chain
-         Nr.GDTh232,     #U238 Chain
-         Nr.GDU235,      #U235 Chain
-         Nr.GDU238,      #U238 Chain
-         Nr.GDTh232,     #Th232 Chain
-         Nr.GDU235]      #U235 Chain
 ###################################################
 def AccBack(Prate, Nrate):
     """
@@ -679,13 +680,14 @@ def AccBack(Prate, Nrate):
         for i in range(len(Prate)):
             back += Prate[i]*Nrate[i]*timeScale
     return back
+###################################################
 PMT_Acc = AccBack(PMT_Pr, PMT_Nr)
 VETO_Acc = AccBack(VETO_Pr, VETO_Nr)
 TANK_Acc = AccBack(TANK_Pr, TANK_Nr)
 CONC_Acc = AccBack(CONC_Pr, CONC_Nr)
 ROCK_Acc = AccBack(ROCK_Pr, ROCK_Nr)
 WATER_Acc = AccBack(WATER_Pr, WATER_Nr)
-#GD_Acc = AccBack(GD_Pr, GD_Nr)
+GD_Acc = AccBack(GD_Pr, GD_Nr)
 ###################################################
 ans = ""
 ai = False
@@ -789,7 +791,6 @@ while ans.lower() != "exit":
         dataAct[2] = TankAct(TANKACT)
         dataAct[3] = ConcAct(CONCACT)
         dataAct[4] = RockAct(ROCKPPM)
-        print(dataAct[4])
         dataAct[5] = WaterAct(RnWPPM)
         dataAct[6] = GdAct(GDPPM)
     #####output####################################
