@@ -35,7 +35,8 @@ IsoDecay = [['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210'], #U238 decay chain
             ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207'], #U235 decay chain
             ['K40'],                                       #K40 decay chain
             ['Pb214', 'Bi214', 'Bi210', 'Tl210'],          #Rn222 decay chain
-            ['Co60', 'Cs137']]
+            ['Co60', 'Cs137'],
+            ['FN']]
 IsoDefault = [[0.043, 0.133, 36], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
               [0.043, 0.133, 36], # [VETO], [U238(ppm), Th232(ppm), K40(ppm)]
               [0.17, 3.8e-3, 34e-3, 14e-3, 4e-3], # [TANK], [U238 (1.4e-3ppm), Th232(0.93e-3ppm), K40(Bq/kg), Co60(Bq/kg), Cs137(Bq/kg)]
@@ -86,14 +87,16 @@ CONCIsoDefault = [[0, 0, 0, 0, 0], #[[Pa234, Pb214, Bi214, Bi210, Tl210],
 CONCIsoEff = CONCIsoDefault
 CONCErr = [] #no data
 #######ROCK########################################
-ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3]]
+ROCKIsoDecay = [IsoDecay[0], IsoDecay[1], IsoDecay[3], IsoDecay[6]]
 ROCKIsoDefault = [Eff.ROCKU238,  #U238 Chain 
                   Eff.ROCKTh232, #Th232 Chain
-                  Eff.ROCKK40]   #K40 Chain
+                  Eff.ROCKK40,   #K40 Chain
+                  [1]]           #FN
 ROCKIsoEff = ROCKIsoDefault
 ROCKErr = [Eff.ROCKU238Err,      #U238 Chain
            Eff.ROCKTh232Err,     #Th232 Chain
-           Eff.ROCKK40Err]       #K40 Chain
+           Eff.ROCKK40Err,       #K40 Chain
+           [0]]                  #Fast Neutron
 ROCKBGErr = ROCKErr
 #######GD##########################################
 GDIsoDecay = [IsoDecay[0],IsoDecay[1],IsoDecay[2], IsoDecay[0], IsoDecay[1], IsoDecay[2]] 
@@ -157,7 +160,8 @@ ROCK_Pr = [Pr.ROCKU238,  #U238 chain
            Pr.ROCKK40]   #K40 chain
 ROCK_Nr = [Nr.ROCKU238,  #U238 chain
            Nr.ROCKTh232, #Th232 chain
-           Nr.ROCKK40]   #K40
+           Nr.ROCKK40,   #K40 chain
+           [0]]
 #########RnWater###################################
 WATER_Pr = Pr.WATERRn222 #Rn222 chain
 WATER_Nr = Nr.WATERRn222 #Rn222 chain
@@ -568,6 +572,8 @@ def BGRate():
                 ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x])
                 ROCKBGIsoN[i].append(dataAct[4][i]*ROCK_Nr[i][x])
             ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKIsoEff[i][x], ROCKBGIso[i][x])    
+            print('dataAct[i][x] = ', dataAct[i][x])
+            print('RockBGIso[i][x] = ', ROCKBGIso[i][x])
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBGIso[i][x], ROCKBGErr[i][x]))
         ROCKBGR += sum(ROCKBGIso[i])
         ROCKBGR_N += sum(ROCKBGIsoN[i])
@@ -633,15 +639,6 @@ def BGRate():
     print('Total accidental + cosmic muon background rate per day is %.5e' % tot)
     return tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso
 ###################################################
-#Iso = [Pa234, Ac228, Pb214, Bi214, Pb212, Bi212, Tl210, Bi210, Tl208, K40]
-#TODO Replace this with the calculation at the end of the previous function
-#IsoShare = [6.73998e-2, 7.56318e-2, 1.81474e-2, 2.02340e-1, 1.36405e-3, 7.18246e-2, 2.67975e-1, 4.53142e-2, 1.56517e-1, 9.34868e-2]
-#PMTShare = [4.60123e-1, 5.37989e-1, 4.06841e-1, 1.95302e-1, 2.37596e-1, 5.78219e-1, 1.88178e-1, 3.63865e-1, 3.62383e-1, 2.98963e-1]
-#VETOShare = [3.95017e-1, 4.12636e-1, 3.12046e-1, 1.65500e-1, 2.14290e-1, 3.33691e-1, 1.69719e-1, 2.93687e-1, 2.17803e-1, 2.44321e-1] 
-#TANKShare = [1.44844e-1, 4.79718e-2, 3.62776e-2, 3.88787e-1, 5.15283e-1, 8.44188e-2, 4.08107e-1, 3.51846e-2, 3.83691e-1, 1.45410e-1] 
-#CONCShare = [1.39419e-5, 1.33521e-3, 1.00972e-3, 2.50823e-2, 3.13512e-2, 3.33691e-1, 1.17226e-3, 0, 3.45508e-2, 6.80389e-3]
-#ROCKShare = [0, 6.84725e-5, 5.17807e-5, 1.13687e-3, 1.48012e-3, 2.23804e-4, 1.17226e-3, 0, 1.57184e-3, 3.06572e-4]
-#RnWAshare = [0, 0, 2.43773e-1, 2.24192e-1, 0, 0, 2.07993e-1, 3.07263e-1, 0, 3.04196e-1]
 def MaxBG(s,t):
     sigma = 4.65
     S = s*0.9
@@ -830,7 +827,9 @@ while ans.lower() != "exit":
             print('Efficiency of Isotopes in ' + Comp[4])
             for i in range(len(ROCKIsoDecay)):
                 for x in range(len(ROCKIsoDefault[i])):
-                    print(InType[2] + ' of ' + PMTIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
+                    #print(ROCKIsoDecay[i][x])
+                    #print(ROCKIsoDefault[i][x])
+                    print(InType[2] + ' of ' + ROCKIsoDecay[i][x] + ' for ' + Comp[4] + ' set to default value %.5e +/- %.5e' % (ROCKIsoEff[i][x], ROCKErr[i][x]))
             print('##################################################')
             print('Efficiency of Isotopes in ' + Comp[5])
             for i in range(len(WATERIsoDecay)):
