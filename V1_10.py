@@ -404,12 +404,12 @@ def RockAct(PPM): #done
     mass = vol*den
     #dim vars
     IsoAct = list(range(len(Iso[4])))
-    print(IsoAct)
+    #print(IsoAct)
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
     IsoAct[-1] = FN
-    print(IsoAct)
+    #print(IsoAct)
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff,fraction):
@@ -565,7 +565,7 @@ def BGRate():
     ROCKBGR = 0
     ROCKBGIsoN = [[], [], [], []]
     ROCKBGR_N = 0
-    print(dataAct[4])
+    #print(dataAct[4])
     for i in range(len(ROCKIsoDecay)):
         for x in range(len(ROCKIsoDecay[i])):
             if ROCKIsoDecay[i][x]=='Tl210':
@@ -617,9 +617,9 @@ def BGRate():
                 GDBGIso[i].append(dataAct[6][i]*GDIsoEff[i][x])
                 GDBGIsoN[i].append(dataAct[6][i]*GD_Nr[i][x])
             GDBGErr[i][x] = ErrProp(GDErr[i][x], GDIsoEff[i][x], GDBGIso[i][x])
-            #print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x])
-            print('Error of ' + GDIsoDecay[i][x] + ' = %.5e' % GDErr[i][x])
-            print('Efficiency of ' + GDIsoDecay[i][x] + ' = %.5e' % GDIsoEff[i][x])
+            print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x]))
+            #print('Error of ' + GDIsoDecay[i][x] + ' = %.5e' % GDErr[i][x])
+            #print('Efficiency of ' + GDIsoDecay[i][x] + ' = %.5e' % GDIsoEff[i][x])
         GDBGR += sum(GDBGIso[i])
         #print(sum(GDBGIso[i]))
         GDBGR_N += sum(GDBGIsoN[i])
@@ -799,9 +799,9 @@ while ans.lower() != "exit":
             print('##################################################')
             print('Activity of Isotopes in ' + Comp[i] + ': ')
             for x in range(len(Iso[i])):
-                print('Iso[i][x] = ', Iso[i][x])
-                print('dataAct[i][x] = ', dataAct[i][x])
-                print('   Activity of ' + Iso[i][x] + ' = %.5e Bq' % dataAct[i][x])
+                #print('Iso[i][x] = ', Iso[i][x])
+                #print('dataAct[i][x] = ', dataAct[i][x])
+                print('   Activity of  %.7s = %.5e Bq' % (Iso[i][x], dataAct[i][x]))
         if ei == False:
             print('##################################################')
             print('Setting Efficiency values to default values')
