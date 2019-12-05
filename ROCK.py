@@ -41,4 +41,30 @@ def ROCKAct(PPM):
     Act = PPM
     for i in range(len(Act)-1):
         Act[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
+    Act[-1] = FN
     return Act
+ROCKIsoAct = ROCKAct(IsoDefault)
+def ErrProp(EffErr, Eff, BG):
+    if Eff != 0:
+        centErr = EffErr/Eff
+        err = BG*centErr
+    else:
+        err = 0
+    return err
+def BGRate():
+    ROCKBGIso = [[], [], [], []]
+    ROCKBGR = 0
+    ROCKBGIso_N = [[], [], [], []]
+    ROCKBGR_N = 0
+    ROCKBGErr = [[], [], [], []]
+    for i in range(len(ROCKIsoDecay)):
+        for x in range(len(ROCKIsoDecay[i])):
+            if ROCKIsoDecay[i][x] == 'Tl210':
+                ROCKBGIso[i].append(ROCKIsoAct[i][x]*ROCKIsoEff[i][x]*0.002)
+            else:
+                ROCKIsoBG[i].append(ROCKIsoAct[i][x]*ROCKIsoEff[i][x])
+            #ROCKBGErr[i].append(
+            print('BGR due to ' + ROCKIsoDecay[i][x] + ' %.5e +/- %.5e' % (ROCKBGIso[i][x], ROCKBGErr[i][x]))
+        ROCKBGR += sum(ROCKBGIso[i])
+        #ROCKBGR_N += sum(ROCKBGIsoN[i])
+    return ROCKBGIso, ROCKBGR

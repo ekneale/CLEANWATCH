@@ -404,10 +404,12 @@ def RockAct(PPM): #done
     mass = vol*den
     #dim vars
     IsoAct = list(range(len(Iso[4])))
+    print(IsoAct)
     #Activity Loop
     for i in range(len(PPM)-1):
         IsoAct[i] = ((Lam[i]*PPM[i])/(Ms[i]*1e6))*mass
     IsoAct[-1] = FN
+    print(IsoAct)
     return IsoAct
 #####Reverse BG for ROCK func######################
 def revROCKAct(BGIso, IsoEff,fraction):
@@ -559,12 +561,13 @@ def BGRate():
     ####ROCK#######################################
     print('##################################################') 
     print('BGR due to ROCK')
-    ROCKBGIso = [[], [], []]
+    ROCKBGIso = [[], [], [], []]
     ROCKBGR = 0
-    ROCKBGIsoN = [[], [], []]
+    ROCKBGIsoN = [[], [], [], []]
     ROCKBGR_N = 0
+    print(dataAct[4])
     for i in range(len(ROCKIsoDecay)):
-        for x in range(len(ROCKIsoEff[i])):
+        for x in range(len(ROCKIsoDecay[i])):
             if ROCKIsoDecay[i][x]=='Tl210':
                 ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x]*0.002)
                 ROCKBGIsoN[i].append(dataAct[4][i]*ROCK_Nr[i][x]*0.002)
@@ -572,8 +575,8 @@ def BGRate():
                 ROCKBGIso[i].append(dataAct[4][i]*ROCKIsoEff[i][x])
                 ROCKBGIsoN[i].append(dataAct[4][i]*ROCK_Nr[i][x])
             ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKIsoEff[i][x], ROCKBGIso[i][x])    
-            print('dataAct[i][x] = ', dataAct[i][x])
-            print('RockBGIso[i][x] = ', ROCKBGIso[i][x])
+            #print('dataAct[i][x] = ', dataAct[4][x])
+            #print('RockBGIso[i][x] = ', ROCKBGIso[i][x])
             print('BGR due to ' + ROCKIsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBGIso[i][x], ROCKBGErr[i][x]))
         ROCKBGR += sum(ROCKBGIso[i])
         ROCKBGR_N += sum(ROCKBGIsoN[i])
