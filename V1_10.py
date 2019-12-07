@@ -178,7 +178,6 @@ GD_Nr = [Nr.GDU238,      #U238 Chain
          Nr.GDU238,      #U238 Chain
          Nr.GDTh232,     #Th232 Chain
          Nr.GDU235]      #U235 Chain
-
 ######menu func####################################
 def menu(): #menu text
     """
