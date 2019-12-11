@@ -1,17 +1,20 @@
-import docopt
 import GD
 BGtot = 0
 argstring = """
     Usage: CLEANWATCH.py [options]
     Arguments:
     Options:
-        --PPM=<GD> #Enter values of PPM for GD component
-        --Eff=<GD> #Enter values of Efficiency for GD component
+        --PPM=<component> #Enter values of PPM for GD component
+        --Eff=<component> #Enter values of Efficiency for GD component
     """
+import docopt
 arguments = docopt.docopt(argstring)
 #if (arguments['--PPM']=='GD'):
-#   GD.setPPM()
+Iso.setPPM(GD.IsoList, GD.PPM)
 #if (arguments['--Eff']=='GD'):
 #   GD.setEff()
 #GD.Activity()
 #BGtot += GD.BGrate()
+#do for all components then do reverse calculation
+#share()
+#revAct()

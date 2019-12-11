@@ -37,3 +37,11 @@ WATERRn222, WATERRn222Err = GetEff(4, 3)
 GDU238, GDU238Err = GetEff(5, 0)
 GDTh232, GDTh232Err = GetEff(5, 1)
 GDU235, GDU235Err = GetEff(5, 5)
+def ErrProp(IsoEffErr, IsoEff, BG):
+    if IsoEff != 0:
+        centErr = IsoEffErr/IsoEff
+        IsoErr = BG*centErr
+    else:
+        IsoErr = 0
+    return IsoErr
+

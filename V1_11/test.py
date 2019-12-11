@@ -1,2 +1,3 @@
 import GD
-GD.setPPM()
+import Iso
+Iso.setPPM(GD.IsoList, GD.PPM)
