@@ -5,13 +5,16 @@ Abs = [1, 1, 0.00117] #natural abundance [U238, Th232, K40]
 #Component Isotopes
 PMT =  ['U238', 'Th232', 'K40']
 VETO = ['U238', 'Th232', 'K40']
+TANK = ['U238', 'Th232', 'K40', 'Co60', 'Cs137']
+CONC = ['U238', 'Th232', 'K40']
 GD =   ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']
 #Decay Chains
 U238 =  ['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210']
 Th232 = ['Ac228', 'Pb212', 'Bi211', 'Tl207']
 U235 =  ['Th231', 'Fr223', 'Pb211', 'Bi211', 'Tl207']
 K40 =   ['K40']
-STEEL = ['Co60', 'Cs137']
+Co60 =  ['Co60']
+Cs137 = ['Cs137']
 Rn222 = ['Pb214', 'Bi214', 'Bi210', 'Tl210']
 FN =    ['Fn']
 def setPPM(Iso, PPM):
