@@ -1,0 +1,2 @@
+import GD
+GD.setPPM()

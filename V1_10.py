@@ -43,7 +43,8 @@ IsoDefault = [[0.043, 0.133, 36], #[[PMT], [U238(ppm), Th232(ppm), K40(ppm)]
               [61, 30, 493],      # [CONCRETE], [U238(Bq/kg), Th232(Bq/kg), K40(Bq/kg)]
               [10e-3, 220e-3, 750, 0.02],# [ROCK], [U238(ppm), Th232(ppm), K40(ppm), fast neutrons(events per day)] 
               [0.002,0.01], #[WATER], [Rn222(Bqm-3), radionuclides(events per day)]
-              [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD](Bq/kg)] [
+              [1, 1, 1, 1, 1, 1]]
+              #[10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3]] #[GD](Bq/kg)] [
 ######Components###################################
 Comp = ['PMT', 'VETO', 'TANK', 'CONCRETE', 'ROCK','WATER', 'GD']
 #####Efficiences###################################
@@ -113,6 +114,7 @@ GDErr = [Eff.GDU238Err,      #U238 Chain
          Eff.GDU238Err,      #U238_l Chain
          Eff.GDTh232Err,     #Th232_l Chain
          Eff.GDU235Err]      #U235_l Chain
+#print(GDErr)
 GDBGErr = GDErr
 #######RnWater#####################################
 WATERIsoDecay = IsoDecay[4] #Rn222 decay chain
@@ -607,6 +609,9 @@ def BGRate():
     GDBGR   = 0
     GDBGIsoN = [[], [], [], [], [], []]
     GDBGR_N   = 0
+    #print(GDErr)
+    #print(GDBGErr)
+    print('##################################################') 
     for i in range(len(GDIsoDecay)):
         for x in range(len(GDIsoEff[i])):
             if GDIsoDecay[i][x]=='Tl210':
@@ -615,14 +620,19 @@ def BGRate():
             else:
                 GDBGIso[i].append(dataAct[6][i]*GDIsoEff[i][x])
                 GDBGIsoN[i].append(dataAct[6][i]*GD_Nr[i][x])
+            if GDIsoEff[i][x] != 0:
+                print('err/Eff = %.5e / %.5e = %.5e' % (GDErr[i][x], GDIsoEff[i][x], (GDErr[i][x]/GDIsoEff[i][x])))
             GDBGErr[i][x] = ErrProp(GDErr[i][x], GDIsoEff[i][x], GDBGIso[i][x])
             print('BGR due to ' + GDIsoDecay[i][x] + ' %.5e +/- %.5e' % (GDBGIso[i][x], GDBGErr[i][x]))
-            #print('Error of ' + GDIsoDecay[i][x] + ' = %.5e' % GDErr[i][x])
-            #print('Efficiency of ' + GDIsoDecay[i][x] + ' = %.5e' % GDIsoEff[i][x])
+            print('Error of ' + GDIsoDecay[i][x] + ' = %.5e' % GDBGErr[i][x])
+            print('Efficiency of ' + GDIsoDecay[i][x] + ' = %.5e' % GDIsoEff[i][x])
+            print('##################################################') 
         GDBGR += sum(GDBGIso[i])
         #print(sum(GDBGIso[i]))
         GDBGR_N += sum(GDBGIsoN[i])
     print('Total BGR due to Gd = %.5e' % GDBGR)
+    #print(GDErr)
+    #print(GDBGErr)
 ###################################################
     #Total#########################################
     tot = PMTBGR + VETOBGR + TANKBGR + CONCBGR + ROCKBGR + WATERBGR + GDBGR
@@ -784,6 +794,7 @@ while ans.lower() != "exit":
         elif in_ans == 'n':
             for i in range(len(GDPPM)):
                 disdefval(InType[0], Iso[6][i], Comp[6], IsoDefault[6][i])
+        #print(GDPPM)
     ####Get Data###################################
         dataAct[0] = PMTAct(PMTPPM)
         dataAct[1] = VETOAct(VETOPPM)
@@ -843,17 +854,14 @@ while ans.lower() != "exit":
                     print(InType[2] + ' of ' + GDIsoDecay[i][x] + ' for ' + Comp[6] + ' set to default value of %.5e +/- %.5e' % (GDIsoEff[i][x], GDErr[i][x]))
         else:
             pass
-        if bgi == False:
-            tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
-            PMTShare = share(tot, PMTBGIso)
-            VETOShare = share(tot, VETOBGIso)
-            TANKShare = share(tot, TANKBGIso)
-            CONCShare = share(tot, CONCBGIso)
-            ROCKShare = share(tot, ROCKBGIso)
-            RnWAShare = share(tot, WATERBGIso)
-            GDShare = share(tot, GDBGIso)
-        else:
-            pass
+        tot, PMTBGIso, VETOBGIso, TANKBGIso, CONCBGIso, ROCKBGIso, WATERBGIso, GDBGIso = BGRate()
+        PMTShare = share(tot, PMTBGIso)
+        VETOShare = share(tot, VETOBGIso)
+        TANKShare = share(tot, TANKBGIso)
+        CONCShare = share(tot, CONCBGIso)
+        ROCKShare = share(tot, ROCKBGIso)
+        RnWAShare = share(tot, WATERBGIso)
+        GDShare = share(tot, GDBGIso)
         try:
             signal = literal_eval(input('Input signal rate: '))
             signal < 1
