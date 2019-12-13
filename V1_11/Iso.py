@@ -7,6 +7,9 @@ PMT =  ['U238', 'Th232', 'K40']
 VETO = ['U238', 'Th232', 'K40']
 TANK = ['U238', 'Th232', 'K40', 'Co60', 'Cs137']
 CONC = ['U238', 'Th232', 'K40']
+TANK = ['U238', 'Th232', 'K40']
+ROCK = ['U238', 'Th232', 'K40', 'Fn']
+WATER= ['Rn222', 'Rn']
 GD =   ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']
 #Decay Chains
 U238 =  ['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210']
@@ -17,6 +20,7 @@ Co60 =  ['Co60']
 Cs137 = ['Cs137']
 Rn222 = ['Pb214', 'Bi214', 'Bi210', 'Tl210']
 FN =    ['Fn']
+RN =    ['Rn']
 def setPPM(Iso, PPM):
     for i in range(len(Iso)):
         try:
