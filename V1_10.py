@@ -181,7 +181,7 @@ GD_Nr = [Nr.GDU238,      #U238 Chain
          Nr.GDTh232,     #Th232 Chain
          Nr.GDU235]      #U235 Chain
 ######menu func####################################
-def menu(): #menu text
+#def menu(): #menu text
     """
     Displays options
     """
@@ -206,7 +206,7 @@ def menu(): #menu text
             print('Loading...')
             break
     return a
-######Input func###################################
+#####Input func###################################
 def InputVals(IType, isotope, component, x):
     """
         IType = Input Type (str)
