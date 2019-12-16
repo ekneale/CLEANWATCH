@@ -8,6 +8,9 @@ import GD
 #imports
 import Iso
 import Eff
+#Vars
+PMTAct = 
+PMTEff = PMT.
 #funcs
 def menu(): #menu text
     """
@@ -34,4 +37,3 @@ def menu(): #menu text
             print('Loading...')
             break
     return a
-

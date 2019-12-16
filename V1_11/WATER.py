@@ -3,8 +3,8 @@ from math import pow
 import numpy as np
 r = 10026.35e-3
 vol = np.pi*pow(r, 3)*2
-PPM = [0.002, 0.01]
-IsoAct = PPM
+defPPM = [0.002, 0.01]
+IsoAct = defPPM
 revIsoAct = PPM
 IsoList = Iso.WATER
 IsoDecay = [Iso.Rn222,
@@ -24,3 +24,4 @@ def revActivity(BG, Eff):
             revIsoAct[i] = maxbg/Eff[i][x]/vol
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)

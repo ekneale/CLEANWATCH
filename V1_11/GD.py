@@ -4,9 +4,9 @@ import Eff
 import Iso
 TankR = 10026.35e-3
 Height = 10026.35e-3
-PPM = [1, 1, 1, 1, 1, 1]
-IsoAct = PPM
-revIsoAct = PPM
+defPPM = [1, 1, 1, 1, 1, 1]
+IsoAct = defPPM
+revIsoAct = defPPM
 IsoList = Iso.GD
 IsoDecay = [Iso.U238,
             Iso.Th232,
@@ -43,4 +43,5 @@ def revActivity(BG, Eff):
             revIsoAct[i] = maxbg/Eff[i][x]/const
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)
 #print('No Errors')

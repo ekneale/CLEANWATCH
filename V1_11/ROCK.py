@@ -4,9 +4,9 @@ from math import pow
 den = 2165
 vol = np.pi*((pow(18,2)*35.5)-pow(13,2)*25.5)
 mass = den*vol
-PPM = [10e-3, 220e-3, 750, 0.02]
-IsoAct = PPM
-revIsoAct = PPM
+defPPM = [10e-3, 220e-3, 750, 0.02]
+IsoAct = defPPM
+revIsoAct = defPPM
 IsoList = Iso.ROCK
 IsoDecay = [Iso.U238,
             Iso.Th232,
@@ -31,3 +31,4 @@ def revActivity(BG, Eff):
             revIsoAct[i] = maxbg/Eff[i][x]/mass/((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs))
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)

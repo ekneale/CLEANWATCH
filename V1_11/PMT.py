@@ -1,9 +1,9 @@
 import Iso, Eff
 mass = 1.4 #kg
 n = 3258
-PPM = [0.043, 0.133, 36] #[U238, Th232, K40]
-IsoAct = PPM
-revIsoAct = PPM
+defPPM = [0.043, 0.133, 36] #[U238, Th232, K40]
+IsoAct = defPPM
+revIsoAct = defPPM
 IsoList = Iso.PMT
 IsoDecay = [Iso.U238,
             Iso.Th232,
@@ -26,4 +26,5 @@ def revActivity(BG, Eff):
             revIsoAct[i] = (BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)
 #print('No Errors')

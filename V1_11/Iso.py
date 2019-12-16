@@ -54,4 +54,3 @@ def BGrate(Act, Eff, Decay):
             print('BG rate for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IsoBG[i][x], Err[i][x]))
         t += sum(IsoBG[i])
     return t
-

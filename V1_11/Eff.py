@@ -46,4 +46,3 @@ def ErrProp(IsoEffErr, IsoEff, BG):
     else:
         IsoErr = 0
     return IsoErr
-

@@ -4,9 +4,9 @@ import numpy as np
 vol = np.pi*(51/2)*(pow(13,2)-pow(12.5,2))-(np.pi/2)*pow(13,2) #m^3
 den = 2300
 mass = vol*den
-PPM = [61, 30, 493]
-IsoAct = PPM
-revIsoAct = PPM
+defPPM = [61, 30, 493]
+IsoAct = defPPM
+revIsoAct = defPPM
 IsoList = Iso.CONC
 IsoDecay = [Iso.U238,
             Iso.Th232,
@@ -26,3 +26,4 @@ def revActivity(BG, Eff):
             revIsoAct[i] = maxbg/Eff[i][x]/mass
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)

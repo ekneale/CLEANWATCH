@@ -7,9 +7,9 @@ t = 6.35e-3
 vol = (2*np.pi*h*pow(r, 2))-(2*np.pi*(h-t)*pow(r-t, 2)) #m^
 den = 8000 #kg/m^3
 mass = vol*den #kg
-PPM = [0.17, 3.8e-3, 34e-3, 14e-3, 4e-3]
-IsoAct = PPM
-revIsoAct = PPM
+defPPM = [0.17, 3.8e-3, 34e-3, 14e-3, 4e-3]
+IsoAct = defPPM
+revIsoAct = defPPM
 IsoList = Iso.TANK
 IsoDecay = [Iso.U238,
             Iso.Th232,
@@ -37,3 +37,4 @@ def revActivity(BG, Eff):
             revIsoAct[i] = (maxbg/Eff[i][x])/mass
         else:
             revIsoAct[i] = 0
+defAct = Activity(defPPM)
