@@ -18,7 +18,7 @@ EffErr = IsoEff
 def Activity(PPM):
     IAct = []
     for i in range(len(PPM)):
-        IsoAct.append(PPM[i]*mass)
+        IAct.append(PPM[i]*mass)
         print('Activity due to ' + Iso.CONC[i] + ' = %.5e' % IAct[i])
     return IAct
 def revActivity(BG, Eff):

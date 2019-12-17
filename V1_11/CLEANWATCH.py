@@ -9,6 +9,7 @@ import GD
 #imports
 import Iso
 import Eff
+import os
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 #Comp = {
@@ -55,6 +56,9 @@ GDPPM = GD.defPPM
 GDAct = GD.defPPM
 GDEff = GD.IsoEff
 GDErr = GD.EffErr
+#input check
+ai = False
+ei = False
 #funcs
 def menu(): #menu text
     """
@@ -68,7 +72,7 @@ def menu(): #menu text
         print('Alex Healey, UoS, 2019')
         print('Options: ')
         print('- Input Values for Activity    [a]')
-        #print('- Input Values for Efficiency  [e]')
+        print('- Input Values for Efficiency  [e]')
         #print('- Calculate Background Rate    [bgr]')
         #print('- Calculate Time Detection     [td]')
         #print('- Calculate Maximum Background [maxbg]')
@@ -81,16 +85,29 @@ def menu(): #menu text
             print('Loading...')
             break
     return a
-def inputAct():
+def inputVal(itype)
     iput = []
-    a = input('What components would you like to input values for PPM for? [PMT/VETO/TANK?/CONC]')
+    a = input('What components would you like to input values for ' + itype  + 'for? [PMT/VETO/TANK/CONC/ROCK/WATER/GD]  ')
     iput = a.split()
     return iput
+def clear():
+    """
+    Clears output
+    """
+    ui = ""
+    while ui.lower() != 'y' or ui.lower() != 'n':
+        ui = input('Do you want to clear the output? [y/n] ')
+        if ui.lower() == 'y':
+            os.system('clc' if os.name == 'nt' else 'clear')
+            break
+        if ui.lower() == 'n':
+            break
 ans = menu()
 while ans.lower() != 'exit':
     if ans.lower() == 'a':
+        ai = True
         #get list of compoents
-        compAct = inputAct()
+        compAct = inputVal('PPM')
         #change PPM values
         for i in range(len(compAct)):
             if compAct[i].upper() == 'PMT':
@@ -133,28 +150,40 @@ while ans.lower() != 'exit':
         if 'PMT' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in PMT')
-            Iso.disdefPPM(Iso.PMT, PMTPPM)
-        elif 'VETO' not in compAct:
+            Iso.disdef(Iso.PMT, PMTPPM, 'PPM')
+            PMTAct = PMT.Activity(PMTPPM)
+        if 'VETO' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in VETO')
-            Iso.disdefPPM(Iso.VETO, VETOPPM)
-        elif 'TANK' not in compAct:
+            Iso.disdef(Iso.VETO, VETOPPM, 'PPM')
+            VETOAct = VETO.Activity(VETOPPM)
+        if 'TANK' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in TANK')
-            Iso.disdefPPM(Iso.TANK, TANKPPM)
-        elif 'CONC' not in compAct:
+            Iso.disdef(Iso.TANK, TANKPPM, 'PPM')
+            TANKAct = TANK.Activity(TANKPPM)
+        if 'CONC' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in CONC')
-            Iso.disdefPPM(Iso.CONC, CONCPPM)
-        elif 'ROCK' not in compAct:
+            Iso.disdef(Iso.CONC, CONCPPM, 'PPM')
+            CONCAct = CONC.Activity(CONCPPM)
+        if 'ROCK' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in ROCK')
-            Iso.disdefPPM(Iso.ROCK, ROCKPPM)
-        elif 'WATER' not in compAct:
+            Iso.disdef(Iso.ROCK, ROCKPPM, 'PPM')
+            ROCKAct = ROCK.Activity(ROCKPPM)
+        if 'WATER' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in WATER')
-            Iso.disdefPPM(Iso.WATER, WATERPPM)
-        elif 'GD' not in compAct:
+            Iso.disdef(Iso.WATER, WATERPPM, 'PPM')
+            WATERAct = WATER.Activity(WATERPPM)
+        if 'GD' not in compAct:
             print('##########################################')
             print('Default values for PPM for Iso in GD')
-            Iso.disdefPPM(Iso.GD, GDPPM)
+            Iso.disdef(Iso.GD, GDPPM, 'PPM')
+            GDAct = GD.Activity(GDPPM)
+        clear()
+        ans = menu()
+    if ans.lower() == 'e':
+        ei = True
+        compEff = inputVal('Efficiency')
