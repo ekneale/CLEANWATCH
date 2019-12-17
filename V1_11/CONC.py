@@ -16,14 +16,16 @@ IsoEff =   [[0, 0, 0, 0, 0], #U238
             [0]]             #K40
 EffErr = IsoEff
 def Activity(PPM):
+    IAct = []
     for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*mass
+        IsoAct.append(PPM[i]*mass)
+        print('Activity due to ' + Iso.CONC[i] + ' = %.5e' % IAct[i])
+    return IAct
 def revActivity(BG, Eff):
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = maxbg/Eff[i][x]/mass
+            rIsoAct.append(maxbg/Eff[i][x]/mass)
         else:
-            revIsoAct[i] = 0
-defAct = Activity(defPPM)
+            rIsoAct.append(0)

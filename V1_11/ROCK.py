@@ -21,14 +21,19 @@ EffErr = [Eff.ROCKU238Err,
           Eff.ROCKK40Err,
           [0]]
 def Activity(PPM):
+    IAct = []
     for i in range(len(PPM)-1):
-        IsoAct[i] = ((Iso.Lam[i]*Iso.Abs[i])/(Iso.Ms[i]*1e6))*mass*PPM[i]
+        IAct.append(((Iso.Lam[i]*Iso.Abs[i])/(Iso.Ms[i]*1e6))*mass*PPM[i])
+    IAct.append(defPPM[-1])
+    return IAct
 def revActivity(BG, Eff):
+    rIsoAct = []
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = maxbg/Eff[i][x]/mass/((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs))
+            rIsoAct.append(maxbg/Eff[i][x]/mass/((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs)))
         else:
-            revIsoAct[i] = 0
+            rIsoAct.append(0)
+    return rIsoAct
 defAct = Activity(defPPM)

@@ -15,16 +15,20 @@ EffErr =   [Eff.VETOU238Err,
             Eff.VETOTh232Err,
             Eff.VETOK40Err]
 Err = EffErr
-def Actvity(PPM):
+def Activity(PPM):
+    IAct = []
     for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*((Iso.Lam[i]*Abs[i])/(Ms[i]*1e6))*mass*n
+        IAct.append(PPM[i]*((Iso.Lam[i]*Iso.Abs[i])/(Iso.Ms[i]*1e6))*mass*n)
+        print('Activity due to ' + Iso.VETO[i] + ' = %.5e' % IAct[i])
+    return IAct
 def revActivity(BG, Eff):
+    rIsoAct = []
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = (BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/Iso.Lam[i]*Iso.Abs[i])
+            rIsoAct.append(BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/Iso.Lam[i]*Iso.Abs[i])
         else:
-            revIsoAct[i] = 0
-defAct = Activity(defPPM)
+            rIsoAct.append(0)
+    return rIsoAct
 #print('No Errors')

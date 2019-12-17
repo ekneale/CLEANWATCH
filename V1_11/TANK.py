@@ -27,14 +27,17 @@ EffErr =   [Eff.TANKU238Err,
             Eff.TANKCo60Err,
             Eff.TANKCs137Err]
 def Activity(PPM):
+    IAct = []
     for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*mass
+        IAct.append(PPM[i]*mass)
+        print('Activity due to ' + Iso.TANK[i] + ' = %.5e' % IAct[i])
+    return IAct
 def revActivity(BG, Eff):
+    rIsoAct = []
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = (maxbg/Eff[i][x])/mass
+            rIsoAct.append((maxbg/Eff[i][x])/mass)
         else:
-            revIsoAct[i] = 0
-defAct = Activity(defPPM)
+            rIsoAct.append(0)

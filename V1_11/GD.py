@@ -28,20 +28,24 @@ EffErr =   [Eff.GDU238Err,   #U238
             Eff.GDU235Err]   #U235_l
 Err = EffErr
 def Activity(PPM):
+    IAct = []
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     const = mass*0.002
     for i in range(len(PPM)):
-        IsoAct[i] = PPM[i]*const
-        print('Activity of ' + Iso[i] + ' = %.5e x %.5e = %.5e' % (PPM[i], const, IsoAct[i]))
+        IAct.append(PPM[i]*const)
+        #print('Activity of ' + Iso[i] + ' = %.5e x %.5e = %.5e' % (PPM[i], const, IsoAct[i]))
+    return IAct
 def revActivity(BG, Eff):
+    rIsoAct = []
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     const = mass*0.002
     for i in range(len(BG)):
         maxbg = max(BG)
         x = BG.index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = maxbg/Eff[i][x]/const
+            revIsoAct.append(maxbg/Eff[i][x]/const)
         else:
-            revIsoAct[i] = 0
+            revIsoAct.append(0)
+    return rIsoAct
 defAct = Activity(defPPM)
 #print('No Errors')

@@ -5,7 +5,7 @@ r = 10026.35e-3
 vol = np.pi*pow(r, 3)*2
 defPPM = [0.002, 0.01]
 IsoAct = defPPM
-revIsoAct = PPM
+revIsoAct = defPPM
 IsoList = Iso.WATER
 IsoDecay = [Iso.Rn222,
             Iso.RN]
@@ -14,14 +14,19 @@ IsoEff = [Eff.WATERRn222,
 EffErr = [Eff.WATERRn222Err,
          [0]]
 def Activity(PPM):
+    IAct = []
     for i in range(len(PPM)-1):
-        IsoAct[i] = PPM[i]*vol
+        IAct.append(PPM[i]*vol)
+    IAct.append(defPPM[-1])
+    return IAct
 def revActivity(BG, Eff):
+    rIsoAct = []
     for i in range(len(BG)-1):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = maxbg/Eff[i][x]/vol
+            rIsoAct.append(maxbg/Eff[i][x]/vol)
         else:
-            revIsoAct[i] = 0
+            revIsoAct.append(0)
+    return rIsoAct
 defAct = Activity(defPPM)
