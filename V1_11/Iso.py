@@ -34,6 +34,9 @@ def setPPM(Iso, PPM):
             output.append(PPM[i])
             print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
     return output
+def disdefPPM(Iso, PPM):
+    for i in range(len(Iso)):
+        print('PPM for ' + Iso[i] + ' set to default value = %.5e' % PPM[i]) 
 def setEff(IsoDecay, IsoEff):
     for i in range(len(IsoDecay)):
         print(Iso[i] + ' chain')

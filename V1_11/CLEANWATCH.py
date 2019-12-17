@@ -4,12 +4,22 @@ import VETO
 import TANK
 import CONC
 import ROCK
+import WATER
 import GD
 #imports
 import Iso
 import Eff
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
+#Comp = {
+#    "PMT"  : PMT,
+#    "VETO" : VETO,
+#    "TANK" : TANK,
+#    "CONC" : CONC,
+#    "ROCK" : ROCK,
+#    "WATER": WATER,
+#    "GD"   : GD
+#}
 #PMT
 PMTPPM = PMT.defPPM
 PMTAct = PMT.defPPM 
@@ -35,6 +45,16 @@ ROCKPPM = ROCK.defPPM
 ROCKAct = ROCK.defPPM
 ROCKEff = ROCK.IsoEff
 ROCKErr = ROCK.EffErr
+#WATER
+WATERPPM = WATER.defPPM
+WATERAct = WATER.defPPM
+WATEREff = WATER.IsoEff
+WATERErr = WATER.EffErr
+#GD
+GDPPM = GD.defPPM
+GDAct = GD.defPPM
+GDEff = GD.IsoEff
+GDErr = GD.EffErr
 #funcs
 def menu(): #menu text
     """
@@ -69,13 +89,15 @@ def inputAct():
 ans = menu()
 while ans.lower() != 'exit':
     if ans.lower() == 'a':
+        #get list of compoents
         compAct = inputAct()
+        #change PPM values
         for i in range(len(compAct)):
             if compAct[i].upper() == 'PMT':
                 print('##########################################')
                 print('Input values for PPM for Iso in PMT')
                 PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM)
-                PMTAct = PMT.Activity(PMTPPM)
+                PMTAct = (compAct[i].upper()).Activity(PMTPPM)
                 #print(PMTPPM)
             if compAct[i].upper() == 'VETO':
                 print('##########################################')
@@ -97,4 +119,42 @@ while ans.lower() != 'exit':
                 print('Input values for PPM for Iso in ROCK')
                 ROCKPPM = Iso.setPPM(Iso.ROCK, ROCK.defPPM)
                 ROCKAct = ROCK.Activity(ROCKPPM)
-
+            if compAct[i].upper() == 'WATER':
+                print('##########################################')
+                print('Input values for PPM for Iso in WATER')
+                WATERPPM = Iso.setPPM(Iso.WATER, WATER.defPPM)
+                WATERAct = WATER.Activity(WATERPPM)
+            if compAct[i].upper() == 'GD':
+                print('##########################################')
+                print('Input values for PPM for Iso in GD')
+                GDPPM = Iso.setPPM(Iso.GD, GD.defPPM)
+                GDAct = GD.Activity(GDPPM)
+        #set to default
+        if 'PMT' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in PMT')
+            Iso.disdefPPM(Iso.PMT, PMTPPM)
+        elif 'VETO' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in VETO')
+            Iso.disdefPPM(Iso.VETO, VETOPPM)
+        elif 'TANK' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in TANK')
+            Iso.disdefPPM(Iso.TANK, TANKPPM)
+        elif 'CONC' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in CONC')
+            Iso.disdefPPM(Iso.CONC, CONCPPM)
+        elif 'ROCK' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in ROCK')
+            Iso.disdefPPM(Iso.ROCK, ROCKPPM)
+        elif 'WATER' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in WATER')
+            Iso.disdefPPM(Iso.WATER, WATERPPM)
+        elif 'GD' not in compAct:
+            print('##########################################')
+            print('Default values for PPM for Iso in GD')
+            Iso.disdefPPM(Iso.GD, GDPPM)
