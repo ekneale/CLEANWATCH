@@ -341,7 +341,7 @@ def bgrate():
     totBG += GDBGr
     print('##########################################')
     print('Total BG rate = %.5e' % totBG)
-    return totBG
+    return totBG, PMTBG, VETOBG, TANKBG, CONCBG, ROCKBG, WATERBG, GDBG
 #########################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
@@ -433,6 +433,6 @@ while ans.lower() != 'exit':
             ActDefault()
         if ei == False:
             EffDefault()
-        tot = bgrate()
+        tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
         clear()
         ans = menu()
