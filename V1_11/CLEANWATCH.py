@@ -352,13 +352,16 @@ def tdcalc(BG):
         signal > 0
         print('Signal rate set to = %.5e' % signal)
     except:
-        signal = 1
+        signal = 0.564
         print('Signal set to default value = %.5e' % signal)
     #calculate td
-    td = 0
+    B = signal*1.035 + BG
+    S = signal*0.9
+    sigma = 4.65
+    td = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days] 
     #convert to days
-    td /= (pow(60,2)*24)
-    print('Time to detection = %.5e days' % td)
+    #td /= (pow(60,2)*24)
+    print('Reactor off time to detection @ 3 sigma rate = %.5e' % td + ' days')
     return td
 #########################################################################################################
 ans = menu()
