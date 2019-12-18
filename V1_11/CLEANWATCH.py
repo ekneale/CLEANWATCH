@@ -197,13 +197,13 @@ def EffDefault():
             print(Iso.GD[i] + ' chain')
             for x in range(len(GDEff[i])):
                 print('Efficiency for ' + GD.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (GDEff[i][x], GDErr[i][x]))
-def ErrProp(EffErr, Eff, BG):
+def ErrProp(EffErr, IsoEff, BG):
     """
     Returns error of BGR
     """
     err = 0
-    if Eff != 0:
-        err = BG*(EffErr/Eff)
+    if IsoEff != 0:
+        err = BG*(EffErr/IsoEff)
         print(err, EffErr)
     else:
         err = 0
@@ -222,6 +222,7 @@ def bgrate():
                 PMTBG[i][x] *= (PMTEff[i][x]*0.002)
             else:
                 PMTBG[i][x] *= PMTEff[i][x]
+            print(PMTBG[i][x])
             PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMTBG[i][x])
             print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMTBG[i][x], PMTBGErr[i][x]))
             if PMTEff[i][x] != 0:
