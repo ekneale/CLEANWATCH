@@ -61,6 +61,7 @@ ai = False
 ei = False
 compAct = []
 compEff = []
+tot = 0
 #funcs
 def menu(): #menu text
     """
@@ -76,7 +77,7 @@ def menu(): #menu text
         print('- Input Values for Activity    [a]')
         print('- Input Values for Efficiency  [e]')
         print('- Calculate Background Rate    [bgr]')
-        #print('- Calculate Time Detection     [td]')
+        print('- Calculate Time Detection     [td]')
         #print('- Calculate Maximum Background [maxbg]')
         #print('- Cleanliness Budget           [cb]')
         print('- Exit software                [exit]')
@@ -209,6 +210,8 @@ def ErrProp(EffErr, IsoEff, BG):
         err = 0
     return err
 def bgrate():
+    totBG = 0
+    ##PMTs
     PMTBG = PMTEff
     PMTBGErr = PMTErr
     PMTBGr = 0
@@ -227,6 +230,8 @@ def bgrate():
             #, PMTBGErr[i][x]))
         PMTBGr += sum(PMTBG[i])
     print('Total BG due to PMT = %.5e' % PMTBGr)
+    totBG += PMTBGr
+    ##VETO
     VETOBG = VETOEff
     VETOBGErr = VETOErr
     VETOBGr = 0
@@ -243,6 +248,8 @@ def bgrate():
             print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e' % VETOBG[i][x])
         VETOBGr += sum(VETOBG[i])
     print('Total BG due to VETO = %.5e' % VETOBGr)
+    totBG += VETOBGr
+    ##TANK
     TANKBG = TANKEff
     TANKBGErr = TANKErr
     TANKBGr = 0
@@ -259,6 +266,8 @@ def bgrate():
             print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e' % TANKBG[i][x])
         TANKBGr += sum(TANKBG[i])
     print('Total BG due to TANK = %.5e' % TANKBGr)
+    totBG += TANKBGr
+    ##CONC
     CONCBG = CONCEff
     CONCBGErr = CONCErr
     CONCBGr = 0
@@ -275,6 +284,8 @@ def bgrate():
             print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e' % CONCBG[i][x])
         CONCBGr += sum(CONCBG[i])
     print('Total BG due to CONC = %.5e' % CONCBGr)
+    totBG += CONCBGr
+    ##ROCK
     ROCKBG = ROCKEff
     ROCKBGErr = ROCKErr
     ROCKBGr = 0
@@ -291,6 +302,8 @@ def bgrate():
             print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e' % ROCKBG[i][x])
         ROCKBGr += sum(ROCKBG[i])
     print('Total BG due to ROCK = %.5e' % ROCKBGr)
+    totBG += ROCKBGr
+    ##WATER
     WATERBG = WATEREff
     WATERBGErr = WATERErr
     WATERBGr = 0
@@ -307,6 +320,8 @@ def bgrate():
             print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e' % WATERBG[i][x])
         WATERBGr += sum(WATERBG[i])
     print('Total BG due to WATER = %.5e' % WATERBGr)
+    totBG += WATERBGr
+    ##GD
     GDBG = GDEff
     GDBGErr = GDErr
     GDBGr = 0
@@ -323,6 +338,10 @@ def bgrate():
             print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e' % GDBG[i][x])
         GDBGr += sum(GDBG[i])
     print('Total BG due to GD = %.5e' % GDBGr)
+    totBG += GDBGr
+    print('##########################################')
+    print('Total BG rate = %.5e' % totBG)
+    return totBG
 #########################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
@@ -414,6 +433,6 @@ while ans.lower() != 'exit':
             ActDefault()
         if ei == False:
             EffDefault()
-        bgrate()
+        tot = bgrate()
         clear()
         ans = menu()
