@@ -37,17 +37,22 @@ def setPPM(Iso, PPM):
 def disdef(Iso, val, t):
     for i in range(len(Iso)):
         print(t + ' for ' + Iso[i] + ' set to default value = %.5e' % val[i]) 
-def setEff(IsoDecay, IsoEff):
+def setEff(IsoDecay, Iso, IsoEff, IsoErr):
+    IEff = IsoEff
+    IErr = IsoErr
     for i in range(len(IsoDecay)):
+        print('##########################################')
         print(Iso[i] + ' chain')
-        for x in range(len(IsoDecay[x])):
+        for x in range(len(IsoDecay[i])):
             try:
                 a = literal_eval(input('Input Efficiency for ' + IsoDecay[i][x] + ': '))
                 a >= 0
-                IsoEff[i][x] = a
-                print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e' % IsoEff[i][x])
+                IEff[i][x] = a
+                IErr[i][x] = 0
+                print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IEff[i][x], IErr[i][x]))
             except:
-                print('Efficiency for ' + IsoDecay[i][x] + ' set to default value of = %.5e' % IsoEff[i][x])
+                print('Efficiency for ' + IsoDecay[i][x] + ' set to default value of = %.5e +/- %/5e' % (IEff[i][x], IErr[i][x]))
+    return IEff, IErr
 def BGrate(Act, Eff, Decay):
     t = 0
     Err = Eff
@@ -61,3 +66,4 @@ def BGrate(Act, Eff, Decay):
             print('BG rate for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IsoBG[i][x], Err[i][x]))
         t += sum(IsoBG[i])
     return t
+
