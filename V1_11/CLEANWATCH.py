@@ -211,7 +211,7 @@ def ErrProp(EffErr, IsoEff, BG):
 def bgrate():
     PMTBG = PMTEff
     PMTBGErr = PMTErr
-    #PMTBGr = 0
+    PMTBGr = 0
     #PMTBGrErr = 0
     for i in range(len(Iso.PMT)):
         print('##########################################')
@@ -219,21 +219,110 @@ def bgrate():
         for x in range(len(PMT.IsoDecay[i])):
             print(PMT.IsoDecay[i][x])
             if PMT.IsoDecay[i][x] == 'Tl210':
-                PMTBG[i][x] *= (PMTEff[i][x]*0.002)
+                PMTBG[i][x] *= (PMTAct[i]*0.002)
             else:
-                PMTBG[i][x] *= PMTEff[i][x]
-            print(PMTBG[i][x])
-            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMTBG[i][x])
-            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMTBG[i][x], PMTBGErr[i][x]))
-            if PMTEff[i][x] != 0:
-                print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMTBG[i][x], (PMTBG[i][x]*(PMTErr[i][x]/PMTEff[i][x]))))
+                PMTBG[i][x] *= PMTAct[i]
+            #PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMTBG[i][x])
+            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e' % (PMTBG[i][x]))
+            #, PMTBGErr[i][x]))
+        PMTBGr += sum(PMTBG[i])
+    print('Total BG due to PMT = %.5e' % PMTBGr)
     VETOBG = VETOEff
     VETOBGErr = VETOErr
-    #VETOBGr = 0
+    VETOBGr = 0
     #VETOBGrErr = 0
     for i in range(len(Iso.VETO)):
-        x = 0
-
+        print('##########################################')
+        print(Iso.VETO[i] + ' chain')
+        for x in range(len(VETO.IsoDecay[i])):
+            if VETO.IsoDecay[i][x] == 'Tl210':
+                VETOBG[i][x] *= (VETOAct[i]*0.002)
+            else:
+                VETOBG[i][x] *= VETOAct[i]
+            #VETOBGErr = ErrProp(VETOErr[i][x], VETOEff[i][x], VETOBG[i][x])
+            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e' % VETOBG[i][x])
+        VETOBGr += sum(VETOBG[i])
+    print('Total BG due to VETO = %.5e' % VETOBGr)
+    TANKBG = TANKEff
+    TANKBGErr = TANKErr
+    TANKBGr = 0
+    #TANKBGrErr = 0
+    for i in range(len(Iso.TANK)):
+        print('##########################################')
+        print(Iso.TANK[i] + ' chain')
+        for x in range(len(TANK.IsoDecay[i])):
+            if TANK.IsoDecay[i][x] == 'Tl210':
+                TANKBG[i][x] *= (TANKAct[i]*0.002)
+            else:
+                TANKBG[i][x] *= TANKAct[i]
+            #TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKEff[i][x], TANKBG[i][x])
+            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e' % TANKBG[i][x])
+        TANKBGr += sum(TANKBG[i])
+    print('Total BG due to TANK = %.5e' % TANKBGr)
+    CONCBG = CONCEff
+    CONCBGErr = CONCErr
+    CONCBGr = 0
+    #CONCBGrErr = 0
+    for i in range(len(Iso.CONC)):
+        print('##########################################')
+        print(Iso.CONC[i] + ' chain')
+        for x in range(len(CONC.IsoDecay[i])):
+            if CONC.IsoDecay[i][x] == 'Tl210':
+                CONCBG[i][x] *= (CONCAct[i]*0.002)
+            else:
+                CONCBG[i][x] *= CONCAct[i]
+            #CONCBGErr[i][x] = ErrProp(CONCErr[i][x], CONCEff[i][x], CONCBG[i][x])
+            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e' % CONCBG[i][x])
+        CONCBGr += sum(CONCBG[i])
+    print('Total BG due to CONC = %.5e' % CONCBGr)
+    ROCKBG = ROCKEff
+    ROCKBGErr = ROCKErr
+    ROCKBGr = 0
+    #ROCKBGrErr = 0
+    for i in range(len(Iso.ROCK)):
+        print('##########################################')
+        print(Iso.ROCK[i] + ' chain')
+        for x in range(len(ROCK.IsoDecay[i])):
+            if ROCK.IsoDecay[i][x] == 'Tl210':
+                ROCKBG[i][x] *= (ROCKAct[i]*0.002)
+            else:
+                ROCKBG[i][x] *= ROCKAct[i]
+            #ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKEff[i][x], ROCKBG[i][x])
+            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e' % ROCKBG[i][x])
+        ROCKBGr += sum(ROCKBG[i])
+    print('Total BG due to ROCK = %.5e' % ROCKBGr)
+    WATERBG = WATEREff
+    WATERBGErr = WATERErr
+    WATERBGr = 0
+    #WATERBGrErr = 0
+    for i in range(len(Iso.WATER)):
+        print('##########################################')
+        print(Iso.WATER[i] + ' chain')
+        for x in range(len(WATER.IsoDecay[i])):
+            if WATER.IsoDecay[i][x] == 'Tl210':
+                WATERBG[i][x] *= (WATERAct[i]*0.002)
+            else:
+                WATERBG[i][x] *= WATERAct[i]
+            #WATERBGErr[i][x] = ErrProp(WATERErr[i][x], WATEREff[i][x], WATERBG[i][x])
+            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e' % WATERBG[i][x])
+        WATERBGr += sum(WATERBG[i])
+    print('Total BG due to WATER = %.5e' % WATERBGr)
+    GDBG = GDEff
+    GDBGErr = GDErr
+    GDBGr = 0
+    #GDBGrErr = 0
+    for i in range(len(Iso.GD)):
+        print('##########################################')
+        print(Iso.GD[i] + ' chain')
+        for x in range(len(GD.IsoDecay[i])):
+            if GD.IsoDecay[i][x] == 'Tl210':
+                GDBG[i][x] *= (GDAct[i]*0.002)
+            else:
+                GDBG[i][x] *= GDAct[i]
+            #GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG[i][x])
+            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e' % GDBG[i][x])
+        GDBGr += sum(GDBG[i])
+    print('Total BG due to GD = %.5e' % GDBGr)
 #########################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
