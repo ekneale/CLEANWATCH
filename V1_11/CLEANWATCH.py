@@ -10,6 +10,8 @@ import GD
 import Iso
 import Eff
 import os
+from ast import literal_eval
+from math import pow
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 #Comp = {
@@ -62,6 +64,7 @@ ei = False
 compAct = []
 compEff = []
 tot = 0
+timeD = 0
 #funcs
 def menu(): #menu text
     """
@@ -342,6 +345,21 @@ def bgrate():
     print('##########################################')
     print('Total BG rate = %.5e' % totBG)
     return totBG, PMTBG, VETOBG, TANKBG, CONCBG, ROCKBG, WATERBG, GDBG
+def tdcalc(BG):
+    #get signal rate
+    try:
+        signal = literal_eval(input('Input signal rate: '))
+        signal > 0
+        print('Signal rate set to = %.5e' % signal)
+    except:
+        signal = 1
+        print('Signal set to default value = %.5e' % signal)
+    #calculate td
+    td = 0
+    #convert to days
+    td /= (pow(60,2)*24)
+    print('Time to detection = %.5e days' % td)
+    return td
 #########################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
@@ -436,3 +454,13 @@ while ans.lower() != 'exit':
         tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
         clear()
         ans = menu()
+    if ans.lower() == 'td':
+        if ai == False:
+            ActDefault()
+        if ei == False:
+            EffDefault()
+        tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
+        timeD = tdcalc(tot) 
+        clear()
+        ans = menu()
+
