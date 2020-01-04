@@ -81,7 +81,7 @@ def menu(): #menu text
         print('- Input Values for Efficiency  [e]')
         print('- Calculate Background Rate    [bgr]')
         print('- Calculate Time Detection     [td]')
-        #print('- Calculate Maximum Background [maxbg]')
+        print('- Calculate Maximum Background [maxbg]')
         #print('- Cleanliness Budget           [cb]')
         print('- Exit software                [exit]')
         print('##################################################')
@@ -363,7 +363,28 @@ def tdcalc(BG):
     #td /= (pow(60,2)*24)
     print('Reactor off time to detection @ 3 sigma rate = %.5e' % td + ' days')
     return td
-#########################################################################################################
+def maxBG():
+    try:
+        signal = literal_eval(input('Input signal rate: '))
+        signal > 0
+        print('Signal rate set to = %.5e' % signal)
+    except:
+        signal = 0.564
+        print('Signal set to default value = %.5e' % signal)
+    try:
+        days = literal_eval(input('Input time to dection in days: '))
+        days > 0
+        print('Time to detection set to = %.5e' % days)
+    except:
+        days = 1.19770e+2
+        print('Time to detection set to default value of = %.5e' % days)
+    sigma = 4.65
+    S = signal*0.9
+    B = (1.5*days*pow(S, 2))/(2.5*pow(sigma, 2)) - S/2.5
+    MBG = B - (S*1.15)
+    print('Maximum BG rate for time detection of %.5e days = %.5e' % (days, MBG))
+    return MBG
+######################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
     if ans.lower() == 'a':
@@ -464,6 +485,10 @@ while ans.lower() != 'exit':
             EffDefault()
         tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
         timeD = tdcalc(tot) 
+        clear()
+        ans = menu()
+    if ans.lower() == 'maxbg':
+        maxBG()
         clear()
         ans = menu()
 
