@@ -36,16 +36,16 @@ def Activity(PPM):
         #print('Activity of ' + Iso[i] + ' = %.5e x %.5e = %.5e' % (PPM[i], const, IsoAct[i]))
     return IAct
 def revActivity(BG, Eff):
-    rIsoAct = []
+    rIsoAct = [0 for i in range(len(IsoList))]
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     const = mass*0.002
     for i in range(len(BG)):
-        maxbg = max(BG)
-        x = BG.index(maxbg)
+        maxbg = max(BG[i])
+        x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct.append(maxbg/Eff[i][x]/const)
+            revIsoAct[i] = (maxbg/Eff[i][x]/const)
         else:
-            revIsoAct.append(0)
+            revIsoAct[i] = 0
     return rIsoAct
 defAct = Activity(defPPM)
 #print('No Errors')

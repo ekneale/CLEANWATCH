@@ -82,7 +82,7 @@ def menu(): #menu text
         print('- Calculate Background Rate    [bgr]')
         print('- Calculate Time Detection     [td]')
         print('- Calculate Maximum Background [maxbg]')
-        #print('- Cleanliness Budget           [cb]')
+        print('- Cleanliness Budget           [cb]')
         print('- Exit software                [exit]')
         print('##################################################')
         a = str(input('Select an option: '))
@@ -384,6 +384,24 @@ def maxBG():
     MBG = B - (S*1.15)
     print('Maximum BG rate for time detection of %.5e days = %.5e' % (days, MBG))
     return MBG
+def share(total, IsoBG):
+    IsoShare = IsoBG
+    for i in range(len(IsoBG)):
+        for x in range(len(IsoBG[i])):
+            IsoShare[i][x] /= (total*0.05*0.0001)
+    return IsoShare
+def revBG(CompShare, MaxBG):
+    CB_BG = CompShare
+    for i in range(len(CompShare)):
+        for x in range(len(CompShare[i])):
+            CB_BG[i][x] *= MaxBG
+    return CB_BG
+def CBOUT(IsoAct, BGIsoCB, Iso): #BGIso, Iso): #(, , ,COMP.IsoList)
+    for i in range(len(IsoAct)):
+        print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i])))
+        print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[i], (sum(BGIsoCB[i])*0.05*0.0001)))
+        print('Radioactivity Budget for %.7s = %.5e' % (Iso[i], IsoAct[i]))
+        #print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[i], sum(BGIso[i]))) #????
 ######################################################################################################
 ans = menu()
 while ans.lower() != 'exit':
@@ -488,7 +506,73 @@ while ans.lower() != 'exit':
         clear()
         ans = menu()
     if ans.lower() == 'maxbg':
-        maxBG()
+        i = maxBG()
         clear()
         ans = menu()
-
+    if ans.lower() == 'cb':
+        #check if activity has been changed
+        if ai == False:
+            ActDefault()
+        #check if efficiency has been changed
+        if ei == False:
+            EffDefault()
+        #calculate BG for comps
+        tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
+        #calculate the shares
+        PMTShare = share(tot,  PMTBGrate)
+        VETOShare = share(tot, VETOBGrate)
+        TANKShare = share(tot, TANKBGrate)
+        CONCShare = share(tot, CONCBGrate)
+        ROCKShare = share(tot, ROCKBGrate)
+        WATERShare = share(tot, WATERBGrate)
+        GDShare = share(tot, GDBGrate)
+        #calculate max BG for signal rate and td
+        MBG = maxBG()
+        ##revAct() calculations
+        #PMT
+        #print(PMTShare)
+        print('##########################################')
+        print('CB for PMT')
+        PMT_CB_BG = revBG(PMTShare, MBG)
+        PMT_CB_Act = PMT.revActivity(PMT_CB_BG, PMTEff)
+        #print(PMT_CB_Act)
+        CBOUT(PMT_CB_Act, PMT_CB_BG, PMT.IsoList)
+        #VETO
+        print('##########################################')
+        print('CB for VETO')
+        VETO_CB_BG = revBG(VETOShare, MBG)
+        VETO_CB_Act = VETO.revActivity(VETO_CB_BG, VETOEff)
+        CBOUT(VETO_CB_Act, VETO_CB_BG, VETO.IsoList)
+        #TANK
+        print('##########################################')
+        print('CB for TANK')
+        TANK_CB_BG = revBG(TANKShare, MBG)
+        TANK_CB_Act = TANK.revActivity(TANK_CB_BG, TANKEff)
+        CBOUT(TANK_CB_Act, TANK_CB_BG, TANK.IsoList)
+        #CONC
+        print('##########################################')
+        print('CB for CONC')
+        CONC_CB_BG = revBG(CONCShare, MBG)
+        CONC_CB_Act = CONC.revActivity(CONC_CB_BG, CONCEff)
+        CBOUT(CONC_CB_Act, CONC_CB_BG, TANK.IsoList)
+        #ROCK
+        print('##########################################')
+        print('CB for ROCK')
+        ROCK_CB_BG = revBG(ROCKShare, MBG)
+        ROCK_CB_Act = ROCK.revActivity(ROCK_CB_BG, ROCKEff)
+        CBOUT(ROCK_CB_Act, ROCK_CB_BG, ROCK.IsoList)
+        #WATER
+        print('##########################################')
+        print('CB for WATERVOLUME')
+        WATER_CB_BG = revBG(WATERShare, MBG)
+        WATER_CB_Act = WATER.revActivity(WATER_CB_BG, WATEREff)
+        CBOUT(WATER_CB_Act, WATER_CB_BG, WATER.IsoList)
+        #GD
+        print('##########################################')
+        print('CB for GD')
+        GD_CB_BG = revBG(GDShare, MBG)
+        GD_CB_Act = GD.revActivity(GD_CB_BG, GDEff)
+        CBOUT(GD_CB_Act, GD_CB_BG, GD.IsoList)
+        #reset
+        clear()
+        ans = menu()

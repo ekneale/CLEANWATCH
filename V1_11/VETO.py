@@ -22,13 +22,13 @@ def Activity(PPM):
         print('Activity due to ' + Iso.VETO[i] + ' = %.5e' % IAct[i])
     return IAct
 def revActivity(BG, Eff):
-    rIsoAct = []
+    rIsoAct = [0 for i in range(len(IsoList))]
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct.append(BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/Iso.Lam[i]*Iso.Abs[i])
+            rIsoAct[i] = (BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/Iso.Lam[i]*Iso.Abs[i])
         else:
-            rIsoAct.append(0)
+            rIsoAct[i] = 0
     return rIsoAct
 #print('No Errors')
