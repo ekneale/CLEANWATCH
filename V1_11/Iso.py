@@ -48,10 +48,17 @@ def setEff(IsoDecay, Iso, IsoEff, IsoErr):
                 a = literal_eval(input('Input Efficiency for ' + IsoDecay[i][x] + ': '))
                 a >= 0
                 IEff[i][x] = a
-                IErr[i][x] = 0
+            except:
+                print('Efficiency for ' + IsoDecay[i][x] + ' set to default value')
+            try:
+                b = literal_eval(input('Input Error for Efficiency for ' + IsoDecay[i][x] @ ': ')
+                b >= 0
+                IErr[i][x] = b
                 print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IEff[i][x], IErr[i][x]))
             except:
-                print('Efficiency for ' + IsoDecay[i][x] + ' set to default value of = %.5e +/- %/5e' % (IEff[i][x], IErr[i][x]))
+                IErr[i][x] = 0
+                print('Error for ' + IsoDecay[i][x] + ' set to 0')
+                print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IEff[i][x], IErr[i][x]))
     return IEff, IErr
 def BGrate(Act, Eff, Decay):
     t = 0

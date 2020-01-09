@@ -77,13 +77,13 @@ def menu(): #menu text
         print('WATCHMAN Cleanliness software, V1.11')
         print('Alex Healey, UoS, 2019')
         print('Options: ')
-        print('- Input Values for Activity    [a]')
-        print('- Input Values for Efficiency  [e]')
-        print('- Calculate Background Rate    [bgr]')
-        print('- Calculate Time Detection     [td]')
-        print('- Calculate Maximum Background [maxbg]')
-        print('- Cleanliness Budget           [cb]')
-        print('- Exit software                [exit]')
+        print('- Input Values for Activity      [a]')
+        print('- Input Values for Efficiency    [e]')
+        print('- Calculate Background Rate      [bgr]')
+        print('- Calculate Time Detection       [td]')
+        print('- Calculate Maximum Background   [maxbg]')
+        print('- Cleanliness Budget             [cb]')
+        print('- Exit software                  [exit]')
         print('##################################################')
         a = str(input('Select an option: '))
         if a.lower() in options and a.lower() != 'exit':
@@ -219,11 +219,13 @@ def bgrate():
     PMTBGErr = PMTErr
     PMTBGr = 0
     #PMTBGrErr = 0
+    print('##########################################')
+    print('BG for PMT')
     for i in range(len(Iso.PMT)):
         print('##########################################')
         print(Iso.PMT[i] + ' chain')
         for x in range(len(PMT.IsoDecay[i])):
-            print(PMT.IsoDecay[i][x])
+            #print(PMT.IsoDecay[i][x])
             if PMT.IsoDecay[i][x] == 'Tl210':
                 PMTBG[i][x] *= (PMTAct[i]*0.002)
             else:
@@ -239,6 +241,8 @@ def bgrate():
     VETOBGErr = VETOErr
     VETOBGr = 0
     #VETOBGrErr = 0
+    print('##########################################')
+    print('BG for VETO')
     for i in range(len(Iso.VETO)):
         print('##########################################')
         print(Iso.VETO[i] + ' chain')
@@ -257,6 +261,8 @@ def bgrate():
     TANKBGErr = TANKErr
     TANKBGr = 0
     #TANKBGrErr = 0
+    print('##########################################')
+    print('BG for TANK')
     for i in range(len(Iso.TANK)):
         print('##########################################')
         print(Iso.TANK[i] + ' chain')
@@ -275,6 +281,8 @@ def bgrate():
     CONCBGErr = CONCErr
     CONCBGr = 0
     #CONCBGrErr = 0
+    print('##########################################')
+    print('BG for CONC')
     for i in range(len(Iso.CONC)):
         print('##########################################')
         print(Iso.CONC[i] + ' chain')
@@ -293,6 +301,8 @@ def bgrate():
     ROCKBGErr = ROCKErr
     ROCKBGr = 0
     #ROCKBGrErr = 0
+    print('##########################################')
+    print('BG for ROCK')
     for i in range(len(Iso.ROCK)):
         print('##########################################')
         print(Iso.ROCK[i] + ' chain')
@@ -311,6 +321,8 @@ def bgrate():
     WATERBGErr = WATERErr
     WATERBGr = 0
     #WATERBGrErr = 0
+    print('##########################################')
+    print('BG for WATERVOLUME')
     for i in range(len(Iso.WATER)):
         print('##########################################')
         print(Iso.WATER[i] + ' chain')
@@ -329,6 +341,8 @@ def bgrate():
     GDBGErr = GDErr
     GDBGr = 0
     #GDBGrErr = 0
+    print('##########################################')
+    print('BG for GD')
     for i in range(len(Iso.GD)):
         print('##########################################')
         print(Iso.GD[i] + ' chain')
