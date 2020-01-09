@@ -36,7 +36,25 @@ def setPPM(Iso, PPM):
     return output
 def disdef(Iso, val, t):
     for i in range(len(Iso)):
-        print(t + ' for ' + Iso[i] + ' set to default value = %.5e' % val[i]) 
+        print(t + ' for ' + Iso[i] + ' set to default value = %.5e' % val[i])
+def EffInput(Iso, IEff):
+    try:
+        a = literal_eval(input('Input Efficiency for ' + Iso + ': '))
+        a >= 0
+    except:
+        a = IEff
+        print('Efficiency for ' + Iso + ' set to default value')
+    return a
+def ErrInput(Iso, Eff):
+    try:
+        b = literal_eval(input('Input Error for Efficiency for ' + Iso + ': '))
+        b >= 0
+        print('Efficiency for ' + Iso + ' = %.5e +/- %.5e' % (Eff, b))
+    except:
+        b = 0
+        print('Error for ' + Iso + ' set to 0')
+        print('Efficiency for ' + Iso + ' = %.5e +/- %.5e' % (Eff, b))
+    return b
 def setEff(IsoDecay, Iso, IsoEff, IsoErr):
     IEff = IsoEff
     IErr = IsoErr
@@ -44,22 +62,9 @@ def setEff(IsoDecay, Iso, IsoEff, IsoErr):
         print('##########################################')
         print(Iso[i] + ' chain')
         for x in range(len(IsoDecay[i])):
-            try:
-                a = literal_eval(input('Input Efficiency for ' + IsoDecay[i][x] + ': '))
-                a >= 0
-                IEff[i][x] = a
-            except:
-                print('Efficiency for ' + IsoDecay[i][x] + ' set to default value')
-            try:
-                b = literal_eval(input('Input Error for Efficiency for ' + IsoDecay[i][x] @ ': ')
-                b >= 0
-                IErr[i][x] = b
-                print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IEff[i][x], IErr[i][x]))
-            except:
-                IErr[i][x] = 0
-                print('Error for ' + IsoDecay[i][x] + ' set to 0')
-                print('Efficiency for ' + IsoDecay[i][x] + ' = %.5e +/- %.5e' % (IEff[i][x], IErr[i][x]))
-    return IEff, IErr
+            IEff[i][x] = EffInput(IsoDecay[i][x], IEff[i][x])
+            IErr[i][x] = ErrInput(IsoDecay[i][x], IEff[i][x])
+        return IEff, IErr
 def BGrate(Act, Eff, Decay):
     t = 0
     Err = Eff
