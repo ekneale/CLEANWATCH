@@ -9,6 +9,8 @@ import GD
 #imports
 import Iso
 import Eff
+import Prate
+import Nrate
 import os
 from ast import literal_eval
 from math import pow
@@ -28,36 +30,82 @@ PMTPPM = PMT.defPPM
 PMTAct = PMT.defPPM 
 PMTEff = PMT.IsoEff
 PMTErr = PMT.EffErr
+PMT_Pr = [Prate.PMTU238,
+          Prate.PMTTh232,
+          Prate.PMTK40]
+PMT_Nr = [Nrate.PMTU238,
+          Nrate.PMTTh232,
+          Nrate.PMTK40]
 #VETO
 VETOPPM = VETO.defPPM
 VETOAct = VETO.defPPM
 VETOEff = VETO.IsoEff
 VETOErr = VETO.EffErr
+VETO_Pr = [Prate.VETOU238,
+           Prate.VETOTh232,
+           Prate.VETOK40]
+VETO_Nr = [Nrate.VETOU238,
+           Nrate.VETOTh232,
+           Nrate.VETOK40]
 #TANK
 TANKPPM = TANK.defPPM
 TANKAct = TANK.defPPM
 TANKEff = TANK.IsoEff
 TANKErr = TANK.EffErr
+TANK_Pr = [Prate.TANKU238,
+           Prate.TANKTh232,
+           Prate.TANKK40]
+TANK_Nr = [Nrate.TANKU238,
+           Nrate.TANKTh232,
+           Nrate.TANKK40]
 #CONC
 CONCPPM = CONC.defPPM
 CONCAct = CONC.defPPM
 CONCEff = CONC.IsoEff
 CONCErr = CONC.EffErr
+CONC_Pr = [[0, 0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0]]
+CONC_Nr = [[0, 0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0]]
 #ROCK
 ROCKPPM = ROCK.defPPM
 ROCKAct = ROCK.defPPM
 ROCKEff = ROCK.IsoEff
 ROCKErr = ROCK.EffErr
+ROCK_Pr = [Prate.ROCKU238,
+           Prate.ROCKTh232,
+           Prate.ROCKK40,
+           [0]]
+ROCK_Nr = [Nrate.ROCKU238,
+           Nrate.ROCKTh232,
+           Nrate.ROCKK40,
+           [0]]
 #WATER
 WATERPPM = WATER.defPPM
 WATERAct = WATER.defPPM
 WATEREff = WATER.IsoEff
 WATERErr = WATER.EffErr
+WATER_Pr = Prate.WATERRn222
+WATER_Nr = Nrate.WATERRn222
 #GD
 GDPPM = GD.defPPM
 GDAct = GD.defPPM
 GDEff = GD.IsoEff
 GDErr = GD.EffErr
+GD_Pr = [Prate.GDU238,
+         Prate.GDTh232,
+         Prate.GDU235,
+         Prate.GDU238,
+         Prate.GDTh232,
+         Prate.GDU235]
+GD_Nr = [Nrate.GDU238,
+         Nrate.GDTh232,
+         Nrate.GDU235,
+         Nrate.GDU238,
+         Nrate.GDTh232,
+         Nrate.GDU235]
 #input check
 ai = False
 ei = False
@@ -208,16 +256,28 @@ def ErrProp(EffErr, IsoEff, BG):
     err = 0
     if IsoEff != 0:
         err = BG*(EffErr/IsoEff)
-        print(err, EffErr)
+        #print(err, EffErr)
     else:
         err = 0
     return err
+def AccBG(CompPrate, CompNrate):
+    timeScale = 0.0001*0.05
+    BG = 0
+    if isinstance(CompPrate[0], list):
+        for i in range(len(CompPrate)):
+            for x in range(len(CompPrate[i])):
+                BG += CompPrate[i][x]*CompNrate[i][x]*timeScale
+    elif isinstance(CompPrate[0], list) == False:
+        for i in range(len(CompPrate)):
+            BG += CompPrate[i]*CompNrate[i]*timeScale
+    return BG
 def bgrate():
     totBG = 0
     ##PMTs
     PMTBG = PMTEff
     PMTBGErr = PMTErr
     PMTBGr = 0
+    PMT_Acc = AccBG(PMT_Pr, PMT_Nr)
     #PMTBGrErr = 0
     print('##########################################')
     print('BG for PMT')
@@ -230,10 +290,9 @@ def bgrate():
                 PMTBG[i][x] *= (PMTAct[i]*0.002)
             else:
                 PMTBG[i][x] *= PMTAct[i]
-            #PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMTBG[i][x])
-            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e' % (PMTBG[i][x]))
-            #, PMTBGErr[i][x]))
-        PMTBGr += sum(PMTBG[i])
+            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMTBG[i][x])
+            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMTBG[i][x], PMTBGErr[i][x]))
+        PMTBGr += sum(PMTBG[i]) + PMT_Acc
     print('Total BG due to PMT = %.5e' % PMTBGr)
     totBG += PMTBGr
     ##VETO
