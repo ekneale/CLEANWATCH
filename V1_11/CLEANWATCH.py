@@ -514,7 +514,7 @@ while ans.lower() != 'exit':
                 print('##########################################')
                 print('Input values for PPM for Iso in PMT')
                 PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM)
-                PMTAct = (compAct[i].upper()).Activity(PMTPPM)
+                PMTAct = PMT.Activity(PMTPPM)
                 #print(PMTPPM)
             if compAct[i].upper() == 'VETO':
                 print('##########################################')

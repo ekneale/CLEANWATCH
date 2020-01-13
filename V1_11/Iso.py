@@ -25,35 +25,133 @@ RN =    ['Rn']
 def setPPM(Iso, PPM):
     output = []
     for i in range(len(Iso)):
-        try:
-            a = literal_eval(input('Input PPM for ' + Iso[i] + ': '))
-            a >= 0
-            output.append(a)
-            print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
-        except:
+        #try:
+        #    a = literal_eval(input('Input PPM for ' + Iso[i] + ': '))
+        #    a >= 0
+        #    output.append(a)
+        #    print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+        #except:
+        #    output.append(PPM[i])
+        #    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+        x = input('Input PPM for ' + Iso[i] + ': ')
+        if len(x) == 0:
             output.append(PPM[i])
             print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+        elif 'e' in x:
+            x = literal_eval(x)
+            if x >= 0:
+                output.append(x)
+                print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+            else:
+                output.append(PPM[i])
+                print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % PPM[i])
+        else:
+            x = x.lower()
+            if x[-1] == 'x':
+                x = x.replace('x', '')
+                x = int(x)
+                if x >= 0:
+                    output.append(x*PPM[i])
+                    print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+                    continue
+                else:
+                    output.append(PPM[i])
+                    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+                    continue
+            else:
+                try:
+                    x = int(x)
+                except:
+                    output.append(PPM[i])
+                    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+                    continue #skips to next iteration?
+            if x < 0 and type(x) == int:
+                output.append(PPM[i])
+                print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+            else:
+                output.append(x)
+                print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
     return output
 def disdef(Iso, val, t):
     for i in range(len(Iso)):
         print(t + ' for ' + Iso[i] + ' set to default value = %.5e' % val[i])
 def EffInput(Iso, IEff):
-    try:
-        a = literal_eval(input('Input Efficiency for ' + Iso + ': '))
-        a >= 0
-    except:
+    #try:
+    #    a = literal_eval(input('Input Efficiency for ' + Iso + ': '))
+    #except:
+    #    a = IEff
+    #    print('Efficiency for ' + Iso + ' set to default value')
+    a = input('Input Efficiency for ' + Iso + ': ')
+    if len(a) == 0:
         a = IEff
-        print('Efficiency for ' + Iso + ' set to default value')
+        print('Efficiency for ' + Iso + ' set to default value %.5e' % a)
+    elif 'e' in a:
+        a = literal_eval(a)
+        if a >= 0:
+            print('Efficiency for ' + Iso + ' = %.5e' % a)
+        else:
+            a = IEff
+            print('Efficiency for ' + Iso + ' set to default value %.5e' % a)
+    else:
+        a = a.lower()
+        if a[-1] == 'x':
+            a = a.replace('x', '')
+            a = int(a)
+            if a >= 0:
+                a *= IEff
+                print('Efficiency for ' + Iso + ' = %.5e' % a)
+            else:
+                a = IEff
+                print('Efficiency for ' + Iso + ' set to default value %.5e' % a)
+        else:
+            try:
+                a = int(a)
+            except:
+                a = IEff
+                print('Efficiency for ' + Iso + ' set to default value %.5e' % a)
+                #break
+        if a < 0:
+            a = IEff
+            print('Efficiency for ' + Iso + ' set to default value %.5e' % a)
+        else:
+            pass
     return a
 def ErrInput(Iso, Eff):
-    try:
-        b = literal_eval(input('Input Error for Efficiency for ' + Iso + ': '))
-        b >= 0
-        print('Efficiency for ' + Iso + ' = %.5e +/- %.5e' % (Eff, b))
-    except:
-        b = 0
-        print('Error for ' + Iso + ' set to 0')
-        print('Efficiency for ' + Iso + ' = %.5e +/- %.5e' % (Eff, b))
+    b = input('Input Efficiency Error for ' + Iso + ': ')
+    if len(b) == 0:
+        b = Eff
+        print('Efficiency for ' + Iso + ' set to default value of = %.5e' % b)
+    elif 'e' in b:
+        b = literal_eval(b)
+        if b >= 0:
+            print('Efficiency Error for ' + Iso + ' = %.5e' % b)
+        else:
+            b = Eff
+            print('Efficiency Error for ' + Iso + ' set to default value of = %.5e' % b)
+
+    else:
+        b = b.lower()
+        if b[-1] == 'x':
+            b = b.replace('x', '')
+            b = int(b)
+            if b >= 0:
+                b *= Eff
+                print('Efficiency Error for ' + Iso + ' = %.5e' % b)
+            else:
+                b = Eff
+                print('Efficiency Error for ' + Iso + ' set to default value of = %.5e' % b)
+        else:
+            try:
+                b = int(b)
+            except:
+                b = Eff
+                print('Efficiency Error for ' + Iso + ' set to default value of = %.5e' % b)
+                #break
+        if b < 0:
+            b = Eff
+            print('Efficiency Error for ' + Iso + ' set to default value of = %.5e' % b)
+        else:
+            pass
     return b
 def setEff(IsoDecay, Iso, IsoEff, IsoErr):
     IEff = IsoEff
