@@ -22,7 +22,9 @@ def GetEff(compNum, chainNum):
         err.append(outfile.Get(hist).GetBinError(binNum[i]))
     return binEff, err
 PMTU238, PMTU238Err = GetEff(0, 0)
+#print(PMTU238)
 PMTTh232, PMTTh232Err = GetEff(0, 1)
+#print(PMTTh232)
 PMTK40, PMTK40Err = GetEff(0, 2)
 VETOU238, VETOU238Err = GetEff(1, 0)
 VETOTh232, VETOTh232Err = GetEff(1, 1)

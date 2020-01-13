@@ -12,6 +12,7 @@ IsoDecay = [Iso.U238,
 IsoEff =   [Eff.PMTU238,
             Eff.PMTTh232,
             Eff.PMTK40]
+#print(IsoEff)
 EffErr =   [Eff.PMTU238Err,
             Eff.PMTTh232Err,
             Eff.PMTK40Err]
