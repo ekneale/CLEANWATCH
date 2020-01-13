@@ -29,7 +29,7 @@ compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 PMTPPM = PMT.defPPM
 PMTAct = PMT.defPPM 
 PMTEff = PMT.IsoEff
-print(PMTEff)
+#print(PMTEff)
 PMTErr = PMT.EffErr
 PMT_Pr = [Prate.PMTU238,
           Prate.PMTTh232,
@@ -124,7 +124,7 @@ def menu(): #menu text
     while a.lower() not in options:
         print('##################################################')
         print('WATCHMAN Cleanliness software, V1.11')
-        print('Alex Healey, UoS, 2019')
+        print('Alex Healey, UoS, 2020')
         print('Options: ')
         print('- Input Values for Activity      [a]')
         print('- Input Values for Efficiency    [e]')
