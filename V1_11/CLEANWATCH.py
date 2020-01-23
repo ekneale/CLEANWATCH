@@ -27,7 +27,7 @@ compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 #}
 #PMT
 PMTPPM = PMT.defPPM
-PMTAct = PMT.defPPM 
+PMTAct = [] 
 PMTEff = PMT.IsoEff
 #print(PMTEff)
 PMTErr = PMT.EffErr
@@ -36,7 +36,7 @@ PMT_Nr = [Nrate.PMTU238,
           Nrate.PMTK40]
 #VETO
 VETOPPM = VETO.defPPM
-VETOAct = VETO.defPPM
+VETOAct = []
 VETOEff = VETO.IsoEff
 VETOErr = VETO.EffErr
 VETO_Nr = [Nrate.VETOU238,
@@ -44,7 +44,7 @@ VETO_Nr = [Nrate.VETOU238,
            Nrate.VETOK40]
 #TANK
 TANKPPM = TANK.defPPM
-TANKAct = TANK.defPPM
+TANKAct = []
 TANKEff = TANK.IsoEff
 TANKErr = TANK.EffErr
 TANK_Nr = [Nrate.TANKU238,
@@ -54,7 +54,7 @@ TANK_Nr = [Nrate.TANKU238,
            [Nrate.TANKSTEEL[1]]]
 #CONC
 CONCPPM = CONC.defPPM
-CONCAct = CONC.defPPM
+CONCAct = []
 CONCEff = CONC.IsoEff
 CONCErr = CONC.EffErr
 CONC_Nr = [[0, 0, 0, 0, 0],
@@ -62,7 +62,7 @@ CONC_Nr = [[0, 0, 0, 0, 0],
            [0]]
 #ROCK
 ROCKPPM = ROCK.defPPM
-ROCKAct = ROCK.defPPM
+ROCKAct = []
 ROCKEff = [[0, 0, 0, 0, 0],
            [0, 0, 0, 0],
            [0],
@@ -77,14 +77,14 @@ ROCK_Nr = [[0, 0, 0, 0, 0],
            [0]]
 #WATER
 WATERPPM = WATER.defPPM
-WATERAct = WATER.defPPM
+WATERAct = []
 WATEREff = WATER.IsoEff
 WATERErr = WATER.EffErr
 WATER_Nr = [Nrate.WATERRn222,
            [1]]
 #GD
 GDPPM = GD.defPPM
-GDAct = GD.defPPM
+GDAct = []
 GDEff = GD.IsoEff
 GDErr = GD.EffErr
 GD_Nr = [Nrate.GDU238,
@@ -179,6 +179,7 @@ def ActDefault():
         print('Default values for PPM for Iso in GD')
         Iso.disdef(Iso.GD, GDPPM, 'PPM')
         GDAct = GD.Activity(GDPPM)
+        return PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct 
 def EffDefault():
     if 'PMT' not in compEff:
         print('##########################################')
@@ -282,6 +283,7 @@ def bgrate():
                 PMT_N[i][x] = (PMT_Nr[i][x]*PMTAct[i]*0.002)
             else:
                 PMT_P[i][x] = (PMTAct[i]*PMTEff[i][x])
+                #print('%.5e x %.5e = %.5e' % (PMTAct[i], PMTEff[i][x], PMT_P[i][x]))
                 PMT_N[i][x] = (PMTAct[i]*PMT_Nr[i][x])
             #print(Iso.PMT[i] + ' Activity = %.5e' % PMTAct[i])
             #print(PMT.IsoDecay[i][x] + ' Efficiency = %.5e' % PMTEff[i][x])
@@ -290,6 +292,7 @@ def bgrate():
             PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x])
             #PMTBGrErr += PMTBGErr[i][x]
             print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
+        print('Total BG for ' + Iso.PMT[i] + ' = %.5e'% sum(PMT_P[i]))
     for i in range(len(PMT_P)):
         PMTBGr_P += sum(PMT_P[i])
     for i in range(len(PMT_N)):
@@ -320,7 +323,8 @@ def bgrate():
                 VETO_N[i][x] = VETOAct[i]*VETO_Nr[i][x]
             VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOEff[i][x], VETO_P[i][x])
             VETOBGrErr += VETOBGErr[i][x]
-            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))   
+            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
+        print('Total BG for ' + Iso.VETO[i] + ' = %.5e'% sum(VETO_P[i]))
     for i in range(len(VETO_P)):
         VETOBGr_P += sum(VETO_P[i])
     for i in range(len(VETO_N)):
@@ -433,9 +437,9 @@ def bgrate():
     print('BG for WATERVOLUME')
     for i in range(len(Iso.WATER)):
         print('##########################################')
-        print(Iso.WATER[i] + ' chain')
-        print(WATEREff, WATERAct)
-        print(WATER_Nr)
+        #print(Iso.WATER[i] + ' chain')
+        #print(WATEREff, WATERAct)
+        #print(WATER_Nr)
         for x in range(len(WATER.IsoDecay[i])):
             if WATER.IsoDecay[i][x] == 'Tl210':
                 WATERBG_P[i][x] = (WATEREff[i][x]*WATERAct[i]*0.002)
@@ -632,7 +636,7 @@ while ans.lower() != 'exit':
         ans = menu()
     if ans.lower() == 'bgr':
         if ai == False:
-            ActDefault()
+            PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         if ei == False:
             EffDefault()
         tot, totAcc, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
