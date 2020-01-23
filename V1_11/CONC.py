@@ -3,7 +3,8 @@ from math import pow
 import numpy as np
 vol = np.pi*(51/2)*(pow(13,2)-pow(12.5,2))-(np.pi/2)*pow(13,2) #m^3
 den = 2300
-mass = vol*den
+mass = 2959812.248671454 #vol*den
+#print(mass)
 defPPM = [61, 30, 493]
 IsoAct = defPPM
 revIsoAct = defPPM

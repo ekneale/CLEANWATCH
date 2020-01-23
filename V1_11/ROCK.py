@@ -4,6 +4,7 @@ from math import pow
 den = 2165
 vol = np.pi*((pow(18,2)*35.5)-pow(13,2)*25.5)
 mass = den*vol
+#print(mass)
 defPPM = [10e-3, 220e-3, 750, 0.02]
 IsoAct = defPPM
 revIsoAct = defPPM
@@ -24,6 +25,7 @@ def Activity(PPM):
     IAct = []
     for i in range(len(PPM)-1):
         IAct.append(((Iso.Lam[i]*Iso.Abs[i])/(Iso.Ms[i]*1e6))*mass*PPM[i])
+        print('Activity for ' + Iso.ROCK[i] + ' = %5e' % IAct[i])
     IAct.append(defPPM[-1])
     return IAct
 def revActivity(BG, Eff):
