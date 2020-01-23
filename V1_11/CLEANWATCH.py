@@ -9,7 +9,7 @@ import GD
 #imports
 import Iso
 import Eff
-import Prate
+#import Prate
 import Nrate
 import os
 from ast import literal_eval
@@ -31,9 +31,6 @@ PMTAct = PMT.defPPM
 PMTEff = PMT.IsoEff
 #print(PMTEff)
 PMTErr = PMT.EffErr
-PMT_Pr = [Prate.PMTU238,
-          Prate.PMTTh232,
-          Prate.PMTK40]
 PMT_Nr = [Nrate.PMTU238,
           Nrate.PMTTh232,
           Nrate.PMTK40]
@@ -42,9 +39,6 @@ VETOPPM = VETO.defPPM
 VETOAct = VETO.defPPM
 VETOEff = VETO.IsoEff
 VETOErr = VETO.EffErr
-VETO_Pr = [Prate.VETOU238,
-           Prate.VETOTh232,
-           Prate.VETOK40]
 VETO_Nr = [Nrate.VETOU238,
            Nrate.VETOTh232,
            Nrate.VETOK40]
@@ -53,9 +47,6 @@ TANKPPM = TANK.defPPM
 TANKAct = TANK.defPPM
 TANKEff = TANK.IsoEff
 TANKErr = TANK.EffErr
-TANK_Pr = [Prate.TANKU238,
-           Prate.TANKTh232,
-           Prate.TANKK40]
 TANK_Nr = [Nrate.TANKU238,
            Nrate.TANKTh232,
            Nrate.TANKK40,
@@ -66,31 +57,29 @@ CONCPPM = CONC.defPPM
 CONCAct = CONC.defPPM
 CONCEff = CONC.IsoEff
 CONCErr = CONC.EffErr
-CONC_Pr = [[0, 0, 0, 0, 0],
-           [0, 0, 0, 0],
-           [0]]
 CONC_Nr = [[0, 0, 0, 0, 0],
            [0, 0, 0, 0],
            [0]]
 #ROCK
 ROCKPPM = ROCK.defPPM
 ROCKAct = ROCK.defPPM
-ROCKEff = ROCK.IsoEff
-ROCKErr = ROCK.EffErr
-ROCK_Pr = [Prate.ROCKU238,
-           Prate.ROCKTh232,
-           Prate.ROCKK40,
+ROCKEff = [[0, 0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0],
+           [1]]
+ROCKErr = [[0, 0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0],
            [0]]
-ROCK_Nr = [Nrate.ROCKU238,
-           Nrate.ROCKTh232,
-           Nrate.ROCKK40,
+ROCK_Nr = [[0, 0, 0, 0, 0],
+           [0, 0, 0, 0],
+           [0],
            [0]]
 #WATER
 WATERPPM = WATER.defPPM
 WATERAct = WATER.defPPM
 WATEREff = WATER.IsoEff
 WATERErr = WATER.EffErr
-WATER_Pr = Prate.WATERRn222
 WATER_Nr = [Nrate.WATERRn222,
            [1]]
 #GD
@@ -98,7 +87,6 @@ GDPPM = GD.defPPM
 GDAct = GD.defPPM
 GDEff = GD.IsoEff
 GDErr = GD.EffErr
-GD_Pr = GD.IsoEff
 GD_Nr = [Nrate.GDU238,
          Nrate.GDTh232,
          Nrate.GDU235,
@@ -259,7 +247,7 @@ def ErrProp(EffErr, IsoEff, BG):
     else:
         err = 0
     return err
-def AccBG(CompPrate, CompNrate):
+def AccBG(CompPrate, CompNrate): #not used
     timeScale = 0.0001*0.05
     BG = 0
     if isinstance(CompPrate[0], list):
@@ -410,7 +398,6 @@ def bgrate():
     ROCKBGr_P = 0
     ROCKBGr_N = 0
     ROCKBGrErr = 0
-    ROCK_Acc = AccBG(ROCK_Pr, ROCK_Nr)
     print('##########################################')
     print('BG for ROCK')
     for i in range(len(Iso.ROCK)):

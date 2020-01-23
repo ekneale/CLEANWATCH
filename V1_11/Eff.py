@@ -17,7 +17,7 @@ def GetEff(compNum, chainNum):
     err = []
     for i in range(len(iso[chainNum])):
         hist = "histWatchman_" + comp[compNum] + iso[chainNum][i]
-        binNum.append(outfile.Get(hist).FindBin(1.5, 8))
+        binNum.append(outfile.Get(hist).FindBin(1.9, 9))
         binEff.append(outfile.Get(hist).GetBinContent(binNum[i]))
         err.append(outfile.Get(hist).GetBinError(binNum[i]))
     return binEff, err
@@ -34,9 +34,9 @@ TANKTh232, TANKTh232Err = GetEff(2, 1)
 TANKK40, TANKK40Err = GetEff(2, 2)
 TANKCo60, TANKCo60Err = GetEff(2, 4)
 TANKCs137, TANKCs137Err = GetEff(2,5)
-ROCKU238, ROCKU238Err = GetEff(3, 0)
-ROCKTh232, ROCKTh232Err = GetEff(3, 1)
-ROCKK40, ROCKK40Err = GetEff(3, 2)
+#ROCKU238, ROCKU238Err = GetEff(3, 0)
+#ROCKTh232, ROCKTh232Err = GetEff(3, 1)
+#ROCKK40, ROCKK40Err = GetEff(3, 2)
 WATERRn222, WATERRn222Err = GetEff(4, 3)
 GDU238, GDU238Err = GetEff(5, 0)
 GDTh232, GDTh232Err = GetEff(5, 1)

@@ -12,13 +12,13 @@ IsoDecay = [Iso.U238,
             Iso.Th232,
             Iso.K40,
             Iso.FN]
-IsoEff = [Eff.ROCKU238,
-          Eff.ROCKTh232,
-          Eff.ROCKK40,
+IsoEff = [[0, 0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0],
           [1]]
-EffErr = [Eff.ROCKU238Err,
-          Eff.ROCKTh232Err,
-          Eff.ROCKK40Err,
+EffErr = [[0, 0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0],
           [0]]
 def Activity(PPM):
     IAct = []
