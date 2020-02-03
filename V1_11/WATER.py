@@ -17,6 +17,7 @@ def Activity(PPM):
     IAct = []
     for i in range(len(PPM)-1):
         IAct.append(PPM[i]*vol)
+        print('Activity for ' + Iso.WATER[i] + ' = %5e' % IAct[i])
     IAct.append(defPPM[-1])
     return IAct
 def revActivity(BG, Eff):

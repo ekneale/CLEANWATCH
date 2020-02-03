@@ -110,7 +110,7 @@ def menu(): #menu text
     options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
     while a.lower() not in options:
         print('##################################################')
-        print('WATCHMAN Cleanliness software, V1.11')
+        print('CLEANWATCH, V1.11')
         print('Alex Healey, UoS, 2020')
         print('Options: ')
         print('- Input Values for Activity      [a]')
@@ -178,7 +178,9 @@ def ActDefault():
     if 'GD' not in compAct:
         print('##########################################')
         print('Default values for PPM for Iso in GD')
-        Iso.disdef(Iso.GD, GDPPM, 'PPM')
+        #Iso.disdef(Iso.GD, GDPPM, 'PPM')
+        for i in range(len(Iso.GD)):
+            print(Iso.GD[i] + ' set to default value = %.5e mBq/kg' % GDPPM[i])
         GDAct = GD.Activity(GDPPM)
         return PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct 
 def EffDefault():
@@ -233,7 +235,7 @@ def EffDefault():
     if 'GD' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in GD')
-        for i in range(len(Iso.GD)):
+        for i in range(len(GDEff)):
             print('##########################################')
             print(Iso.GD[i] + ' chain')
             for x in range(len(GDEff[i])):
@@ -477,18 +479,54 @@ def bgrate():
     GDBGrErr = 0
     print('##########################################')
     print('BG for GD')
-    for i in range(len(Iso.GD)):
+    for i in range(len(GDEff)):
         print('##########################################')
         print(Iso.GD[i] + ' chain')
         for x in range(len(GD.IsoDecay[i])):
+            if GD.IsoDecay[i][x] =='Pa234':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[0]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[0]
+            if GD.IsoDecay[i][x] == 'Pb214':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            if GD.IsoDecay[i][x] == 'Bi214':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            if GD.IsoDecay[i][x] == 'Bi210':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
             if GD.IsoDecay[i][x] == 'Tl210':
-                GDBG_P[i][x] = (GDEff[i][x]*GDAct[i]*0.002)
-                GDBG_N[i][x] = (GD_Nr[i][x]*GDAct[i]*0.002)
-            else:
-                GDBG_P[i][x] = GDAct[i]*GDEff[i][x]
-                GDBG_N[i][x] = GDAct[i]*GD_Nr[i][x]
+                GDBG_P[i][x] = (GDEff[i][x]*GDAct[3]*0.002)
+                GDBG_N[i][x] = (GD_Nr[i][x]*GDAct[3]*0.002)
+            if GD.IsoDecay[i][x] == 'Ac228':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[1]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[1]
+            if GD.IsoDecay[i][x] == 'Pb212':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            if GD.IsoDecay[i][x] == 'Bi211':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            if GD.IsoDecay[i][x] == 'Tl208':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            if GD.IsoDecay[i][x] == 'Th231':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            if GD.IsoDecay[i][x] == 'Fr223':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            if GD.IsoDecay[i][x] == 'Pb211':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            if GD.IsoDecay[i][x] == 'Bi211':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            if GD.IsoDecay[i][x] == 'Tl207':
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
             GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
-            GDBGrErr += GDBGErr[i][x]
+            #GDBGrErr += GDBGErr[i][x]
             print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
     for i in range(len(GDBG_P)):
         GDBGr_P += sum(GDBG_P[i])

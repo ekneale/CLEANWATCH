@@ -11,16 +11,16 @@ revIsoAct = defPPM
 IsoList = Iso.ROCK
 IsoDecay = [Iso.U238,
             Iso.Th232,
-            Iso.K40,
-            Iso.FN]
+            Iso.K40]#,
+            #Iso.FN]
 IsoEff = [[0, 0, 0, 0, 0],
           [0, 0, 0, 0],
-          [0],
-          [1]]
+          [0]]#,
+          #[1]]
 EffErr = [[0, 0, 0, 0, 0],
           [0, 0, 0, 0],
-          [0],
-          [0]]
+          [0]]#,
+          #[0]]
 def Activity(PPM):
     IAct = []
     for i in range(len(PPM)-1):

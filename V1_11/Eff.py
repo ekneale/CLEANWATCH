@@ -18,11 +18,15 @@ def GetEff(compNum, chainNum):
     for i in range(len(iso[chainNum])):
         hist = "histWatchman_" + comp[compNum] + iso[chainNum][i]
         binNum.append(outfile.Get(hist).FindBin(1.9, 9))
-        binEff.append(outfile.Get(hist).GetBinContent(binNum[i]))
+        #print(binNum[i])
+        temp = outfile.Get(hist).GetBinContent(binNum[i])
+        #print(temp)
+        binEff.append(temp)
         err.append(outfile.Get(hist).GetBinError(binNum[i]))
     return binEff, err
+#print('histWatchman_COMP_Iso_CHAIN_IsoChain_NA')
 PMTU238, PMTU238Err = GetEff(0, 0)
-#print(PMTU238)
+#print('PMT U238', PMTU238)
 PMTTh232, PMTTh232Err = GetEff(0, 1)
 #print(PMTTh232)
 PMTK40, PMTK40Err = GetEff(0, 2)
