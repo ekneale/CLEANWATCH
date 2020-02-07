@@ -15,6 +15,7 @@ import os
 from ast import literal_eval
 from math import pow
 import numpy as np
+#from uncertainties import ufloat
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 #Comp = {
@@ -191,7 +192,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.PMT[i] + ' chain')
             for x in range(len(PMTEff[i])):
-                print('Efficiency for ' + PMT.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (PMTEff[i][x], PMTErr[i][x]))
+                print('Efficiency for ' + PMT.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (PMTEff[i][x], PMTErr[i][x]))
     if 'VETO' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in VETO')
@@ -199,7 +200,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.VETO[i] + ' chain')
             for x in range(len(VETOEff[i])):
-                print('Efficiency for ' + VETO.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (VETOEff[i][x], VETOErr[i][x]))
+                print('Efficiency for ' + VETO.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (VETOEff[i][x], VETOErr[i][x]))
     if 'TANK' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in TANK')
@@ -207,7 +208,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.TANK[i] + ' chain')
             for x in range(len(TANKEff[i])):
-                print('Efficiency for ' + TANK.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (TANKEff[i][x], TANKErr[i][x]))
+                print('Efficiency for ' + TANK.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (TANKEff[i][x], TANKErr[i][x]))
     if 'CONC' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in CONC')
@@ -215,7 +216,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.CONC[i] + ' chain')
             for x in range(len(CONCEff[i])):
-                print('Efficiency for ' + CONC.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (CONCEff[i][x], CONCErr[i][x]))
+                print('Efficiency for ' + CONC.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (CONCEff[i][x], CONCErr[i][x]))
     if 'ROCK' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in ROCK')
@@ -223,7 +224,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.ROCK[i] + ' chain')
             for x in range(len(ROCKEff[i])):
-                print('Efficiency for ' + ROCK.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (ROCKEff[i][x], ROCKErr[i][x]))
+                print('Efficiency for ' + ROCK.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (ROCKEff[i][x], ROCKErr[i][x]))
     if 'WATER' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in WATER')
@@ -231,7 +232,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.WATER[i] + ' chain')
             for x in range(len(WATEREff[i])):
-                print('Efficiency for ' + WATER.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (WATEREff[i][x], WATERErr[i][x]))
+                print('Efficiency for ' + WATER.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (WATEREff[i][x], WATERErr[i][x]))
     if 'GD' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in GD')
@@ -239,7 +240,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.GD[i] + ' chain')
             for x in range(len(GDEff[i])):
-                print('Efficiency for ' + GD.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (GDEff[i][x], GDErr[i][x]))
+                print('Efficiency for ' + GD.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (GDEff[i][x], GDErr[i][x]))
 def ErrProp(EffErr, IsoEff, BG):
     """
     Returns error of BGR
@@ -301,7 +302,7 @@ def bgrate():
             #print('Expected BG = %.5e' % (PMTAct[i]*PMTEff[i][x]))
             PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x])
             #PMTBGrErr += PMTBGErr[i][x]
-            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
+            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
         PMTBGrErr = totErr(PMTBGErr)
         print('Total BG for ' + Iso.PMT[i] + ' = %.5e'% (sum(PMT_P[i])))
     for i in range(len(PMT_P)):
@@ -309,7 +310,8 @@ def bgrate():
     for i in range(len(PMT_N)):
         PMTBGr_N += sum(PMT_N[i])
     #print('Accidental BG for PMT = %.5e' % PMT_Acc)
-    print('Total BG due to PMT = %.5e +/- %.5e' % (PMTBGr_P, PMTBGrErr))
+    print('##########################################')
+    print('Total BG due to PMT = %.5e \u00B1 %.5e' % (PMTBGr_P, PMTBGrErr))
     totBG_P += PMTBGr_P
     totBG_N += PMTBGr_N
     ##VETO
@@ -334,14 +336,15 @@ def bgrate():
                 VETO_N[i][x] = VETOAct[i]*VETO_Nr[i][x]
             VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOEff[i][x], VETO_P[i][x])
             VETOBGrErr += VETOBGErr[i][x]
-            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
+            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
         VETOBGrErr = totErr(VETOBGErr)
-        print('Total BG for ' + Iso.VETO[i] + ' = %.5e +/- %.5e'% (sum(VETO_P[i]), VETOBGrErr))
+        print('Total BG for ' + Iso.VETO[i] + ' = %.5e \u00B1 %.5e'% (sum(VETO_P[i]), VETOBGrErr))
     for i in range(len(VETO_P)):
         VETOBGr_P += sum(VETO_P[i])
     for i in range(len(VETO_N)):
         VETOBGr_N += sum(VETO_N[i])
     #print('Accidental BG for VETO = %.5e' % VETO_Acc) 
+    print('##########################################')
     print('Total BG due to VETO = %.5e +/- %.5e' % (VETOBGr_P, VETOBGrErr))
     totBG_P += VETOBGr_P
     totBG_N += VETOBGr_N
@@ -366,7 +369,7 @@ def bgrate():
                 TANKBG_P[i][x] = TANKAct[i]*TANKEff[i][x]
                 TANKBG_N[i][x] = TANKAct[i]*TANK_Nr[i][x]
             TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKEff[i][x], TANKBG_P[i][x])
-            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (TANKBG_P[i][x], TANKBGErr[i][x]))
+            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (TANKBG_P[i][x], TANKBGErr[i][x]))
     for i in range(len(TANKBG_P)):
         TANKBGr_P += sum(TANKBG_P[i])
     for i in range(len(TANKBG_N)):    
@@ -375,7 +378,8 @@ def bgrate():
     totBG_N += TANKBGr_N
     #print('Accidental BG for TANK = %.5e' % TANK_Acc)
     TANKBGrErr = totErr(TANKBGErr)
-    print('Total BG due to TANK = %.5e +/- %.5e' % (TANKBGr_P, TANKBGrErr))
+    print('##########################################')
+    print('Total BG due to TANK = %.5e \u00B1 %.5e' % (TANKBGr_P, TANKBGrErr))
     ##CONC
     CONCBG_P = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
     CONCBG_N = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
@@ -398,14 +402,15 @@ def bgrate():
                 CONCBG_N[i][x] = CONCAct[i]*CONC_Nr[i][x]
             CONCBGErr[i][x] = ErrProp(CONCErr[i][x], CONCEff[i][x], CONCBG_P[i][x])
             CONCBGrErr += CONCBGErr[i][x]
-            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (CONCBG_P[i][x], CONCBGErr[i][x]))
+            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (CONCBG_P[i][x], CONCBGErr[i][x]))
     for i in range(len(CONCBG_P)):
         CONCBGr_P += sum(CONCBG_P[i])
     for i in range(len(CONCBG_N)):
         CONCBGr_N += sum(CONCBG_N[i])
     #print('Accidental BG for CONC = %.5e' % CONC_Acc)
     CONCBGrErr = totErr(CONCBGErr)
-    print('Total BG due to CONC = %.5e +/- %.5e' % (CONCBGr_P, CONCBGrErr))
+    print('##########################################')
+    print('Total BG due to CONC = %.5e \u00B1 %.5e' % (CONCBGr_P, CONCBGrErr))
     totBG_P += CONCBGr_P
     totBG_N += CONCBGr_N
     ##ROCK
@@ -429,7 +434,7 @@ def bgrate():
                 ROCKBG_P[i][x] = ROCKAct[i]*ROCKEff[i][x]
                 ROCKBG_N[i][x] = ROCKAct[i]*ROCK_Nr[i][x]
             ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKEff[i][x], ROCKBG_P[i][x])
-            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBG_P[i][x], ROCKBGErr[i][x]))
+            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (ROCKBG_P[i][x], ROCKBGErr[i][x]))
     for i in range(len(ROCKBG_P)):
         ROCKBGr_P += sum(ROCKBG_P[i])
     for i in range(len(ROCKBG_N)):
@@ -440,7 +445,8 @@ def bgrate():
     totBG_N += ROCKBGr_N
     #print('Accidental BG for ROCK = %.5e' % ROCK_Acc)
     ROCKBGrErr = totErr(ROCKBGErr)
-    print('Total BG due to ROCK = %.5e +/- %.5e' % (ROCKBGr_P, ROCKBGrErr))
+    print('##########################################')
+    print('Total BG due to ROCK = %.5e \u00B1 %.5e' % (ROCKBGr_P, ROCKBGrErr))
     ##WATER
     WATERBG_P = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
     WATERBG_N = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
@@ -464,7 +470,7 @@ def bgrate():
                 WATERBG_P[i][x] = WATERAct[i]*WATEREff[i][x]
                 WATERBG_N[i][x] = WATERAct[i]*WATER_Nr[i][x]
             WATERBGErr[i][x] = ErrProp(WATERErr[i][x], WATEREff[i][x], WATERBG_P[i][x])
-            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (WATERBG_P[i][x], WATERBGErr[i][x]))
+            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (WATERBG_P[i][x], WATERBGErr[i][x]))
     for i in range(len(WATERBG_P)):
         WATERBGr_P += sum(WATERBG_P[i])
     for i in range(len(WATERBG_N)):
@@ -472,7 +478,8 @@ def bgrate():
     WATERBGrErr = totErr(WATERBGErr)
     print('##########################################')
     print('BG due to RN = %.5e' % WATERAct[-1])
-    print('Total BG due to WATER = %.5e +/- %.5e' % (WATERBGr_P, WATERBGrErr))
+    print('##########################################')
+    print('Total BG due to WATER = %.5e \u00B1 %.5e' % (WATERBGr_P, WATERBGrErr))
     totBG_P += WATERBGr_P
     totBG_N += WATERBGr_N
     ##GD
@@ -532,13 +539,14 @@ def bgrate():
                 GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
             GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
             #GDBGrErr += GDBGErr[i][x]
-            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
+            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
     for i in range(len(GDBG_P)):
         GDBGr_P += sum(GDBG_P[i])
     for i in range(len(GDBG_N)):
         GDBGr_N += sum(GDBG_N[i])
     GDBGrErr = totErr(GDBGErr)
-    print('Total BG due to GD = %.5e +/- %.5e' % (GDBGr_P, GDBGrErr))
+    print('##########################################')
+    print('Total BG due to GD = %.5e \u00B1 %.5e' % (GDBGr_P, GDBGrErr))
     totBG_P += GDBGr_P
     totBG_N += GDBGr_N
     totAcc = totBG_P*totBG_N*0.0001*0.05*(pow(60,2)*24)
