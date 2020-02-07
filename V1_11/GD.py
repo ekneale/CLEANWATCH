@@ -8,6 +8,7 @@ defPPM = [10e-3, 0.2e-3, 0.25e-3, 0.28e-3, 0.35e-3, 1.7e-3] #mBq/kg
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.GD
+IType = ['PPM' for i in range(len(IsoList))]
 IsoDecay = [Iso.U238,        #U238 upper
             Iso.Th232,       #Th232 upper
             Iso.U235,        #U235 upper

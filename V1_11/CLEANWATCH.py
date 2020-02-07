@@ -219,7 +219,7 @@ def EffDefault():
     if 'ROCK' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in ROCK')
-        for i in range(len(Iso.ROCK)):
+        for i in range(len(Iso.ROCK)-1):
             print('##########################################')
             print(Iso.ROCK[i] + ' chain')
             for x in range(len(ROCKEff[i])):
@@ -227,7 +227,7 @@ def EffDefault():
     if 'WATER' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in WATER')
-        for i in range(len(Iso.WATER)):
+        for i in range(len(Iso.WATER)-1):
             print('##########################################')
             print(Iso.WATER[i] + ' chain')
             for x in range(len(WATEREff[i])):
@@ -280,7 +280,7 @@ def bgrate():
     PMTBGr_N = 0
     #PMT_Acc = AccBG(PMT_Pr, PMT_Nr)
     PMTBGrErr = 0
-    print(PMT.IsoDecay)
+    #print(PMT.IsoDecay)
     print('##########################################')
     print('BG for PMT')
     for i in range(len(PMTEff)):
@@ -417,7 +417,8 @@ def bgrate():
     ROCKBGrErr = 0
     print('##########################################')
     print('BG for ROCK')
-    for i in range(len(Iso.ROCK)):
+    #print(Iso.ROCK)
+    for i in range(len(Iso.ROCK)-1):
         print('##########################################')
         print(Iso.ROCK[i] + ' chain')
         for x in range(len(ROCK.IsoDecay[i])):
@@ -433,6 +434,8 @@ def bgrate():
         ROCKBGr_P += sum(ROCKBG_P[i])
     for i in range(len(ROCKBG_N)):
         ROCKBGr_N += sum(ROCKBG_N[i])
+    print('##########################################')
+    print('BG due to FN = %.5e' % ROCKAct[-1])
     totBG_P += ROCKBGr_P
     totBG_N += ROCKBGr_N
     #print('Accidental BG for ROCK = %.5e' % ROCK_Acc)
@@ -448,7 +451,7 @@ def bgrate():
     #WATER_Acc = AccBG(WATER_Pr, WATER_Nr)
     print('##########################################')
     print('BG for WATERVOLUME')
-    for i in range(len(Iso.WATER)):
+    for i in range(len(Iso.WATER)-1):
         print('##########################################')
         #print(Iso.WATER[i] + ' chain')
         #print(WATEREff, WATERAct)
@@ -467,6 +470,8 @@ def bgrate():
     for i in range(len(WATERBG_N)):
         WATERBGr_N += sum(WATERBG_N[i])
     WATERBGrErr = totErr(WATERBGErr)
+    print('##########################################')
+    print('BG due to RN = %.5e' % WATERAct[-1])
     print('Total BG due to WATER = %.5e +/- %.5e' % (WATERBGr_P, WATERBGrErr))
     totBG_P += WATERBGr_P
     totBG_N += WATERBGr_N
@@ -537,11 +542,11 @@ def bgrate():
     totBG_P += GDBGr_P
     totBG_N += GDBGr_N
     totAcc = totBG_P*totBG_N*0.0001*0.05*(pow(60,2)*24)
-    totBG = totAcc+0.02+0.01 
+    totBG = totAcc+ROCKAct[-1]+WATERAct[-1] 
     #TODO hard-coded values for FN (0.02 per day) and RN (0.01 per day) for the moment. User needs to be able to change these values from the interface but we must ensure they are not added until AFTER the accidental rate has been calculated. They must be included in the total background value used for calculations of dwell time and so on.
     print('##########################################')
     print('Total Accidental rate = %.5e /day' % totAcc)
-    print('Total BD rate including FN + RN = %.5e /day' % totBG)
+    print('Total BG rate including FN + RN = %.5e /day' % totBG)
     print('Total prompt BG rate = %.5e Hz' % totBG_P)
     return totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P
 def tdcalc(BG):
@@ -613,38 +618,38 @@ while ans.lower() != 'exit':
             if compAct[i].upper() == 'PMT':
                 print('##########################################')
                 print('Input values for PPM for Iso in PMT')
-                PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM)
+                PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM, PMT.IType)
                 PMTAct = PMT.Activity(PMTPPM)
                 #print(PMTPPM)
             if compAct[i].upper() == 'VETO':
                 print('##########################################')
                 print('Input values for PPM for Iso in VETO')
-                VETOPPM = Iso.setPPM(Iso.VETO, VETO.defPPM)
+                VETOPPM = Iso.setPPM(Iso.VETO, VETO.defPPM, VETO.IType)
                 VETOAct = VETO.Activity(VETOPPM)
             if compAct[i].upper() == 'TANK':
                 print('##########################################')
                 print('Input values for PPM for Iso in TANK')
-                TANKPPM = Iso.setPPM(Iso.TANK, TANK.defPPM)
+                TANKPPM = Iso.setPPM(Iso.TANK, TANK.defPPM, TANK.IType)
                 TANKAct = TANK.Activity(TANKPPM)
             if compAct[i].upper() == 'CONC':
                 print('##########################################')
                 print('Input values for PPM for Iso in CONC')
-                CONCPPM = Iso.setPPM(Iso.CONC, CONC.defPPM)
+                CONCPPM = Iso.setPPM(Iso.CONC, CONC.defPPM, CONC.IType)
                 CONCAct = CONC.Activity(CONCPPM)
             if compAct[i].upper() == 'ROCK':
                 print('##########################################')
                 print('Input values for PPM for Iso in ROCK')
-                ROCKPPM = Iso.setPPM(Iso.ROCK, ROCK.defPPM)
+                ROCKPPM = Iso.setPPM(Iso.ROCK, ROCK.defPPM, ROCK.IType)
                 ROCKAct = ROCK.Activity(ROCKPPM)
             if compAct[i].upper() == 'WATER':
                 print('##########################################')
                 print('Input values for PPM for Iso in WATER')
-                WATERPPM = Iso.setPPM(Iso.WATER, WATER.defPPM)
+                WATERPPM = Iso.setPPM(Iso.WATER, WATER.defPPM, WATER.IType)
                 WATERAct = WATER.Activity(WATERPPM)
             if compAct[i].upper() == 'GD':
                 print('##########################################')
                 print('Input values for PPM for Iso in GD')
-                GDPPM = Iso.setPPM(Iso.GD, GD.defPPM)
+                GDPPM = Iso.setPPM(Iso.GD, GD.defPPM, GD.IType)
                 GDAct = GD.Activity(GDPPM)
         #set to default
         ActDefault()

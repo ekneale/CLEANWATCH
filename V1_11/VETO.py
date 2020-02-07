@@ -5,6 +5,7 @@ defPPM = [0.043, 0.133, 36]
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.VETO
+IType = ['PPM' for i in range(len(IsoList))]
 IsoDecay = [Iso.U238,
             Iso.Th232,
             Iso.K40]

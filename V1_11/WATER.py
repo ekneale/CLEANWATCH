@@ -7,12 +7,13 @@ defPPM = [0.002, 0.01]
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.WATER
+IType = ['PPM', 'Events per day']
 IsoDecay = [Iso.Rn222,
             Iso.RN]
-IsoEff = [Eff.WATERRn222,
-         [1]]
-EffErr = [Eff.WATERRn222Err,
-         [0]]
+IsoEff = [Eff.WATERRn222]
+         #[1]]
+EffErr = [Eff.WATERRn222Err]
+         #[0]]
 def Activity(PPM):
     IAct = []
     for i in range(len(PPM)-1):
@@ -30,4 +31,4 @@ def revActivity(BG, Eff):
         else:
             revIsoAct.append(0)
     return rIsoAct
-defAct = Activity(defPPM)
+#defAct = Activity(defPPM)

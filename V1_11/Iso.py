@@ -9,8 +9,8 @@ VETO = ['U238', 'Th232', 'K40']
 TANK = ['U238', 'Th232', 'K40', 'Co60', 'Cs137']
 CONC = ['U238', 'Th232', 'K40']
 #TANK = ['U238', 'Th232', 'K40']
-ROCK = ['U238', 'Th232', 'K40']#, 'Fn']
-WATER= ['Rn222'] #, 'Rn']
+ROCK = ['U238', 'Th232', 'K40', 'Fn']
+WATER= ['Rn222', 'Rn']
 GD =   ['U238', 'Th232', 'U235', 'U238_l', 'Th232_l', 'U235_l']
 #Decay Chains
 U238 =  ['Pa234', 'Pb214', 'Bi214', 'Bi210', 'Tl210']
@@ -22,7 +22,7 @@ Cs137 = ['Cs137']
 Rn222 = ['Pb214', 'Bi214', 'Bi210', 'Tl210']
 FN =    ['Fn']
 RN =    ['Rn']
-def setPPM(Iso, PPM):
+def setPPM(Iso, PPM, Itype):
     output = []
     for i in range(len(Iso)):
         #try:
@@ -33,18 +33,18 @@ def setPPM(Iso, PPM):
         #except:
         #    output.append(PPM[i])
         #    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
-        x = input('Input PPM for ' + Iso[i] + ': ')
+        x = input('Input ' + Itype[i] + ' for ' + Iso[i] + ': ')
         if len(x) == 0:
             output.append(PPM[i])
-            print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+            print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
         elif 'e' in x:
             x = literal_eval(x)
             if x >= 0:
                 output.append(x)
-                print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+                print(Itype[i] + ' for ' + Iso[i] + ' = %.5e' % output[i])
             else:
                 output.append(PPM[i])
-                print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % PPM[i])
+                print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % PPM[i])
         else:
             x = x.lower()
             if x[-1] == 'x':
@@ -52,25 +52,25 @@ def setPPM(Iso, PPM):
                 x = int(x)
                 if x >= 0:
                     output.append(x*PPM[i])
-                    print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+                    print(Itype[i] + ' for ' + Iso[i] + ' = %.5e' % output[i])
                     continue
                 else:
                     output.append(PPM[i])
-                    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+                    print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
                     continue
             else:
                 try:
                     x = int(x)
                 except:
                     output.append(PPM[i])
-                    print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+                    print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
                     continue #skips to next iteration?
             if x < 0 and type(x) == int:
                 output.append(PPM[i])
-                print('PPM for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
+                print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
             else:
                 output.append(x)
-                print('PPM for ' + Iso[i] + ' = %.5e' % output[i])
+                print(Itype + ' for ' + Iso[i] + ' = %.5e' % output[i])
     return output
 def disdef(Iso, val, t):
     for i in range(len(Iso)):

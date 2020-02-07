@@ -9,6 +9,7 @@ den = 8000 #kg/m^3
 mass = vol*den #96200.08945836162 kg
 #print(mass)
 defPPM = [0.17, 3.8e-3, 34e-3, 19e-3, 7.7e-4]
+IType = ['PPM', 'PPM', 'PPM', 'Bq', 'Bq']
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.TANK

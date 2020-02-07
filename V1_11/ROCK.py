@@ -6,9 +6,11 @@ vol = np.pi*((pow(18,2)*35.5)-pow(13,2)*25.5)
 mass = den*vol
 #print(mass)
 defPPM = [10e-3, 220e-3, 750, 0.02]
+IType = ['PPM', 'PPM', 'PPM', 'Events per day']
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.ROCK
+IType = ['PPM', 'PPM', 'PPM', 'Events per day']
 IsoDecay = [Iso.U238,
             Iso.Th232,
             Iso.K40]#,
@@ -41,4 +43,4 @@ def revActivity(BG, Eff):
         else:
             rIsoAct[i] = BG[i][x]
     return rIsoAct
-defAct = Activity(defPPM)
+#defAct = Activity(defPPM)
