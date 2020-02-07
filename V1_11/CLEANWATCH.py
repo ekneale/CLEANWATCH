@@ -511,8 +511,8 @@ def bgrate():
                 GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
                 GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
             if GD.IsoDecay[i][x] == 'Th231':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+                GDBG_P[i][x] = GDEff[i][x]*GDAct[2]
+                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[2]
             if GD.IsoDecay[i][x] == 'Fr223':
                 GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
                 GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
@@ -537,10 +537,13 @@ def bgrate():
     totBG_P += GDBGr_P
     totBG_N += GDBGr_N
     totAcc = totBG_P*totBG_N*0.0001*0.05*(pow(60,2)*24)
+    totBG = totAcc+0.02+0.01 
+    #TODO hard-coded values for FN (0.02 per day) and RN (0.01 per day) for the moment. User needs to be able to change these values from the interface but we must ensure they are not added until AFTER the accidental rate has been calculated. They must be included in the total background value used for calculations of dwell time and so on.
     print('##########################################')
     print('Total Accidental rate = %.5e /day' % totAcc)
-    print('Total BG rate = %.5e Hz' % totBG_P)
-    return totBG_P, totAcc, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P
+    print('Total BD rate including FN + RN = %.5e /day' % totBG)
+    print('Total prompt BG rate = %.5e Hz' % totBG_P)
+    return totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P
 def tdcalc(BG):
     #get signal rate
     try:
