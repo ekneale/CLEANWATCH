@@ -9,18 +9,24 @@ IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.GD
 IType = ['PPM' for i in range(len(IsoList))]
-IsoDecay = [Iso.U238,        #U238 upper
-            Iso.Th232,       #Th232 upper
-            Iso.U235,        #U235 upper
-            Iso.U238,        #U238 lower
-            Iso.Th232,       #Th232 lower 
-            Iso.U235]        #U235 lower
-IsoEff =   [Eff.GDU238,      #U238
-            Eff.GDTh232,     #Th232
-            Eff.GDU235]      #U235
-EffErr =   [Eff.GDU238Err,   #U238
-            Eff.GDTh232Err,  #Th232
-            Eff.GDU235Err]   #U235
+IsoDecay = [['Pa234'],                                   #U238 upper
+            ['Ac228'],                                   #Th232 upper
+            ['Th231'],                                   #U235 upper
+            ['Pb214', 'Bi214', 'Bi210', 'Tl210'],        #U238 lower
+            ['Pb212', 'Bi211', 'Tl208'],                 #Th232 lower 
+            ['Fr223', 'Pb211', 'Bi211', 'Tl207']]        #U235 lower
+IsoEff =   [Eff.GDU238u,      #U238_u
+            Eff.GDTh232u,     #Th232_u
+            Eff.GDU235u,      #U235_u
+            Eff.GDU238l,      #U238_l
+            Eff.GDTh232l,     #Th232_l
+            Eff.GDU235l]      #U235_l
+EffErr =   [Eff.GDU238uErr,   #U238_u
+            Eff.GDTh232uErr,  #Th232_u
+            Eff.GDU235uErr,   #U235_u
+            Eff.GDU238lErr,   #U238_l
+            Eff.GDTh232lErr,  #Th232_l
+            Eff.GDU235lErr]   #U235_l
 Err = EffErr
 def Activity(PPM):
     IAct = []
