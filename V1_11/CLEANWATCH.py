@@ -710,7 +710,7 @@ while ans.lower() != 'exit':
         ans = menu()
     if ans.lower() == 'td':
         if ai == False:
-            ActDefault()
+            PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         if ei == False:
             EffDefault()
         tot, totAcc, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
@@ -724,12 +724,12 @@ while ans.lower() != 'exit':
     if ans.lower() == 'cb':
         #check if activity has been changed
         if ai == False:
-            ActDefault()
+            PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         #check if efficiency has been changed
         if ei == False:
             EffDefault()
         #calculate BG for comps
-        tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
+        tot, totAcc, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
         #calculate the shares
         PMTShare = share(tot,  PMTBGrate)
         VETOShare = share(tot, VETOBGrate)
