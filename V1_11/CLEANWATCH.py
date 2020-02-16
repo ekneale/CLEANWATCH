@@ -570,7 +570,7 @@ def tdcalc(BG):
     B = signal*1.035 + BG
     S = signal*0.9
     sigma = 4.65
-    td = pow(sigma, 2)*(B+((B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days] 
+    td = pow(sigma, 2)*((B+(B+S)/(3/2)))*(1/pow(S,2)) #/((60**2)*24) #[days] 
     #convert to days
     #td /= (pow(60,2)*24)
     print('Reactor off time to detection @ 3 sigma rate = %.5e' % td + ' days')
