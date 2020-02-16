@@ -15,7 +15,6 @@ import os
 from ast import literal_eval
 from math import pow
 import numpy as np
-#from uncertainties import ufloat
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
 #Comp = {
@@ -111,7 +110,7 @@ def menu(): #menu text
     options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
     while a.lower() not in options:
         print('##################################################')
-        print('CLEANWATCH, V1.11')
+        print('WATCHMAN Cleanliness software, V1.11')
         print('Alex Healey, UoS, 2020')
         print('Options: ')
         print('- Input Values for Activity      [a]')
@@ -179,9 +178,7 @@ def ActDefault():
     if 'GD' not in compAct:
         print('##########################################')
         print('Default values for PPM for Iso in GD')
-        #Iso.disdef(Iso.GD, GDPPM, 'PPM')
-        for i in range(len(Iso.GD)):
-            print(Iso.GD[i] + ' set to default value = %.5e mBq/kg' % GDPPM[i])
+        Iso.disdef(Iso.GD, GDPPM, 'PPM')
         GDAct = GD.Activity(GDPPM)
         return PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct 
 def EffDefault():
@@ -192,7 +189,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.PMT[i] + ' chain')
             for x in range(len(PMTEff[i])):
-                print('Efficiency for ' + PMT.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (PMTEff[i][x], PMTErr[i][x]))
+                print('Efficiency for ' + PMT.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (PMTEff[i][x], PMTErr[i][x]))
     if 'VETO' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in VETO')
@@ -200,7 +197,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.VETO[i] + ' chain')
             for x in range(len(VETOEff[i])):
-                print('Efficiency for ' + VETO.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (VETOEff[i][x], VETOErr[i][x]))
+                print('Efficiency for ' + VETO.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (VETOEff[i][x], VETOErr[i][x]))
     if 'TANK' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in TANK')
@@ -208,7 +205,7 @@ def EffDefault():
             print('##########################################')
             print(Iso.TANK[i] + ' chain')
             for x in range(len(TANKEff[i])):
-                print('Efficiency for ' + TANK.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (TANKEff[i][x], TANKErr[i][x]))
+                print('Efficiency for ' + TANK.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (TANKEff[i][x], TANKErr[i][x]))
     if 'CONC' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in CONC')
@@ -216,31 +213,31 @@ def EffDefault():
             print('##########################################')
             print(Iso.CONC[i] + ' chain')
             for x in range(len(CONCEff[i])):
-                print('Efficiency for ' + CONC.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (CONCEff[i][x], CONCErr[i][x]))
+                print('Efficiency for ' + CONC.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (CONCEff[i][x], CONCErr[i][x]))
     if 'ROCK' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in ROCK')
-        for i in range(len(Iso.ROCK)-1):
+        for i in range(len(Iso.ROCK)):
             print('##########################################')
             print(Iso.ROCK[i] + ' chain')
             for x in range(len(ROCKEff[i])):
-                print('Efficiency for ' + ROCK.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (ROCKEff[i][x], ROCKErr[i][x]))
+                print('Efficiency for ' + ROCK.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (ROCKEff[i][x], ROCKErr[i][x]))
     if 'WATER' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in WATER')
-        for i in range(len(Iso.WATER)-1):
+        for i in range(len(Iso.WATER)):
             print('##########################################')
             print(Iso.WATER[i] + ' chain')
             for x in range(len(WATEREff[i])):
-                print('Efficiency for ' + WATER.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (WATEREff[i][x], WATERErr[i][x]))
+                print('Efficiency for ' + WATER.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (WATEREff[i][x], WATERErr[i][x]))
     if 'GD' not in compEff:
         print('##########################################')
         print('Default values for Efficiency for Iso in GD')
-        for i in range(len(GDEff)):
+        for i in range(len(Iso.GD)):
             print('##########################################')
             print(Iso.GD[i] + ' chain')
             for x in range(len(GDEff[i])):
-                print('Efficiency for ' + GD.IsoDecay[i][x] + ' set to default value of = %.5e \u00B1 %.5e' % (GDEff[i][x], GDErr[i][x]))
+                print('Efficiency for ' + GD.IsoDecay[i][x] + ' set to default value of = %.5e +/- %.5e' % (GDEff[i][x], GDErr[i][x]))
 def ErrProp(EffErr, IsoEff, BG):
     """
     Returns error of BGR
@@ -281,7 +278,7 @@ def bgrate():
     PMTBGr_N = 0
     #PMT_Acc = AccBG(PMT_Pr, PMT_Nr)
     PMTBGrErr = 0
-    #print(PMT.IsoDecay)
+    print(PMT.IsoDecay)
     print('##########################################')
     print('BG for PMT')
     for i in range(len(PMTEff)):
@@ -300,9 +297,9 @@ def bgrate():
             #print(PMT.IsoDecay[i][x] + ' Efficiency = %.5e' % PMTEff[i][x])
             #print(PMT.IsoDecay[i][x] + ' Efficiency Error = %.5e' % PMTErr[i][x])
             #print('Expected BG = %.5e' % (PMTAct[i]*PMTEff[i][x]))
-            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x])
+            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x]) #TODO check this function
             #PMTBGrErr += PMTBGErr[i][x]
-            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
+            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
         PMTBGrErr = totErr(PMTBGErr)
         print('Total BG for ' + Iso.PMT[i] + ' = %.5e'% (sum(PMT_P[i])))
     for i in range(len(PMT_P)):
@@ -310,8 +307,7 @@ def bgrate():
     for i in range(len(PMT_N)):
         PMTBGr_N += sum(PMT_N[i])
     #print('Accidental BG for PMT = %.5e' % PMT_Acc)
-    print('##########################################')
-    print('Total BG due to PMT = %.5e \u00B1 %.5e' % (PMTBGr_P, PMTBGrErr))
+    print('Total BG due to PMT = %.5e +/- %.5e' % (PMTBGr_P, PMTBGrErr))
     totBG_P += PMTBGr_P
     totBG_N += PMTBGr_N
     ##VETO
@@ -336,15 +332,14 @@ def bgrate():
                 VETO_N[i][x] = VETOAct[i]*VETO_Nr[i][x]
             VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOEff[i][x], VETO_P[i][x])
             VETOBGrErr += VETOBGErr[i][x]
-            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
+            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
         VETOBGrErr = totErr(VETOBGErr)
-        print('Total BG for ' + Iso.VETO[i] + ' = %.5e \u00B1 %.5e'% (sum(VETO_P[i]), VETOBGrErr))
+        print('Total BG for ' + Iso.VETO[i] + ' = %.5e +/- %.5e'% (sum(VETO_P[i]), VETOBGrErr))
     for i in range(len(VETO_P)):
         VETOBGr_P += sum(VETO_P[i])
     for i in range(len(VETO_N)):
         VETOBGr_N += sum(VETO_N[i])
     #print('Accidental BG for VETO = %.5e' % VETO_Acc) 
-    print('##########################################')
     print('Total BG due to VETO = %.5e +/- %.5e' % (VETOBGr_P, VETOBGrErr))
     totBG_P += VETOBGr_P
     totBG_N += VETOBGr_N
@@ -369,7 +364,7 @@ def bgrate():
                 TANKBG_P[i][x] = TANKAct[i]*TANKEff[i][x]
                 TANKBG_N[i][x] = TANKAct[i]*TANK_Nr[i][x]
             TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKEff[i][x], TANKBG_P[i][x])
-            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (TANKBG_P[i][x], TANKBGErr[i][x]))
+            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (TANKBG_P[i][x], TANKBGErr[i][x]))
     for i in range(len(TANKBG_P)):
         TANKBGr_P += sum(TANKBG_P[i])
     for i in range(len(TANKBG_N)):    
@@ -378,8 +373,7 @@ def bgrate():
     totBG_N += TANKBGr_N
     #print('Accidental BG for TANK = %.5e' % TANK_Acc)
     TANKBGrErr = totErr(TANKBGErr)
-    print('##########################################')
-    print('Total BG due to TANK = %.5e \u00B1 %.5e' % (TANKBGr_P, TANKBGrErr))
+    print('Total BG due to TANK = %.5e +/- %.5e' % (TANKBGr_P, TANKBGrErr))
     ##CONC
     CONCBG_P = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
     CONCBG_N = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
@@ -402,15 +396,14 @@ def bgrate():
                 CONCBG_N[i][x] = CONCAct[i]*CONC_Nr[i][x]
             CONCBGErr[i][x] = ErrProp(CONCErr[i][x], CONCEff[i][x], CONCBG_P[i][x])
             CONCBGrErr += CONCBGErr[i][x]
-            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (CONCBG_P[i][x], CONCBGErr[i][x]))
+            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (CONCBG_P[i][x], CONCBGErr[i][x]))
     for i in range(len(CONCBG_P)):
         CONCBGr_P += sum(CONCBG_P[i])
     for i in range(len(CONCBG_N)):
         CONCBGr_N += sum(CONCBG_N[i])
     #print('Accidental BG for CONC = %.5e' % CONC_Acc)
     CONCBGrErr = totErr(CONCBGErr)
-    print('##########################################')
-    print('Total BG due to CONC = %.5e \u00B1 %.5e' % (CONCBGr_P, CONCBGrErr))
+    print('Total BG due to CONC = %.5e +/- %.5e' % (CONCBGr_P, CONCBGrErr))
     totBG_P += CONCBGr_P
     totBG_N += CONCBGr_N
     ##ROCK
@@ -422,8 +415,7 @@ def bgrate():
     ROCKBGrErr = 0
     print('##########################################')
     print('BG for ROCK')
-    #print(Iso.ROCK)
-    for i in range(len(Iso.ROCK)-1):
+    for i in range(len(Iso.ROCK)):
         print('##########################################')
         print(Iso.ROCK[i] + ' chain')
         for x in range(len(ROCK.IsoDecay[i])):
@@ -434,19 +426,16 @@ def bgrate():
                 ROCKBG_P[i][x] = ROCKAct[i]*ROCKEff[i][x]
                 ROCKBG_N[i][x] = ROCKAct[i]*ROCK_Nr[i][x]
             ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKEff[i][x], ROCKBG_P[i][x])
-            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (ROCKBG_P[i][x], ROCKBGErr[i][x]))
+            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (ROCKBG_P[i][x], ROCKBGErr[i][x]))
     for i in range(len(ROCKBG_P)):
         ROCKBGr_P += sum(ROCKBG_P[i])
     for i in range(len(ROCKBG_N)):
         ROCKBGr_N += sum(ROCKBG_N[i])
-    print('##########################################')
-    print('BG due to FN = %.5e' % ROCKAct[-1])
     totBG_P += ROCKBGr_P
     totBG_N += ROCKBGr_N
     #print('Accidental BG for ROCK = %.5e' % ROCK_Acc)
     ROCKBGrErr = totErr(ROCKBGErr)
-    print('##########################################')
-    print('Total BG due to ROCK = %.5e \u00B1 %.5e' % (ROCKBGr_P, ROCKBGrErr))
+    print('Total BG due to ROCK = %.5e +/- %.5e' % (ROCKBGr_P, ROCKBGrErr))
     ##WATER
     WATERBG_P = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
     WATERBG_N = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
@@ -457,7 +446,7 @@ def bgrate():
     #WATER_Acc = AccBG(WATER_Pr, WATER_Nr)
     print('##########################################')
     print('BG for WATERVOLUME')
-    for i in range(len(Iso.WATER)-1):
+    for i in range(len(Iso.WATER)):
         print('##########################################')
         #print(Iso.WATER[i] + ' chain')
         #print(WATEREff, WATERAct)
@@ -470,16 +459,13 @@ def bgrate():
                 WATERBG_P[i][x] = WATERAct[i]*WATEREff[i][x]
                 WATERBG_N[i][x] = WATERAct[i]*WATER_Nr[i][x]
             WATERBGErr[i][x] = ErrProp(WATERErr[i][x], WATEREff[i][x], WATERBG_P[i][x])
-            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (WATERBG_P[i][x], WATERBGErr[i][x]))
+            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (WATERBG_P[i][x], WATERBGErr[i][x]))
     for i in range(len(WATERBG_P)):
         WATERBGr_P += sum(WATERBG_P[i])
     for i in range(len(WATERBG_N)):
         WATERBGr_N += sum(WATERBG_N[i])
     WATERBGrErr = totErr(WATERBGErr)
-    print('##########################################')
-    print('BG due to RN = %.5e' % WATERAct[-1])
-    print('##########################################')
-    print('Total BG due to WATER = %.5e \u00B1 %.5e' % (WATERBGr_P, WATERBGrErr))
+    print('Total BG due to WATER = %.5e +/- %.5e' % (WATERBGr_P, WATERBGrErr))
     totBG_P += WATERBGr_P
     totBG_N += WATERBGr_N
     ##GD
@@ -491,72 +477,32 @@ def bgrate():
     GDBGrErr = 0
     print('##########################################')
     print('BG for GD')
-    for i in range(len(GDEff)):
+    for i in range(len(Iso.GD)):
         print('##########################################')
         print(Iso.GD[i] + ' chain')
         for x in range(len(GD.IsoDecay[i])):
-            if GD.IsoDecay[i][x] =='Pa234':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[0]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[0]
-            if GD.IsoDecay[i][x] == 'Pb214':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
-            if GD.IsoDecay[i][x] == 'Bi214':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
-            if GD.IsoDecay[i][x] == 'Bi210':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
             if GD.IsoDecay[i][x] == 'Tl210':
-                GDBG_P[i][x] = (GDEff[i][x]*GDAct[3]*0.002)
-                GDBG_N[i][x] = (GD_Nr[i][x]*GDAct[3]*0.002)
-            if GD.IsoDecay[i][x] == 'Ac228':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[1]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[1]
-            if GD.IsoDecay[i][x] == 'Pb212':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Bi211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Tl208':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Th231':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[2]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[2]
-            if GD.IsoDecay[i][x] == 'Fr223':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Pb211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Bi211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Tl207':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+                GDBG_P[i][x] = (GDEff[i][x]*GDAct[i]*0.002)
+                GDBG_N[i][x] = (GD_Nr[i][x]*GDAct[i]*0.002)
+            else:
+                GDBG_P[i][x] = GDAct[i]*GDEff[i][x]
+                GDBG_N[i][x] = GDAct[i]*GD_Nr[i][x]
             GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
-            #GDBGrErr += GDBGErr[i][x]
-            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e \u00B1 %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
+            GDBGrErr += GDBGErr[i][x]
+            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e +/- %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
     for i in range(len(GDBG_P)):
         GDBGr_P += sum(GDBG_P[i])
     for i in range(len(GDBG_N)):
         GDBGr_N += sum(GDBG_N[i])
     GDBGrErr = totErr(GDBGErr)
-    print('##########################################')
-    print('Total BG due to GD = %.5e \u00B1 %.5e' % (GDBGr_P, GDBGrErr))
+    print('Total BG due to GD = %.5e +/- %.5e' % (GDBGr_P, GDBGrErr))
     totBG_P += GDBGr_P
     totBG_N += GDBGr_N
     totAcc = totBG_P*totBG_N*0.0001*0.05*(pow(60,2)*24)
-    totBG = totAcc+ROCKAct[-1]+WATERAct[-1] 
-    #TODO hard-coded values for FN (0.02 per day) and RN (0.01 per day) for the moment. User needs to be able to change these values from the interface but we must ensure they are not added until AFTER the accidental rate has been calculated. They must be included in the total background value used for calculations of dwell time and so on.
     print('##########################################')
     print('Total Accidental rate = %.5e /day' % totAcc)
-    print('Total BG rate including FN + RN = %.5e /day' % totBG)
-    print('Total prompt BG rate = %.5e Hz' % totBG_P)
-    return totBG_P, totAcc, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N
+    print('Total BG rate = %.5e Hz' % totBG_P)
+    return totBG_P, totAcc, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P
 def tdcalc(BG):
     #get signal rate
     try:
@@ -564,7 +510,7 @@ def tdcalc(BG):
         signal > 0
         print('Signal rate set to = %.5e' % signal)
     except:
-        signal = 0.414
+        signal = 0.564
         print('Signal set to default value = %.5e' % signal)
     #calculate td
     B = signal*1.035 + BG
@@ -581,14 +527,14 @@ def maxBG():
         signal > 0
         print('Signal rate set to = %.5e' % signal)
     except:
-        signal = 0.414
+        signal = 0.564
         print('Signal set to default value = %.5e' % signal)
     try:
         days = literal_eval(input('Input time to dection in days: '))
         days > 0
         print('Time to detection set to = %.5e' % days)
     except:
-        days = 1.67196e+2
+        days = 1.19770e+2
         print('Time to detection set to default value of = %.5e' % days)
     sigma = 4.65
     S = signal*0.9
@@ -596,14 +542,12 @@ def maxBG():
     MBG = B - (S*1.15)
     print('Maximum BG rate for time detection of %.5e days = %.5e' % (days, MBG))
     return MBG
-def share(total, tot, IsoBG_P,IsoBG_N):
-    IsoShare = IsoBG_P
-    totshare=0
-    for i in range(len(IsoBG_P)):
-        for x in range(len(IsoBG_P[i])):
-            fraction = IsoBG_P[i][x]/tot
-            IsoShare[i][x] = (total * IsoBG_P[i][x]*IsoBG_N[i][x])/tot/0.0001/0.05/86400. 
-    return IsoShare # Hz
+def share(total, IsoBG):
+    IsoShare = IsoBG
+    for i in range(len(IsoBG)):
+        for x in range(len(IsoBG[i])):
+            IsoShare[i][x] /= (total*0.05*0.0001)
+    return IsoShare
 def revBG(CompShare, MaxBG):
     CB_BG = CompShare
     for i in range(len(CompShare)):
@@ -612,7 +556,7 @@ def revBG(CompShare, MaxBG):
     return CB_BG
 def CBOUT(IsoAct, BGIsoCB, Iso): #BGIso, Iso): #(, , ,COMP.IsoList)
     for i in range(len(IsoAct)):
-#        print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i]))) #TODO change this to give the singles rate for prompt events
+        print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i])))
         print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[i], (sum(BGIsoCB[i])*0.05*0.0001)))
         print('Radioactivity Budget for %.7s = %.5e' % (Iso[i], IsoAct[i]))
         #print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[i], sum(BGIso[i]))) #????
@@ -628,38 +572,38 @@ while ans.lower() != 'exit':
             if compAct[i].upper() == 'PMT':
                 print('##########################################')
                 print('Input values for PPM for Iso in PMT')
-                PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM, PMT.IType)
+                PMTPPM = Iso.setPPM(Iso.PMT, PMT.defPPM)
                 PMTAct = PMT.Activity(PMTPPM)
                 #print(PMTPPM)
             if compAct[i].upper() == 'VETO':
                 print('##########################################')
                 print('Input values for PPM for Iso in VETO')
-                VETOPPM = Iso.setPPM(Iso.VETO, VETO.defPPM, VETO.IType)
+                VETOPPM = Iso.setPPM(Iso.VETO, VETO.defPPM)
                 VETOAct = VETO.Activity(VETOPPM)
             if compAct[i].upper() == 'TANK':
                 print('##########################################')
                 print('Input values for PPM for Iso in TANK')
-                TANKPPM = Iso.setPPM(Iso.TANK, TANK.defPPM, TANK.IType)
+                TANKPPM = Iso.setPPM(Iso.TANK, TANK.defPPM)
                 TANKAct = TANK.Activity(TANKPPM)
             if compAct[i].upper() == 'CONC':
                 print('##########################################')
                 print('Input values for PPM for Iso in CONC')
-                CONCPPM = Iso.setPPM(Iso.CONC, CONC.defPPM, CONC.IType)
+                CONCPPM = Iso.setPPM(Iso.CONC, CONC.defPPM)
                 CONCAct = CONC.Activity(CONCPPM)
             if compAct[i].upper() == 'ROCK':
                 print('##########################################')
                 print('Input values for PPM for Iso in ROCK')
-                ROCKPPM = Iso.setPPM(Iso.ROCK, ROCK.defPPM, ROCK.IType)
+                ROCKPPM = Iso.setPPM(Iso.ROCK, ROCK.defPPM)
                 ROCKAct = ROCK.Activity(ROCKPPM)
             if compAct[i].upper() == 'WATER':
                 print('##########################################')
                 print('Input values for PPM for Iso in WATER')
-                WATERPPM = Iso.setPPM(Iso.WATER, WATER.defPPM, WATER.IType)
+                WATERPPM = Iso.setPPM(Iso.WATER, WATER.defPPM)
                 WATERAct = WATER.Activity(WATERPPM)
             if compAct[i].upper() == 'GD':
                 print('##########################################')
                 print('Input values for PPM for Iso in GD')
-                GDPPM = Iso.setPPM(Iso.GD, GD.defPPM, GD.IType)
+                GDPPM = Iso.setPPM(Iso.GD, GD.defPPM)
                 GDAct = GD.Activity(GDPPM)
         #set to default
         ActDefault()
@@ -707,7 +651,7 @@ while ans.lower() != 'exit':
             PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         if ei == False:
             EffDefault()
-        totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N  = bgrate()
+        tot, totAcc, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
         clear()
         ans = menu()
     if ans.lower() == 'td':
@@ -715,8 +659,8 @@ while ans.lower() != 'exit':
             ActDefault()
         if ei == False:
             EffDefault()
-        totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N = bgrate()
-        timeD = tdcalc(totBG) 
+        tot, totAcc, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
+        timeD = tdcalc(totAcc) 
         clear()
         ans = menu()
     if ans.lower() == 'maxbg':
@@ -730,62 +674,62 @@ while ans.lower() != 'exit':
         #check if efficiency has been changed
         if ei == False:
             EffDefault()
+        #calculate BG for comps
+        tot, PMTBGrate, VETOBGrate, TANKBGrate, CONCBGrate, ROCKBGrate, WATERBGrate, GDBGrate = bgrate()
+        #calculate the shares
+        PMTShare = share(tot,  PMTBGrate)
+        VETOShare = share(tot, VETOBGrate)
+        TANKShare = share(tot, TANKBGrate)
+        CONCShare = share(tot, CONCBGrate)
+        ROCKShare = share(tot, ROCKBGrate)
+        WATERShare = share(tot, WATERBGrate)
+        GDShare = share(tot, GDBGrate)
         #calculate max BG for signal rate and td
         MBG = maxBG()
-        #calculate BG for comps
-        totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N  = bgrate()
-        #calculate the shares
-        PMT_CB_BG = share(MBG,totBG,PMT_P, PMT_N)
-        VETO_CB_BG = share(MBG,totBG, VETO_P, VETO_N)
-        TANK_CB_BG = share(MBG, totBG, TANKBG_P, TANKBG_N)
-        CONC_CB_BG = share(MBG,totBG, CONCBG_P, CONCBG_N)
-        ROCK_CB_BG = share(MBG,totBG, ROCKBG_P, ROCKBG_N)
-        WATER_CB_BG = share(MBG,totBG, WATERBG_P, WATERBG_N)
-        GD_CB_BG = share(MBG,totBG, GDBG_P, GDBG_N)
         ##revAct() calculations
         #PMT
         #print(PMTShare)
         print('##########################################')
         print('CB for PMT')
-#        PMT_CB_BG = PMTShare
-        PMT_CB_Act = PMT.revActivity(PMT_CB_BG, PMTEff,PMT_Nr)
+        PMT_CB_BG = revBG(PMTShare, MBG)
+        PMT_CB_Act = PMT.revActivity(PMT_CB_BG, PMTEff)
         #print(PMT_CB_Act)
         CBOUT(PMT_CB_Act, PMT_CB_BG, PMT.IsoList)
         #VETO
         print('##########################################')
         print('CB for VETO')
-        #VETO_CB_BG = revBG(VETOShare, MBdG)
-        VETO_CB_Act = VETO.revActivity(VETO_CB_BG, VETOEff,VETO_Nr)
+        VETO_CB_BG = revBG(VETOShare, MBG)
+        VETO_CB_Act = VETO.revActivity(VETO_CB_BG, VETOEff)
         CBOUT(VETO_CB_Act, VETO_CB_BG, VETO.IsoList)
         #TANK
         print('##########################################')
         print('CB for TANK')
-        #TANK_CB_BG = revBG(TANKShare, MBG)
-        TANK_CB_Act = TANK.revActivity(TANK_CB_BG, TANKEff, TANK_Nr)
+        TANK_CB_BG = revBG(TANKShare, MBG)
+        TANK_CB_Act = TANK.revActivity(TANK_CB_BG, TANKEff)
         CBOUT(TANK_CB_Act, TANK_CB_BG, TANK.IsoList)
         #CONC
         print('##########################################')
         print('CB for CONC')
-#        CONC_CB_BG = revBG(CONCShare, MBG)
-        CONC_CB_Act = CONC.revActivity(CONC_CB_BG, CONCEff,CONC_Nr)
+        CONC_CB_BG = revBG(CONCShare, MBG)
+        CONC_CB_Act = CONC.revActivity(CONC_CB_BG, CONCEff)
         CBOUT(CONC_CB_Act, CONC_CB_BG, TANK.IsoList)
         #ROCK
         print('##########################################')
         print('CB for ROCK')
-#        ROCK_CB_BG = revBG(ROCKShare, MBG)
-        ROCK_CB_Act = ROCK.revActivity(ROCK_CB_BG, ROCKEff,ROCK_Nr)
+        ROCK_CB_BG = revBG(ROCKShare, MBG)
+        ROCK_CB_Act = ROCK.revActivity(ROCK_CB_BG, ROCKEff)
         CBOUT(ROCK_CB_Act, ROCK_CB_BG, ROCK.IsoList)
         #WATER
         print('##########################################')
         print('CB for WATERVOLUME')
-#        WATER_CB_BG = revBG(WATERShare, MBG)
-        WATER_CB_Act = WATER.revActivity(WATER_CB_BG, WATEREff,WATER_Nr)
+        WATER_CB_BG = revBG(WATERShare, MBG)
+        WATER_CB_Act = WATER.revActivity(WATER_CB_BG, WATEREff)
         CBOUT(WATER_CB_Act, WATER_CB_BG, WATER.IsoList)
         #GD
         print('##########################################')
         print('CB for GD')
-#        GD_CB_BG = revBG(GDShare, MBG)
-        GD_CB_Act = GD.revActivity(GD_CB_BG, GDEff,GD_Nr)
+        GD_CB_BG = revBG(GDShare, MBG)
+        GD_CB_Act = GD.revActivity(GD_CB_BG, GDEff)
         CBOUT(GD_CB_Act, GD_CB_BG, GD.IsoList)
         #reset
         clear()

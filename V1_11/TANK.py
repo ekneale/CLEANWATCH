@@ -34,13 +34,13 @@ def Activity(PPM):
         IAct.append(PPM[i]*mass)
         print('Activity due to ' + Iso.TANK[i] + ' = %.5e' % IAct[i])
     return IAct
-def revActivity(BG, Eff):
+def revActivity(BG, Eff,NEff):
     rIsoAct = [0 for i in range(len(IsoList))]
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct[i] = (maxbg/Eff[i][x]/mass)
+            rIsoAct[i] = (maxbg/Eff[i][x]/NEff[i][x]/mass)
         else:
             rIsoAct[i] = 0
     return rIsoAct

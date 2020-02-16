@@ -24,13 +24,13 @@ def Activity(PPM):
         IAct.append(PPM[i]*((Iso.Lam[i]*Iso.Abs[i])/(Iso.Ms[i]*1e6))*mass*n)
         print('Activity due to ' + Iso.PMT[i] + ' = %.5e' % IAct[i])
     return IAct
-def revActivity(BG, Eff):
+def revActivity(BG, Eff,NEff):
     rIsoAct = [0 for i in range(len(IsoList))]
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct[i] = (BG[i][x]/Eff[i][x])*(1/(mass*n))*((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
+            rIsoAct[i] = (BG[i][x]/Eff[i][x]/NEff[i][x])/(mass*n)*((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
             #print(rIsoAct[i][x])
         else:
             rIsoAct[i] = 0

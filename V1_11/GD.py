@@ -29,7 +29,7 @@ def Activity(PPM):
         IAct.append(PPM[i]*mass*0.002)
         print('Activity of ' + Iso.GD[i] + ' = %.5e Bq' % (IAct[i]))
     return IAct
-def revActivity(BG, Eff):
+def revActivity(BG, Eff,NEff):
     rIsoAct = [0 for i in range(len(IsoList))]
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     const = mass*0.002
@@ -37,7 +37,7 @@ def revActivity(BG, Eff):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = (maxbg/Eff[i][x]/const)
+            revIsoAct[i] = (maxbg/Eff[i][x]/NEff[i][x]/const)
         else:
             revIsoAct[i] = 0
     return rIsoAct

@@ -30,14 +30,14 @@ def Activity(PPM):
         print('Activity for ' + Iso.ROCK[i] + ' = %5e' % IAct[i])
     IAct.append(defPPM[-1])
     return IAct
-def revActivity(BG, Eff):
+def revActivity(BG, Eff,NEff):
     rIsoAct = [0 for i in range(len(IsoList))]
     for i in range(len(BG)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if i > len(BG) - 1:
             if Eff[i][x] != 0:
-                rIsoAct[i] = maxbg/Eff[i][x]/mass/((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
+                rIsoAct[i] = maxbg/Eff[i][x]/NEff[i][x]/mass/((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
             else:
                 rIsoAct[i] = 0
         else:
