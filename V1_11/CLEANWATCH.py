@@ -712,7 +712,7 @@ while ans.lower() != 'exit':
         ans = menu()
     if ans.lower() == 'td':
         if ai == False:
-            ActDefault()
+            PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         if ei == False:
             EffDefault()
         totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N = bgrate()
@@ -726,7 +726,7 @@ while ans.lower() != 'exit':
     if ans.lower() == 'cb':
         #check if activity has been changed
         if ai == False:
-            ActDefault()
+            PMTAct, VETOAct, TANKAct, CONCAct, ROCKAct, WATERAct, GDAct = ActDefault()
         #check if efficiency has been changed
         if ei == False:
             EffDefault()

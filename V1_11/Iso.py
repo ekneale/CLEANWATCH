@@ -47,7 +47,7 @@ def setPPM(Iso, PPM, Itype):
                 print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % PPM[i])
         else:
             x = x.lower()
-            if x[-1] == 'x':
+            if x[-1] == 'x' and len(x) > 1:
                 x = x.replace('x', '')
                 x = int(x)
                 if x >= 0:
@@ -65,7 +65,7 @@ def setPPM(Iso, PPM, Itype):
                     output.append(PPM[i])
                     print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
                     continue #skips to next iteration?
-            if x < 0 and type(x) == int:
+            if x < 0 or type(x) != int:
                 output.append(PPM[i])
                 print(Itype[i] + ' for ' + Iso[i] + ' set to default value of = %.5e' % output[i])
             else:
