@@ -2,7 +2,7 @@ from ast import literal_eval
 #Properties
 Ms = [3.953e-25, 3.853145e-25, 6.636286e-26] #Mass [kg] [U238, Th232, K40]
 Lam = [4.916e-18, 1.57e-18, 1.842e-18] #decay constant [U238, Th232, K40]
-Abs = [1, 1, 0.00117] #natural abundance [U238, Th232, K40]
+Abs = [1, 1, 0.000117] #natural abundance [U238, Th232, K40]
 #Component Isotopes
 PMT =  ['U238', 'Th232', 'K40']
 VETO = ['U238', 'Th232', 'K40']
