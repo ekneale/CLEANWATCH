@@ -2,7 +2,7 @@ import Iso, Eff
 from math import *
 mass = 1.4
 n = 296
-defPPM = [0.043, 0.133, 36]
+defPPM = [0.064, 0.172, 85.47]
 IsoAct = defPPM
 revIsoAct = defPPM
 IsoList = Iso.VETO

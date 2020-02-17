@@ -2,7 +2,7 @@ import Iso, Eff
 from math import sqrt
 mass = 1.4 #kg
 n = 3258
-defPPM = [0.043, 0.133, 36] #[U238, Th232, K40]
+defPPM = [0.064, 0.172, 85.47] #[U238, Th232, K40]
 PPM = defPPM
 IsoAct = defPPM
 revIsoAct = defPPM
