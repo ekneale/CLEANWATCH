@@ -1,4 +1,5 @@
 import Iso, Eff
+from math import sqrt
 mass = 1.4 #kg
 n = 3258
 defPPM = [0.043, 0.133, 36] #[U238, Th232, K40]
@@ -30,7 +31,8 @@ def revActivity(BG, Eff,NEff):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct[i] = (BG[i][x]/Eff[i][x]/NEff[i][x])/(mass*n)*((Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i]))
+#            PMTAct=sqrt(BG[i][x]/Eff[i][x]/NEff[i][x])
+            rIsoAct[i] = sqrt(BG[i][x]/Eff[i][x]/NEff[i][x])/(mass*n)*(Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i])
             #print(rIsoAct[i][x])
         else:
             rIsoAct[i] = 0

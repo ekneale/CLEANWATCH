@@ -1,5 +1,5 @@
 import Iso, Eff
-from math import pow
+from math import *
 import numpy as np
 h = 10026.35e-3
 r = 10026.35e-3
@@ -40,7 +40,7 @@ def revActivity(BG, Eff,NEff):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct[i] = (maxbg/Eff[i][x]/NEff[i][x]/mass)
+            rIsoAct[i] = sqrt(maxbg/Eff[i][x]/NEff[i][x])/mass
         else:
             rIsoAct[i] = 0
     return rIsoAct

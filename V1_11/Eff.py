@@ -23,7 +23,7 @@ def GetEff(compNum, chainNum):
     err = []
     for i in range(len(iso[chainNum])):
         hist = "histWatchman_" + comp[compNum] + iso[chainNum][i]
-        binNum.append(outfile.Get(hist).FindBin(1.9, 9))
+        binNum.append(outfile.Get(hist).FindBin(1.9, 8))
         #print(binNum[i])
         temp = outfile.Get(hist).GetBinContent(binNum[i])
         #print(temp)

@@ -1,5 +1,5 @@
 import numpy as np
-from math import pow
+from math import *
 import Eff
 import Iso
 TankR = 10026.35e-3
@@ -43,7 +43,7 @@ def revActivity(BG, Eff,NEff):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = (maxbg/Eff[i][x]/NEff[i][x]/const)
+            revIsoAct[i] = sqrt(maxbg/Eff[i][x]/NEff[i][x])/const
         else:
             revIsoAct[i] = 0
     return rIsoAct

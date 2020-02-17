@@ -588,7 +588,7 @@ def maxBG():
         days > 0
         print('Time to detection set to = %.5e' % days)
     except:
-        days = 1.67196e+2
+        days = 1.69847e+2
         print('Time to detection set to default value of = %.5e' % days)
     sigma = 4.65
     S = signal*0.9
@@ -748,7 +748,7 @@ while ans.lower() != 'exit':
         print('##########################################')
         print('CB for PMT')
 #        PMT_CB_BG = PMTShare
-        PMT_CB_Act = PMT.revActivity(PMT_CB_BG, PMTEff,PMT_Nr)
+        PMT_CB_Act = PMT.revActivity(PMT_CB_BG, PMTEff, PMT_Nr)
         #print(PMT_CB_Act)
         CBOUT(PMT_CB_Act, PMT_CB_BG, PMT.IsoList)
         #VETO
