@@ -37,7 +37,7 @@ def revActivity(BG, Eff,NEff):
         x = BG[i].index(maxbg)
         if i > len(BG) - 1:
             if Eff[i][x] != 0:
-                rIsoAct[i] = sqrt(maxbg/Eff[i][x]/NEff[i][x])/mass*(Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i])
+                rIsoAct[i] = maxbg/Eff[i][x]/mass*(Iso.Ms[i]*1e6)/(Iso.Lam[i]*Iso.Abs[i])
             else:
                 rIsoAct[i] = 0
         else:

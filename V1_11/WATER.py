@@ -27,7 +27,7 @@ def revActivity(BG, Eff,NEff):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            rIsoAct.append(sqrt(maxbg/Eff[i][x]/NEff[i][x])/vol)
+            rIsoAct.append(maxbg/Eff[i][x]/vol)
         else:
             revIsoAct.append(0)
     return rIsoAct

@@ -596,13 +596,12 @@ def maxBG():
     MBG = B - (S*1.15)
     print('Maximum BG rate for time detection of %.5e days = %.5e' % (days, MBG))
     return MBG
-def share(total, tot, IsoBG_P,IsoBG_N):
+def share(total, tot, IsoBG_P):
     IsoShare = IsoBG_P
     totshare=0
     for i in range(len(IsoBG_P)):
         for x in range(len(IsoBG_P[i])):
-            fraction = IsoBG_P[i][x]/tot
-            IsoShare[i][x] = (total * IsoBG_P[i][x]*IsoBG_N[i][x])/tot/0.0001/0.05/86400. 
+            IsoShare[i][x] = total/tot * IsoBG_P[i][x] # prompt rate for given isotope in Hz
     return IsoShare # Hz
 def revBG(CompShare, MaxBG):
     CB_BG = CompShare
@@ -735,13 +734,13 @@ while ans.lower() != 'exit':
         #calculate BG for comps
         totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N  = bgrate()
         #calculate the shares
-        PMT_CB_BG = share(MBG,totBG,PMT_P, PMT_N)
-        VETO_CB_BG = share(MBG,totBG, VETO_P, VETO_N)
-        TANK_CB_BG = share(MBG, totBG, TANKBG_P, TANKBG_N)
-        CONC_CB_BG = share(MBG,totBG, CONCBG_P, CONCBG_N)
-        ROCK_CB_BG = share(MBG,totBG, ROCKBG_P, ROCKBG_N)
-        WATER_CB_BG = share(MBG,totBG, WATERBG_P, WATERBG_N)
-        GD_CB_BG = share(MBG,totBG, GDBG_P, GDBG_N)
+        PMT_CB_BG = share(MBG,totBG,PMT_P)
+        VETO_CB_BG = share(MBG,totBG, VETO_P)
+        TANK_CB_BG = share(MBG, totBG, TANKBG_P)
+        CONC_CB_BG = share(MBG,totBG, CONCBG_P)
+        ROCK_CB_BG = share(MBG,totBG, ROCKBG_P)
+        WATER_CB_BG = share(MBG,totBG, WATERBG_P)
+        GD_CB_BG = share(MBG,totBG, GDBG_P)
         ##revAct() calculations
         #PMT
         #print(PMTShare)
