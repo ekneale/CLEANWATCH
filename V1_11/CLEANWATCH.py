@@ -108,7 +108,7 @@ def menu(): #menu text
     Displays options
     """
     a = ''
-    options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb']
+    options = ['a', 'e', 'bgr', 'exit', 'td', 'maxbg', 'cb', 'mintd']
     while a.lower() not in options:
         print('##################################################')
         print('CLEANWATCH, V1.11')
@@ -118,6 +118,7 @@ def menu(): #menu text
         print('- Input Values for Efficiency    [e]')
         print('- Calculate Background Rate      [bgr]')
         print('- Calculate Time Detection       [td]')
+        print('- Minimum Time Detection         [mintd]')
         print('- Calculate Maximum Background   [maxbg]')
         print('- Cleanliness Budget             [cb]')
         print('- Exit software                  [exit]')
@@ -598,12 +599,13 @@ def maxBG():
     MBG = B - (S*1.15)
     print('Maximum BG rate for time detection of %.5e days = %.5e' % (days, MBG))
     return MBG
-def share(total, tot, IsoBG_P):
+def share(total, tot, IsoBG_P, CompIso):
     IsoShare = IsoBG_P
     totshare=0
     for i in range(len(IsoBG_P)):
         for x in range(len(IsoBG_P[i])):
             IsoShare[i][x] = total/tot * IsoBG_P[i][x] # prompt rate for given isotope in Hz
+            print('BG due to ' + CompIso[i][x] + '  = %.5e' % IsoShare[i][x])
     return IsoShare # Hz
 def revBG(CompShare, MaxBG):
     CB_BG = CompShare
@@ -731,18 +733,34 @@ while ans.lower() != 'exit':
         #check if efficiency has been changed
         if ei == False:
             EffDefault()
-        #calculate max BG for signal rate and td
-        MBG = maxBG()
         #calculate BG for comps
         totBG_P, totBG, PMT_P, VETO_P, TANKBG_P, CONCBG_P, ROCKBG_P, WATERBG_P, GDBG_P, PMT_N, VETO_N, TANKBG_N, CONCBG_N, ROCKBG_N, WATERBG_N, GDBG_N  = bgrate()
+        #calculate max BG for signal rate and td
+        MBG = maxBG()
         #calculate the shares
-        PMT_CB_BG = share(MBG,totBG,PMT_P)
-        VETO_CB_BG = share(MBG,totBG, VETO_P)
-        TANK_CB_BG = share(MBG, totBG, TANKBG_P)
-        CONC_CB_BG = share(MBG,totBG, CONCBG_P)
-        ROCK_CB_BG = share(MBG,totBG, ROCKBG_P)
-        WATER_CB_BG = share(MBG,totBG, WATERBG_P)
-        GD_CB_BG = share(MBG,totBG, GDBG_P)
+        print('##########################################')
+        print('Calculated BG for PMT')
+        PMT_CB_BG = share(MBG,totBG,PMT_P, PMT.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for VETO')
+        VETO_CB_BG = share(MBG,totBG, VETO_P, VETO.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for TANK')
+        TANK_CB_BG = share(MBG, totBG, TANKBG_P, TANK.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for CONC')
+        CONC_CB_BG = share(MBG,totBG, CONCBG_P, CONC.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for ROCK')
+        #print(ROCKBG_P)
+        #print(ROCK.IsoDecay)
+        ROCK_CB_BG = share(MBG,totBG, [ROCKBG_P[0], ROCKBG_P[1], ROCKBG_P[2]], ROCK.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for WATER')
+        WATER_CB_BG = share(MBG,totBG, WATERBG_P, WATER.IsoDecay)
+        print('##########################################')
+        print('Calculated BG for GD')
+        GD_CB_BG = share(MBG,totBG, GDBG_P, GD.IsoDecay)
         ##revAct() calculations
         #PMT
         #print(PMTShare)
@@ -775,7 +793,10 @@ while ans.lower() != 'exit':
         print('CB for ROCK')
 #        ROCK_CB_BG = revBG(ROCKShare, MBG)
         ROCK_CB_Act = ROCK.revActivity(ROCK_CB_BG, ROCKEff,ROCK_Nr)
-        CBOUT(ROCK_CB_Act, ROCK_CB_BG, ROCK.IsoList)
+        #print(ROCK_CB_Act)
+        #print(ROCK_CB_BG)
+        #print(ROCK.IsoList)
+        CBOUT(ROCK_CB_Act[:-1], ROCK_CB_BG, [ROCK.IsoList[0], ROCK.IsoList[1], ROCK.IsoList[2]])
         #WATER
         print('##########################################')
         print('CB for WATERVOLUME')
