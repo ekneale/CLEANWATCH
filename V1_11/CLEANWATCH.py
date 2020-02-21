@@ -800,14 +800,17 @@ while ans.lower() != 'exit':
         #WATER
         print('##########################################')
         print('CB for WATERVOLUME')
-#        WATER_CB_BG = revBG(WATERShare, MBG)
+        #WATER_CB_BG = revBG(WATERShare, MBG)
         WATER_CB_Act = WATER.revActivity(WATER_CB_BG, WATEREff,WATER_Nr)
+        #print(WATER_CB_BG)
         CBOUT(WATER_CB_Act, WATER_CB_BG, WATER.IsoList)
         #GD
         print('##########################################')
         print('CB for GD')
-#        GD_CB_BG = revBG(GDShare, MBG)
+        #GD_CB_BG = revBG(GDShare, MBG)
+        #print(GD_CB_BG)
         GD_CB_Act = GD.revActivity(GD_CB_BG, GDEff,GD_Nr)
+        #print(CD_CB_Act)
         CBOUT(GD_CB_Act, GD_CB_BG, GD.IsoList)
         #reset
         clear()

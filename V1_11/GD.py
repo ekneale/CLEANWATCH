@@ -39,13 +39,14 @@ def revActivity(BG, Eff,NEff):
     rIsoAct = [0 for i in range(len(IsoList))]
     mass = np.pi*pow(TankR, 2)*(2*Height)*1e3
     const = mass*0.002
-    for i in range(len(BG)):
+    for i in range(len(IsoList)):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
-            revIsoAct[i] = maxbg/Eff[i][x]/const
+            rIsoAct[i] = maxbg/Eff[i][x]/const
         else:
-            revIsoAct[i] = 0
+            print('Efficiency = 0')
+            rIsoAct[i] = 0
     return rIsoAct
 #defAct = Activity(defPPM)
 #print('No Errors')

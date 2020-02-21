@@ -21,14 +21,15 @@ def Activity(PPM):
         print('Activity for ' + Iso.WATER[i] + ' = %5e' % IAct[i])
     IAct.append(defPPM[-1])
     return IAct
-def revActivity(BG, Eff,NEff):
+def revActivity(BG, Eff, NEff):
     rIsoAct = []
-    for i in range(len(BG)-1):
+    for i in range(len(IsoList)-1):
         maxbg = max(BG[i])
         x = BG[i].index(maxbg)
         if Eff[i][x] != 0:
             rIsoAct.append(maxbg/Eff[i][x]/vol)
         else:
             revIsoAct.append(0)
+    print(rIsoAct)
     return rIsoAct
 #defAct = Activity(defPPM)
