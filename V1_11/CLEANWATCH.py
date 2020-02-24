@@ -616,7 +616,7 @@ def revBG(CompShare, MaxBG):
     return CB_BG
 def CBOUT(IsoAct, BGIsoCB, Iso): #BGIso, Iso): #(, , ,COMP.IsoList)
     for i in range(len(IsoAct)):
-#        print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i]))) #TODO change this to give the singles rate for prompt events
+        print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i]))) #TODO change this to give the singles rate for prompt events
         print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[i], (sum(BGIsoCB[i])*0.05*0.0001)))
         print('Radioactivity Budget for %.7s = %.5e' % (Iso[i], IsoAct[i]))
         #print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[i], sum(BGIso[i]))) #????
