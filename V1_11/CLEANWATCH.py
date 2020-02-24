@@ -277,7 +277,7 @@ def bgrate():
     ##PMTs
     PMT_N = [[0 for x in range(len(PMTEff[i]))] for i in range(len(PMTEff))]
     PMT_P = [[0 for x in range(len(PMTEff[i]))] for i in range(len(PMTEff))]
-    PMTBGErr = [[0 for x in range(len(PMTErr[i]))] for i in range(len(PMTErr))]
+    #PMTBGErr = [[0 for x in range(len(PMTErr[i]))] for i in range(len(PMTErr))]
     PMTBGr_P = 0
     PMTBGr_N = 0
     #PMT_Acc = AccBG(PMT_Pr, PMT_Nr)
@@ -301,10 +301,10 @@ def bgrate():
             #print(PMT.IsoDecay[i][x] + ' Efficiency = %.5e' % PMTEff[i][x])
             #print(PMT.IsoDecay[i][x] + ' Efficiency Error = %.5e' % PMTErr[i][x])
             #print('Expected BG = %.5e' % (PMTAct[i]*PMTEff[i][x]))
-            PMTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x])
+            #MTBGErr[i][x] = ErrProp(PMTErr[i][x], PMTEff[i][x], PMT_P[i][x])
             #PMTBGrErr += PMTBGErr[i][x]
-            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (PMT_P[i][x], PMTBGErr[i][x]))
-        PMTBGrErr = totErr(PMTBGErr)
+            print('BG due to ' + PMT.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (PMT_P[i][x], PMTErr[i][x]))
+        PMTBGrErr = totErr(PMTErr)
         print('Total BG for ' + Iso.PMT[i] + ' = %.5e Hz'% (sum(PMT_P[i])))
     for i in range(len(PMT_P)):
         PMTBGr_P += sum(PMT_P[i])
@@ -318,7 +318,7 @@ def bgrate():
     ##VETO
     VETO_P = [[0 for x in range(len(VETOEff[i]))] for i in range(len(VETOEff))]
     VETO_N = [[0 for x in range(len(VETOEff[i]))] for i in range(len(VETOEff))]
-    VETOBGErr = VETOErr
+    #VETOBGErr = VETOErr
     VETOBGr_P = 0
     VETOBGr_N = 0
     VETOBGrErr = 0
@@ -335,10 +335,10 @@ def bgrate():
             else:
                 VETO_P[i][x] = VETOAct[i]*VETOEff[i][x]
                 VETO_N[i][x] = VETOAct[i]*VETO_Nr[i][x]
-            VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOEff[i][x], VETO_P[i][x])
-            VETOBGrErr += VETOBGErr[i][x]
-            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (VETO_P[i][x], VETOBGErr[i][x]))  
-        VETOBGrErr = totErr(VETOBGErr)
+            #VETOBGErr[i][x] = ErrProp(VETOErr[i][x], VETOEff[i][x], VETO_P[i][x])
+            #VETOBGrErr += VETOBGErr[i][x]
+            print('BG due to ' + VETO.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (VETO_P[i][x], VETOErr[i][x]))  
+        VETOBGrErr = totErr(VETOErr)
         print('Total BG for ' + Iso.VETO[i] + ' = %.5e Hz \u00B1 %.5e'% (sum(VETO_P[i]), VETOBGrErr))
     for i in range(len(VETO_P)):
         VETOBGr_P += sum(VETO_P[i])
@@ -346,13 +346,13 @@ def bgrate():
         VETOBGr_N += sum(VETO_N[i])
     #print('Accidental BG for VETO = %.5e' % VETO_Acc) 
     print('##########################################')
-    print('Total BG due to VETO = %.5e Hz +/- %.5e' % (VETOBGr_P, VETOBGrErr))
+    print('Total BG due to VETO = %.5e Hz \u00B1 %.5e' % (VETOBGr_P, VETOBGrErr))
     totBG_P += VETOBGr_P
     totBG_N += VETOBGr_N
     ##TANK
     TANKBG_P = [[0 for x in range(len(TANKEff[i]))] for i in range(len(TANKEff))]
     TANKBG_N = [[0 for x in range(len(TANKEff[i]))] for i in range(len(TANKEff))]
-    TANKBGErr = TANKErr
+    #TANKBGErr = TANKErr
     TANKBGr_P = 0
     TANKBGr_N = 0
     TANKBGrErr = 0
@@ -369,8 +369,8 @@ def bgrate():
             else:
                 TANKBG_P[i][x] = TANKAct[i]*TANKEff[i][x]
                 TANKBG_N[i][x] = TANKAct[i]*TANK_Nr[i][x]
-            TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKEff[i][x], TANKBG_P[i][x])
-            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (TANKBG_P[i][x], TANKBGErr[i][x]))
+            #TANKBGErr[i][x] = ErrProp(TANKErr[i][x], TANKEff[i][x], TANKBG_P[i][x])
+            print('BG due to ' + TANK.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (TANKBG_P[i][x], TANKErr[i][x]))
         print('Total BG for ' + Iso.TANK[i] + ' = %.5e Hz \u00B1 %.5e'% (sum(TANKBG_P[i]), TANKBGrErr))
 
     for i in range(len(TANKBG_P)):
@@ -380,13 +380,13 @@ def bgrate():
     totBG_P += TANKBGr_P
     totBG_N += TANKBGr_N
     #print('Accidental BG for TANK = %.5e' % TANK_Acc)
-    TANKBGrErr = totErr(TANKBGErr)
+    TANKBGrErr = totErr(TANKErr)
     print('##########################################')
     print('Total BG due to TANK = %.5e Hz \u00B1 %.5e' % (TANKBGr_P, TANKBGrErr))
     ##CONC
     CONCBG_P = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
     CONCBG_N = [[0 for x in range(len(CONCEff[i]))] for i in range(len(CONCEff))]
-    CONCBGErr = CONCErr
+    #CONCBGErr = CONCErr
     CONCBGr_P = 0
     CONCBGr_N = 0
     CONCBGrErr = 0
@@ -403,15 +403,15 @@ def bgrate():
             else:
                 CONCBG_P[i][x] = CONCAct[i]*CONCEff[i][x]
                 CONCBG_N[i][x] = CONCAct[i]*CONC_Nr[i][x]
-            CONCBGErr[i][x] = ErrProp(CONCErr[i][x], CONCEff[i][x], CONCBG_P[i][x])
-            CONCBGrErr += CONCBGErr[i][x]
-            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (CONCBG_P[i][x], CONCBGErr[i][x]))
+            #CONCBGErr[i][x] = ErrProp(CONCErr[i][x], CONCEff[i][x], CONCBG_P[i][x])
+            #CONCBGrErr += CONCBGErr[i][x]
+            print('BG due to ' + CONC.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (CONCBG_P[i][x], CONCErr[i][x]))
     for i in range(len(CONCBG_P)):
         CONCBGr_P += sum(CONCBG_P[i])
     for i in range(len(CONCBG_N)):
         CONCBGr_N += sum(CONCBG_N[i])
     #print('Accidental BG for CONC = %.5e' % CONC_Acc)
-    CONCBGrErr = totErr(CONCBGErr)
+    CONCBGrErr = totErr(CONCErr)
     print('##########################################')
     print('Total BG due to CONC = %.5e Hz \u00B1 %.5e' % (CONCBGr_P, CONCBGrErr))
     totBG_P += CONCBGr_P
@@ -419,7 +419,7 @@ def bgrate():
     ##ROCK
     ROCKBG_P = [[0 for x in range(len(ROCKEff[i]))] for i in range(len(ROCKEff))]
     ROCKBG_N = [[0 for x in range(len(ROCKEff[i]))] for i in range(len(ROCKEff))]
-    ROCKBGErr = ROCKErr
+    #ROCKBGErr = ROCKErr
     ROCKBGr_P = 0
     ROCKBGr_N = 0
     ROCKBGrErr = 0
@@ -436,8 +436,8 @@ def bgrate():
             else:
                 ROCKBG_P[i][x] = ROCKAct[i]*ROCKEff[i][x]
                 ROCKBG_N[i][x] = ROCKAct[i]*ROCK_Nr[i][x]
-            ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKEff[i][x], ROCKBG_P[i][x])
-            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (ROCKBG_P[i][x], ROCKBGErr[i][x]))
+            #ROCKBGErr[i][x] = ErrProp(ROCKErr[i][x], ROCKEff[i][x], ROCKBG_P[i][x])
+            print('BG due to ' + ROCK.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (ROCKBG_P[i][x], ROCKErr[i][x]))
     for i in range(len(ROCKBG_P)):
         ROCKBGr_P += sum(ROCKBG_P[i])
     for i in range(len(ROCKBG_N)):
@@ -447,13 +447,13 @@ def bgrate():
     totBG_P += ROCKBGr_P
     totBG_N += ROCKBGr_N
     #print('Accidental BG for ROCK = %.5e' % ROCK_Acc)
-    ROCKBGrErr = totErr(ROCKBGErr)
+    ROCKBGrErr = totErr(ROCKErr)
     print('##########################################')
     print('Total BG due to ROCK = %.5e Hz \u00B1 %.5e' % (ROCKBGr_P, ROCKBGrErr))
     ##WATER
     WATERBG_P = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
     WATERBG_N = [[0 for x in range(len(WATEREff[i]))] for i in range(len(WATEREff))]
-    WATERBGErr = WATERErr
+    #WATERBGErr = WATERErr
     WATERBGr_P = 0
     WATERBGr_N = 0
     WATERBGrErr = 0
@@ -472,13 +472,13 @@ def bgrate():
             else:
                 WATERBG_P[i][x] = WATERAct[i]*WATEREff[i][x]
                 WATERBG_N[i][x] = WATERAct[i]*WATER_Nr[i][x]
-            WATERBGErr[i][x] = ErrProp(WATERErr[i][x], WATEREff[i][x], WATERBG_P[i][x])
-            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (WATERBG_P[i][x], WATERBGErr[i][x]))
+            #WATERBGErr[i][x] = ErrProp(WATERErr[i][x], WATEREff[i][x], WATERBG_P[i][x])
+            print('BG due to ' + WATER.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (WATERBG_P[i][x], WATERErr[i][x]))
     for i in range(len(WATERBG_P)):
         WATERBGr_P += sum(WATERBG_P[i])
     for i in range(len(WATERBG_N)):
         WATERBGr_N += sum(WATERBG_N[i])
-    WATERBGrErr = totErr(WATERBGErr)
+    WATERBGrErr = totErr(WATERErr)
     print('##########################################')
     print('BG due to RN = %.5e' % WATERAct[-1])
     print('##########################################')
@@ -488,7 +488,7 @@ def bgrate():
     ##GD
     GDBG_P = [[0 for x in range(len(GDEff[i]))] for i in range(len(GDEff))]
     GDBG_N = [[0 for x in range(len(GDEff[i]))] for i in range(len(GDEff))]
-    GDBGErr = GDErr
+    #GDBGErr = GDErr
     GDBGr_P = 0
     GDBGr_N = 0
     GDBGrErr = 0
@@ -540,14 +540,15 @@ def bgrate():
             if GD.IsoDecay[i][x] == 'Tl207':
                 GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
                 GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
+            #GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
             #GDBGrErr += GDBGErr[i][x]
-            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (GDBG_P[i][x], GDBGErr[i][x]))
+            print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (GDBG_P[i][x], GDErr[i][x]))
+        print('Total BG due to ' + Iso.GD[i] + ' = %.5e' % sum(GDBG_P[i]))
     for i in range(len(GDBG_P)):
         GDBGr_P += sum(GDBG_P[i])
     for i in range(len(GDBG_N)):
         GDBGr_N += sum(GDBG_N[i])
-    GDBGrErr = totErr(GDBGErr)
+    GDBGrErr = totErr(GDErr)
     print('##########################################')
     print('Total BG due to GD = %.5e Hz \u00B1 %.5e' % (GDBGr_P, GDBGrErr))
     totBG_P += GDBGr_P
