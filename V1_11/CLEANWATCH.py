@@ -498,48 +498,51 @@ def bgrate():
         print('##########################################')
         print(Iso.GD[i] + ' chain')
         for x in range(len(GD.IsoDecay[i])):
-            if GD.IsoDecay[i][x] =='Pa234':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[0]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[0]
-            if GD.IsoDecay[i][x] == 'Pb214':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
-            if GD.IsoDecay[i][x] == 'Bi214':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
-            if GD.IsoDecay[i][x] == 'Bi210':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            #if GD.IsoDecay[i][x] =='Pa234':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[0]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[0]
+            #if GD.IsoDecay[i][x] == 'Pb214':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            #if GD.IsoDecay[i][x] == 'Bi214':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
+            #if GD.IsoDecay[i][x] == 'Bi210':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[3]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[3]
             if GD.IsoDecay[i][x] == 'Tl210':
                 GDBG_P[i][x] = (GDEff[i][x]*GDAct[3]*0.002)
                 GDBG_N[i][x] = (GD_Nr[i][x]*GDAct[3]*0.002)
-            if GD.IsoDecay[i][x] == 'Ac228':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[1]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[1]
-            if GD.IsoDecay[i][x] == 'Pb212':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Bi211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Tl208':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
-            if GD.IsoDecay[i][x] == 'Th231':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[2]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[2]
-            if GD.IsoDecay[i][x] == 'Fr223':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Pb211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Bi211':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
-            if GD.IsoDecay[i][x] == 'Tl207':
-                GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
-                GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            else:
+                GDBG_P[i][x] = (GDEff[i][x]*GDAct[i])
+                GDBG_N[i][x] = (GDEff[i][x]*GDAct[i])
+            #if GD.IsoDecay[i][x] == 'Ac228':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[1]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[1]
+            #if GD.IsoDecay[i][x] == 'Pb212':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            #if GD.IsoDecay[i][x] == 'Bi211':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            #if GD.IsoDecay[i][x] == 'Tl208':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[4]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[4]
+            #if GD.IsoDecay[i][x] == 'Th231':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[2]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[2]
+            #if GD.IsoDecay[i][x] == 'Fr223':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            #if GD.IsoDecay[i][x] == 'Pb211':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            #if GD.IsoDecay[i][x] == 'Bi211':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
+            #if GD.IsoDecay[i][x] == 'Tl207':
+            #    GDBG_P[i][x] = GDEff[i][x]*GDAct[5]
+            #    GDBG_N[i][x] = GD_Nr[i][x]*GDAct[5]
             #GDBGErr[i][x] = ErrProp(GDErr[i][x], GDEff[i][x], GDBG_P[i][x])
             #GDBGrErr += GDBGErr[i][x]
             print('BG due to ' + GD.IsoDecay[i][x] + ' = %.5e Hz \u00B1 %.5e' % (GDBG_P[i][x], GDErr[i][x]))
@@ -555,7 +558,7 @@ def bgrate():
     totBG_N += GDBGr_N
     totAcc = totBG_P*totBG_N*0.0001*0.05*(pow(60,2)*24)
     totBG = totAcc+ROCKAct[-1]+WATERAct[-1] 
-    #TODO hard-coded values for FN (0.02 per day) and RN (0.01 per day) for the moment. User needs to be able to change these values from the interface but we must ensure they are not added until AFTER the accidental rate has been calculated. They must be included in the total background value used for calculations of dwell time and so on.
+    #TODO hard-coded values for FN (0.02 per day) and RN (0.01 per day) for the moment. User needs to be able to change these values from the interface but we must ensure they are not added until AFTER the accidental rate has been calculated. They must be included in the total background value used for calculations of dwell time and so on. - i think i have done this
     print('##########################################')
     print('Total Accidental rate = %.5e /day' % totAcc)
     print('Total BG rate including FN + RN = %.5e /day' % totBG)
