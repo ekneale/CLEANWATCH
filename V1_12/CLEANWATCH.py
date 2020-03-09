@@ -18,20 +18,10 @@ import numpy as np
 #from uncertainties import ufloat
 #Vars
 compList = ['PMT', 'VETO', 'TANK', 'CONC', 'ROCK', 'WATER', 'GD']
-#Comp = {
-#    "PMT"  : PMT,
-#    "VETO" : VETO,
-#    "TANK" : TANK,
-#    "CONC" : CONC,
-#    "ROCK" : ROCK,
-#    "WATER": WATER,
-#    "GD"   : GD
-#}
 #PMT
 PMTPPM = PMT.defPPM
 PMTAct = [] 
 PMTEff = PMT.IsoEff
-#print(PMTEff)
 PMTErr = PMT.EffErr
 PMT_Nr = [Nrate.PMTU238,
           Nrate.PMTTh232,
@@ -620,7 +610,9 @@ def revBG(CompShare, MaxBG):
 def CBOUT(IsoAct, BGIsoCB, Iso): #BGIso, Iso): #(, , ,COMP.IsoList)
     for i in range(len(IsoAct)):
         print('Singles Budget for %.7s = %.5e Hz' % (Iso[i], sum(BGIsoCB[i]))) #TODO change this to give the singles rate for prompt events
+    for i in range(len(IsoAct)):
         print('Accidentals Budget for %.7s = %.5e Hz' % (Iso[i], (sum(BGIsoCB[i])*0.05*0.0001)))
+    for i in range(len(IsoAct)):
         print('Radioactivity Budget for %.7s = %.5e' % (Iso[i], IsoAct[i]))
         #print('Nominal singles rate for %.7s = %.5e Hz' % (Iso[i], sum(BGIso[i]))) #????
 ######################################################################################################
