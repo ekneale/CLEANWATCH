@@ -30,6 +30,6 @@ def revActivity(BG, Eff, NEff):
             rIsoAct.append(maxbg/Eff[i][x]/vol)
         else:
             revIsoAct.append(0)
-    print(rIsoAct)
+    #print(rIsoAct)
     return rIsoAct
 #defAct = Activity(defPPM)

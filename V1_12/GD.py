@@ -45,7 +45,7 @@ def revActivity(BG, Eff,NEff):
         if Eff[i][x] != 0:
             rIsoAct[i] = maxbg/Eff[i][x]/const
         else:
-            print('Efficiency = 0')
+            #print('Efficiency = 0')
             rIsoAct[i] = 0
     return rIsoAct
 #defAct = Activity(defPPM)
